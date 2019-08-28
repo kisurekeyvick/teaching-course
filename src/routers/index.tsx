@@ -34,7 +34,7 @@ export default class RouteClass extends React.Component<IProps, any> {
      */
     public userStatus = () => {
         const userInfo: any = this.localStorageService.get('userInfo');
-        return !userInfo['token'];
+        return !(userInfo && userInfo['token']);
     }
 
     /** 
