@@ -2,13 +2,16 @@ import * as React from 'react';
 import { Form, Input, Button, Checkbox, Icon, Tabs, Row, Col} from 'antd';
 import { Link } from "react-router-dom";
 import * as _ from 'lodash';
-// import moment from 'moment';
+import moment from 'moment';
 import { IForm, loginFormItem, loginPhoneFormItem } from './login-config';
 import { CookieService } from 'common/utils/cache/cookie';
 import { validTelePhone } from 'common/utils/validator';
 // import { api } from '../../../common/api/index';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import './login.scss';
+import {connect} from 'react-redux';
+import { updateUserInfo } from 'store/user/action';
+import { bindActionCreators } from 'redux';
 
 const FormItem = Form.Item;
 const TabPane = Tabs.TabPane;
@@ -169,9 +172,11 @@ class UserLogin extends React.PureComponent<IProps, any> {
                 // api.login.post()
 
                 // Todo 这一步需要后端接口
-                // const endTime: any = params['remember'] ? moment().add(30, 'days').toDate() : '';
-                // this._cookie.setCookie('_token', 'YYTDHDSASDFGHFDSDFVGBNGFDS', endTime);
-                this.props.history.push('/home');
+                const endTime: any = params['remember'] ? moment().add(30, 'days').toDate() : '';
+                params['token'] = 'UYRFTDTYTYDEYDRTDE';
+                this.localStorageService.set('userInfo', params, endTime);
+                this.props.updateUserInfo(params);
+                this.props.history.push('/book');
             }
         });
     }
@@ -293,4 +298,17 @@ class UserLogin extends React.PureComponent<IProps, any> {
     }
 }
 
-export default Form.create()(UserLogin);
+function mapStateToProps(state: any) {
+    return {};
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return {
+        updateUserInfo: bindActionCreators(updateUserInfo, dispatch)
+    };
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Form.create()(UserLogin));

@@ -16,6 +16,16 @@ export const userRouter: ILoadableRoute[] = [
 
 export const pagesRouter: ILoadableRoute[] = [
     {
+        path: '/book',
+        component: Loadable({
+            loader: () => import('../containers/book/index'),
+            loading: () => null,
+            modules: ['book']
+        }),
+        key: 2,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
             loader: () => import('../containers/exception/index'),

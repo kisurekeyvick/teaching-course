@@ -5,6 +5,7 @@ import UserContainer from 'containers/user/user';
 import { pagesRouter, ILoadableRoute } from './routerList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import * as _ from 'lodash';
+import {connect} from 'react-redux';
 
 type IProps = {
     [key: string]: any
@@ -14,7 +15,7 @@ type IConfig = {
     routes: ILoadableRoute[]
 };
 
-export default class RouteClass extends React.Component<IProps, any> {
+class RouteClass extends React.Component<IProps, any> {
     public config: IConfig;
     public localStorageService: LocalStorageService;
 
@@ -33,8 +34,8 @@ export default class RouteClass extends React.Component<IProps, any> {
      * @desc 获取用户登录状态
      */
     public userStatus = () => {
-        const userInfo: any = this.localStorageService.get('userInfo');
-        return !(userInfo && userInfo['token']);
+        const userInfo = this.localStorageService.get('userInfo');
+        return !(userInfo && userInfo['value']['token']);
     }
 
     /** 
@@ -60,9 +61,19 @@ export default class RouteClass extends React.Component<IProps, any> {
                         <Switch>
                             <Route exact={true} path='/user/:status' component={UserContainer}/>
                             { needLogin && <Redirect from='/' to='/user/login'/> }
-                            { !needLogin && routes }
+                            { routes }
                         </Switch>
                     </Router>
                 </React.Fragment>
     }
 }
+
+function mapStateToProps(state: any) {
+    return {
+        userInfo: state.userReducer && state.userReducer.userInfo
+    }
+}
+
+export default connect(
+    mapStateToProps
+)(RouteClass);

@@ -1,1 +1,5 @@
-export const saga = '这是一个saga文件';
+import {fork,call} from 'redux-saga/effects'
+
+export default function* rootSaga() {
+    yield '';
+}
