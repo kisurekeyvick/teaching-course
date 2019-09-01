@@ -1,0 +1,27 @@
+@import '../../../assets/styles/global.scss';
+
+.directory-box {
+    height: 100%;
+    
+    .directory-title {
+        border-left: 2px solid $mainColor;
+        display: flex;
+        padding: 0 20px;
+
+        p {
+            margin-bottom: 0;
+            line-height: 35px;
+            flex: 1;
+        }
+
+        .icon {
+            flex: 0 0 50px;
+            text-align: right;
+            line-height: 35px;
+        }
+    }
+
+    .directory-menu-box {
+        padding: 10px;
+    }
+}

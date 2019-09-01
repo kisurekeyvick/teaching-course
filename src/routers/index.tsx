@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 // import { env } from 'environment/index';
 import UserContainer from 'containers/user/user';
+import GlobalLayout from 'containers/globalLayout/index';
 import { pagesRouter, ILoadableRoute } from './routerList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import * as _ from 'lodash';
@@ -42,7 +43,7 @@ class RouteClass extends React.Component<IProps, any> {
      * @func
      * @desc 构建route页面
      */
-    public buildPageRoute = () => {
+    public buildPageRoute = ():React.ReactNode[] => {
         return this.config.routes.map((route: ILoadableRoute, index: number) => {
             const rest: any = { }; 
             if (route.exact)
@@ -54,14 +55,17 @@ class RouteClass extends React.Component<IProps, any> {
 
     public render() {
         const needLogin = this.userStatus();
-        const routes = this.buildPageRoute();
+        const routes:React.ReactNode[] = this.buildPageRoute();
 
         return <React.Fragment>
                     <Router>
                         <Switch>
                             <Route exact={true} path='/user/:status' component={UserContainer}/>
-                            { needLogin && <Redirect from='/' to='/user/login'/> }
-                            { routes }
+                            { needLogin ? <Redirect from='/' to='/user/login'/> : <GlobalLayout>
+                                <Switch>
+                                    { routes }
+                                </Switch>
+                            </GlobalLayout> }
                         </Switch>
                     </Router>
                 </React.Fragment>

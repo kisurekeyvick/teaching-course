@@ -21,7 +21,7 @@ export default class ExceptionComponent extends React.PureComponent<any, any> {
         const props = {
             type: '404',
             backText: '返回首页',
-            redirect: '/home',
+            redirect: '/book',
             linkTo: this.skipTo
         };
 

@@ -1,0 +1,36 @@
+@import '../../assets/styles/global.scss';
+
+@mixin slidelayout {
+    flex: 0 0 300px;
+    margin: 20px 20px 0 20px;
+}
+
+.book-container {
+    height: 100%;
+    background-color: #f5f5f5;
+
+    .book-body {
+        display: flex;
+        height: 100%;
+    
+        .book-left {
+            @include slidelayout;
+            background-color: #fff;
+        }
+    
+        .book-center {
+            flex: 1;
+            padding: 0 30px;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+    
+        .book-right {
+            @include slidelayout;
+
+            .book-right-recommend {
+                margin-bottom: 20px;
+            }
+        }
+    }
+}

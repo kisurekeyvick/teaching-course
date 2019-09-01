@@ -1,0 +1,15 @@
+@import '../../../assets/styles/global.scss';
+
+.recommend-box {
+    background-color: #fff;
+    
+    .recommend-title {
+        border-left: 2px solid $mainColor;
+        padding-left: 20px;
+
+        p {
+            margin-bottom: 0;
+            line-height: 35px;
+        }
+    }
+}

@@ -1,0 +1,84 @@
+.global-layout {
+    height: 100%;
+
+    .ant-layout-header {
+        height: 65px;
+        padding: 0;
+        background: transparent;
+        line-height: 0;
+    }
+
+    .ant-layout-content {
+        margin-top: 65px;
+    }
+
+    .global-head {
+        display: flex;
+        padding: 15px 340px;
+        width: 100%;
+        background-color: #fff;
+
+        .global-head-left {
+            flex: 0 0 150px;
+
+            img {
+                width: 100px;
+                height: 35px;
+            }
+        }
+
+        .global-head-right {
+            flex: 1;
+            text-align: right;
+
+            .search-control {
+                width: 300px;
+            }
+
+            .right-menu {
+                list-style: none;
+                margin-bottom: 0;
+                float: right;
+
+                .menu-item {
+                    padding: 7px 10px;
+                    border-radius: 5px;
+                    display: inline-block;
+                    cursor: pointer;
+
+                    i {
+                        font-size: 18px;
+                    }
+
+                    &:hover {
+                        background-color: #F3F3F3;
+                    }
+                }
+            }
+        }
+    }
+
+    .global-body {
+        height: 100%;
+
+        .expection {
+            padding-top: 100px;
+        }
+    }
+}
+
+.global-container-popover-user {
+    min-width: 200px;
+
+    ul {
+        display: block;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            display: inline-block;
+            cursor: pointer;
+        }
+    }
+}
