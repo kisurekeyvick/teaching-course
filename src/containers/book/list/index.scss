@@ -1,0 +1,53 @@
+@import '../../../assets/styles/global.scss';
+
+@mixin filterLayout {
+    padding: 13px 10px;
+    border-bottom: 1px solid hsla(0,0%,59.2%,.1);
+}
+
+.book-list {
+    .filter-box {
+        .filter-box-type {
+            @include filterLayout;
+        }
+        
+        .filter-box-format {
+            @include filterLayout;
+            
+            label {
+                margin-right: 12px;
+            }
+
+            .ant-radio-group {
+                label.ant-radio-wrapper {
+                    margin-right: 0;
+
+                    span {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+
+        .filter-box-sort {
+            @include filterLayout;
+            border-bottom: none;
+
+            label {
+                margin-right: 12px;
+            }
+        }
+
+        .filter-item-content {
+            display: inline-block;
+
+            span {
+                cursor: pointer;
+
+                &.selected {
+                    color: $mainColor;
+                }
+            }
+        }
+    }
+}

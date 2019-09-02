@@ -38,7 +38,6 @@ export default class BookContainer extends React.Component<IProps, any> {
                             <Directory {...directoryProps}/>
                         </div>
                         <div className='book-center'>
-                            <p>content</p>
                             <BookList />
                         </div>
                         <div className='book-right'>

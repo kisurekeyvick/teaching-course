@@ -4,7 +4,7 @@
     .ant-layout-header {
         height: 65px;
         padding: 0;
-        background: transparent;
+        background: #fff;
         line-height: 0;
     }
 
@@ -14,8 +14,9 @@
 
     .global-head {
         display: flex;
-        padding: 15px 340px;
-        width: 100%;
+        padding: 15px 0;
+        max-width: 992px;
+        margin: 0 auto;
         background-color: #fff;
 
         .global-head-left {
@@ -32,7 +33,7 @@
             text-align: right;
 
             .search-control {
-                width: 300px;
+                width: 270px;
             }
 
             .right-menu {
@@ -60,6 +61,8 @@
 
     .global-body {
         height: 100%;
+        max-width: 992px;
+        margin: 0 auto;
 
         .expection {
             padding-top: 100px;

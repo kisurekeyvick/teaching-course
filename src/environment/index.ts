@@ -4,7 +4,7 @@ import pageLogo from 'assets/images/siderLogo.png';
 
 export const env = {
     name: '教学课程资源平台',
-    footerText: 'Microspicy-Technology ©2019 Author K',
+    footerText: 'Microspicy-Technology ©2019 Author nice fish',
     siderLogo,
     loginLogo,
     pageLogo,
