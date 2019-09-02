@@ -1,0 +1,22 @@
+.page-component-box {
+    text-align: right;
+
+    span.page-component-pageInfo {
+        margin-right: 8px;
+    }
+
+    ul.ant-pagination {
+        display: inline;
+    }
+}
+
+@media (max-width: 835px) {
+    .page-component-box {
+        text-align: left;
+        
+        span.page-component-pageInfo {
+            display: block;
+            margin-bottom: 24px;
+        }
+    }
+}

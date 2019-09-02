@@ -5,8 +5,14 @@
     border-bottom: 1px solid hsla(0,0%,59.2%,.1);
 }
 
+@mixin smallsize {
+    font-size: 12px;
+}
+
 .book-list {
     .filter-box {
+        @include smallsize;
+        
         .filter-box-type {
             @include filterLayout;
         }
@@ -23,7 +29,7 @@
                     margin-right: 0;
 
                     span {
-                        font-size: 12px;
+                        @include smallsize;
                     }
                 }
             }
@@ -48,6 +54,90 @@
                     color: $mainColor;
                 }
             }
+
+            span.ant-radio-inner {
+                width: 13px;
+                height: 13px;
+                top: -1px;
+            }
         }
+    }
+
+    .booklist-container {
+        .booklist-item:not(:last-child) {
+            border-bottom: 1px solid rgba(151, 151, 151, 0.1);
+        }
+
+        .booklist-item {
+            padding: 12px;
+
+            .booklist-item-top {
+                display: flex;
+
+                .booklist-item-top-left {
+                    flex: 1;
+                    line-height: 30px;
+
+                    span {
+                        margin-left: 12px;
+                    }
+                }
+
+                .booklist-item-top-right {
+                    flex: 0 0 200px;
+                    margin-top: -5px;
+                    
+                    & > i.i-rate {
+                        font-size: 18px;
+                        margin-left: 12px;
+                    }
+
+                    .booklist-item-top-right-qrcode {
+                        font-size: 16px;
+                        margin-left: 12px;
+                        cursor: pointer;
+                    }
+
+                    i.anticon.anticon-star {
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .booklist-item-bottom {
+                display: flex;
+                margin-top: 12px;
+
+                img {
+                    width: 100px;
+                    height: 100px;
+                    padding-right: 20px;
+                    flex: 0 0 120px;
+                }
+
+                .booklist-item-bottom-right {
+                    flex: 1;
+
+                    & > span.desc {
+                        @include smallsize;
+                        display: block;
+                    }
+                    
+                    div.booklist-item-bottom-right-detail {
+                        margin-top: 12px;
+                        @include smallsize;
+                    }
+
+                    p.contributor {
+                        margin: 12px 0 0 0;
+                        @include smallsize;
+                    }
+                }
+            }
+        }
+    }
+
+    .booklist-pagination {
+        padding: 24px 0;
     }
 }

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { filterConfig, IFilterConfigItem } from './index.config';
-import { Divider, Radio, Icon } from 'antd';
+import { filterConfig, IFilterConfigItem, booklist } from './index.config';
+import { Divider, Radio, Icon, Rate } from 'antd';
+import { PageComponent, IPageComponnetProps } from 'components/pagination/index';
 import * as _ from 'lodash';
 import './index.scss';
 
@@ -18,8 +19,29 @@ class BookListContainer extends React.PureComponent<IProps, any> {
             /** 资源格式 */
             format: '',
             /** 搜索条件 */
-            filterConfig: _.cloneDeep(filterConfig)
+            filterConfig: _.cloneDeep(filterConfig),
+            /** 教材列表 */
+            booklist: [],
+            /** 分页 */
+            pageInfo: {
+                currentPage: 1,
+                pageCount: 0,
+                pageSize: 10,
+                rowCount: 0,
+                totalCount: 0,
+                pageSizeOptions:['10', '20', '30', '40', '50']
+            }
         };
+    }
+
+    componentDidMount() {
+        this.loadBookList();
+    }
+
+    public loadBookList = () => {
+        this.setState({
+            booklist: booklist
+        });
     }
 
     /** 
@@ -71,6 +93,30 @@ class BookListContainer extends React.PureComponent<IProps, any> {
 
     /** 
      * @func
+     * @desc 选择教材
+     */
+    public selectBook = (e: any) => {
+
+    }
+
+    /** 
+     * @func
+     * @desc 分页发生变化
+     */
+    public pageChange = (page: number, pageSize?: number) => {
+        this.setState({
+            pageInfo: {
+                ...this.state.pageInfo,
+                currentPage: page,
+                ...pageSize && {
+                    pageSize
+                }
+            }
+        });
+    }
+
+    /** 
+     * @func
      * @desc 构建过滤条件
      * @params 
      *      items   数据源
@@ -101,6 +147,11 @@ class BookListContainer extends React.PureComponent<IProps, any> {
     }
 
     public render() {
+        const pageComponentProps: IPageComponnetProps = {
+            ...this.state.pageInfo,
+            pageChange: this.pageChange
+        };
+
         return <div className='book-list'>
                     <div className='filter-box'>
                         <div className='filter-box-type'>
@@ -115,9 +166,49 @@ class BookListContainer extends React.PureComponent<IProps, any> {
                             { this.buildfilterContent({ sourceKey: 'sort', componentType: 'common'}) }
                         </div>
                     </div>
-                    {
-                        this.props.searchBook
-                    }
+
+                    <div className='booklist-container'>
+                        {
+                            this.state.booklist.map((item: any) => {
+                                return <div className='booklist-item' key={item.id} onClick={this.selectBook}>
+                                            <div className='booklist-item-top'>
+                                                <div className='booklist-item-top-left'>
+                                                    { item.type === 'zip' && <Icon type="file-zip" /> }
+                                                    { item.type === 'ppt' && <Icon type="file-ppt" /> }
+                                                    { item.type === 'doc' && <Icon type="file-word" /> }
+                                                    <span>{ item.title }</span>
+                                                </div>
+                                                <div className='booklist-item-top-right'>
+                                                    <Rate disabled defaultValue={item.rate}/>
+                                                    <i className='i-rate'>{item.rate}</i>
+                                                    <label>({item.currentCount})</label>
+                                                    <Icon className='booklist-item-top-right-qrcode' type="qrcode" />
+                                                </div>
+                                            </div>
+                                            <div className='booklist-item-bottom'>
+                                                <img alt='缩略图' src={item.pic} />
+                                                <div className='booklist-item-bottom-right'>
+                                                    <span className='desc'>{item.desc || '暂无简介'}</span>
+                                                    <div className='booklist-item-bottom-right-detail'>
+                                                        <span>{item.createTime}</span>
+                                                        <Divider type="vertical"/>
+                                                        <span>大小：{item.size}</span>
+                                                        <Divider type="vertical"/>
+                                                        <span>浏览量：{item.viewCount}</span>
+                                                        <Divider type="vertical"/>
+                                                        <span>下载：{item.downloadCount}</span>
+                                                    </div>
+                                                    <p className='contributor'>贡献者：{item.contributors}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                            })
+                        }
+                    </div>
+
+                    <div className='booklist-pagination'>
+                        <PageComponent {...pageComponentProps}/>
+                    </div>
                 </div>
     }
 }
