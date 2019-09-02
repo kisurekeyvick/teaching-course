@@ -38,6 +38,10 @@ class BookListContainer extends React.PureComponent<IProps, any> {
         this.loadBookList();
     }
 
+    /** 
+     * @func
+     * @desc 加载book列表
+     */
     public loadBookList = () => {
         this.setState({
             booklist: booklist
