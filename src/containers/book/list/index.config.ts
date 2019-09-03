@@ -58,6 +58,7 @@ export const booklist = [
         contributors: 'nice fish',
         currentCount: '319',
         type: 'zip',
+        qrcode: 'https://juejin.im',
         id: 1
     },
     {
@@ -72,6 +73,7 @@ export const booklist = [
         contributors: 'nice fish',
         currentCount: '119',
         type: 'ppt',
+        qrcode: 'https://juejin.im',
         id: 2
     },
     {
@@ -86,6 +88,7 @@ export const booklist = [
         contributors: 'nice fish',
         currentCount: '219',
         type: 'doc',
+        qrcode: 'https://juejin.im',
         id: 3
     },
 ];

@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import { filterConfig, IFilterConfigItem, booklist, imgList } from './index.config';
-import { Divider, Radio, Icon, Rate } from 'antd';
+import { Divider, Radio, Icon, Rate, Popover } from 'antd';
 import { PageComponent, IPageComponnetProps } from 'components/pagination/index';
+import QrcodeComponent from 'components/qrcode/index';
 import * as _ from 'lodash';
 import './index.scss';
 
@@ -100,7 +101,7 @@ class BookListContainer extends React.PureComponent<IProps, any> {
      * @desc 选择教材
      */
     public selectBook = (e: any) => {
-
+        console.log(e);
     }
 
     /** 
@@ -186,7 +187,9 @@ class BookListContainer extends React.PureComponent<IProps, any> {
                                                     <Rate disabled defaultValue={item.rate}/>
                                                     <i className='i-rate'>{item.rate}</i>
                                                     <label>({item.currentCount})</label>
-                                                    <Icon className='booklist-item-top-right-qrcode' type="qrcode" />
+                                                    <Popover title='' content={ <QrcodeComponent url={item.qrcode}/> } trigger="hover">
+                                                        <Icon className='booklist-item-top-right-qrcode' type="qrcode"/>
+                                                    </Popover>
                                                 </div>
                                             </div>
                                             <div className='booklist-item-bottom'>

@@ -60,6 +60,13 @@
                 height: 13px;
                 top: -1px;
             }
+
+            .ant-radio-inner:after {
+                top: 3px;
+                left: 3px;
+                width: 5px;
+                height: 5px;
+            }
         }
     }
 
@@ -99,6 +106,7 @@
                         font-size: 16px;
                         margin-left: 12px;
                         cursor: pointer;
+                        position: relative;
                     }
 
                     i.anticon.anticon-star {

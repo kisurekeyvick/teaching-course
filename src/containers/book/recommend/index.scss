@@ -1,5 +1,13 @@
 @import '../../../assets/styles/global.scss';
 
+@mixin layout {
+    padding: 12px;
+}
+
+@mixin smallsize {
+    font-size: 12px;
+}
+
 .recommend-box {
     background-color: #fff;
     
@@ -12,4 +20,38 @@
             line-height: 35px;
         }
     }
+
+    .recommend-content {
+        @include layout;
+        padding-bottom: 0;
+
+        .recommend-content-title {
+            span {
+                margin-left: 12px;
+            }
+
+            margin-bottom: 5px;
+        }
+
+        p {
+            @include smallsize;
+            margin-bottom: 5px;
+        }
+    }
+
+    .recommend-operate {
+        @include layout;
+        display: flex;
+
+        .download-btn {
+            @include smallsize;
+            flex: 1;
+        }
+    }
+}
+
+.recommend-operate-qrcode-icon {
+    font-size: 25px;
+    flex: 0 0 50px;
+    cursor: pointer;
 }
