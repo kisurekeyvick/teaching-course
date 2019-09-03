@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
+import { Link } from "react-router-dom";
 import './index.scss';
 import { Layout, Input, Icon, Popover, Row, Col } from 'antd';
 import * as _ from 'lodash';
@@ -105,6 +106,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                     <div className='global-head'>
                         <div className='global-head-left'>
                             <img alt='logo' src={env.pageLogo}/>
+                            <Link className='link-item' to='/book'>首页</Link>
                         </div>
                         <div className='global-head-right'>
                             <Search className='search-control' placeholder='搜索教材' onSearch={this.searchBook}/>

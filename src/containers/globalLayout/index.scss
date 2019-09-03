@@ -22,11 +22,17 @@
         background-color: #fff;
 
         .global-head-left {
-            flex: 0 0 150px;
+            flex: 0 0 250px;
 
             img {
                 width: 100px;
                 height: 35px;
+                margin-left: 50px;
+            }
+
+            .link-item {
+                margin-left: 25px;
+                padding-top: 20px;
             }
         }
 
