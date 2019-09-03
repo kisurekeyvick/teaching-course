@@ -3,11 +3,8 @@ import { ISettingContainerProps } from './interface';
 import { IHeadTab, headTabs } from './index.config';
 import SettingPersonalContainer from './personal/index';
 import SettingModifyPwdContainer from './modifyPassword/index';
-import { Tabs } from 'antd';
 import * as _ from 'lodash';
 import './index.scss';
-
-const { TabPane } = Tabs;
 
 interface ISettingContainerState {
     headTabs: IHeadTab[];
