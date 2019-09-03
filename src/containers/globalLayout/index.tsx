@@ -90,10 +90,10 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
      * @desc 正对于顶部菜单 user按钮列表中的相关操作
      */
     public userMenuOperation = (tag: string) => {
-        const d = this.childref;
-        console.log(d);
         if (tag === 'exit') {
             window.location.href = '/user/login';
+        } else if (tag === 'personalSetting') {
+            window.location.href = '/setting';
         }
     }
 

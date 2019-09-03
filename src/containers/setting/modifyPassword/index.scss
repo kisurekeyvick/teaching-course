@@ -1,0 +1,5 @@
+@import '../index.scss';
+
+.setting-modifyPwd-box {
+    @include childLayout;
+}

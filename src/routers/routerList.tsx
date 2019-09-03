@@ -26,6 +26,16 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/setting',
+        component: Loadable({
+            loader: () => import('../containers/setting/index'),
+            loading: () => null,
+            modules: ['setting']
+        }),
+        key: 3,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
             loader: () => import('../containers/exception/index'),

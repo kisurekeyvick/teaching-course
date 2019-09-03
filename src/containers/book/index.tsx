@@ -30,8 +30,6 @@ export default class BookContainer extends React.Component<IProps, any> {
             callBack: this.selectDirectoryMenu
         };
 
-        console.log('内部的props', this.props);
-
         return <div className='book-container'>
                     <div className='book-body'>
                         <div className='book-left'>
