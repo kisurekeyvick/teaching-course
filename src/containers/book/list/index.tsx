@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { filterConfig, IFilterConfigItem, booklist } from './index.config';
+import { filterConfig, IFilterConfigItem, booklist, imgList } from './index.config';
 import { Divider, Radio, Icon, Rate } from 'antd';
 import { PageComponent, IPageComponnetProps } from 'components/pagination/index';
 import * as _ from 'lodash';
@@ -173,7 +173,7 @@ class BookListContainer extends React.PureComponent<IProps, any> {
 
                     <div className='booklist-container'>
                         {
-                            this.state.booklist.map((item: any) => {
+                            this.state.booklist.length > 0 ? this.state.booklist.map((item: any) => {
                                 return <div className='booklist-item' key={item.id} onClick={this.selectBook}>
                                             <div className='booklist-item-top'>
                                                 <div className='booklist-item-top-left'>
@@ -206,13 +206,18 @@ class BookListContainer extends React.PureComponent<IProps, any> {
                                                 </div>
                                             </div>
                                         </div>
-                            })
+                            }) :
+                            <div className='noData'>
+                                <img alt='无数据' src={imgList.noData} />
+                                <p>很抱歉没有符合条件的教材</p>
+                            </div>
                         }
                     </div>
-
-                    <div className='booklist-pagination'>
-                        <PageComponent {...pageComponentProps}/>
-                    </div>
+                    {
+                        this.state.booklist.length > 0 && <div className='booklist-pagination'>
+                            <PageComponent {...pageComponentProps}/>
+                        </div>
+                    }
                 </div>
     }
 }

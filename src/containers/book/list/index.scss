@@ -138,6 +138,21 @@
                 }
             }
         }
+
+        .noData {
+            img {
+                width: 200px;
+                margin: 0 auto;
+                display: block;
+            }
+
+            p {
+                text-align: center;
+                @include smallsize;
+                margin-top: 24px;
+                color: #bbb;
+            }
+        }
     }
 
     .booklist-pagination {

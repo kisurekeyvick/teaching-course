@@ -1,4 +1,10 @@
-import picture from 'assets/images/timg.jpg'; 
+import picture from 'assets/images/timg.jpg';
+import noData from 'assets/images/noData.png';
+
+export const imgList: any = {
+    picture,
+    noData
+};
 
 export interface IFilterConfigItem {
     name?: string;
