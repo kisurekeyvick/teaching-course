@@ -65,11 +65,14 @@
 
     .booklist-container {
         .booklist-item:not(:last-child) {
-            border-bottom: 1px solid rgba(151, 151, 151, 0.1);
+            @include bottomBorder;
         }
 
         .booklist-item {
             padding: 12px;
+            cursor: pointer;
+
+            @include backgroundAnimate(rgba(0,0,0,.03));
 
             .booklist-item-top {
                 display: flex;

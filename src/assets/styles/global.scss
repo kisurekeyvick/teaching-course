@@ -47,3 +47,35 @@ $errorColor: #fc7963;
 
 $mainColor:#9254de;
 $secondMainColor: #f9f0ff;
+
+@mixin hoverBgColor {
+    background-color: rgba(0,0,0,.03);
+}
+
+@mixin bottomBorder {
+    border-bottom: 1px solid rgba(151, 151, 151, 0.1);
+}
+
+@mixin backgroundAnimate($bgColor) {
+    display: block;
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+
+    &:hover:before {
+        right: 0%;
+        left: auto;
+        width: 100%;
+    }
+
+    &:before {
+        display: block;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        height: 100%;
+        width: 0px;
+        content: '';
+        background: $bgColor;
+        transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+    }
+}
