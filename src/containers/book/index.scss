@@ -11,6 +11,14 @@
     .book-body {
         display: flex;
         height: 100%;
+
+        .lefeAnimate, .rightAnimate {
+            animation: slideInUp 1.5s;
+        }
+
+        .centerAnimate {
+            animation: slideInUp 0.5s;
+        }
     
         .book-left {
             @include slidelayout;

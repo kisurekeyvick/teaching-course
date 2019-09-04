@@ -2,6 +2,7 @@
 
 @mixin childLayout {
     padding: 40px 30px;
+    background-color: #fff;
 }
 
 .setting-container {
@@ -32,7 +33,6 @@
 
     .setting-container-content {
         margin-top: 65px;
-        background-color: #fff;
         border-radius: 5px;
     }
 }

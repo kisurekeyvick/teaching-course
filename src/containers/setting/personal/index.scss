@@ -1,5 +1,105 @@
 @import '../index.scss';
+@import '../../../assets/styles/global.scss';
+
+@mixin borderBottom {
+    border-bottom: 1px solid #f1f1f1;
+}
+
+@mixin spanStyle {
+    cursor: pointer;
+
+    &:hover {
+        color: $mainColor;
+    }
+}
 
 .setting-personal-box {
     @include childLayout;
+
+    &.animateCss {
+        animation: slideInUp 0.5s;
+    }
+
+    p.title {
+        @include borderBottom;
+        font-size: 25px;
+        margin-bottom: 0px;
+        padding-bottom: 12px;
+    }
+
+    .setting-item {
+        @include borderBottom;
+        display: flex;
+        padding: 12px 0;
+
+        &>label {
+            flex: 0 0 100px;
+            text-align: left;
+            line-height: 32px;
+        }
+
+        .content {
+            flex: 1;
+
+            .inner-content {
+                display: flex;
+
+                .input-control {
+                    flex: 1;
+                    border: none;
+
+                    &:focus {
+                        border: none !important;
+                        box-shadow:0 0 0 transparent;
+                    }
+                }
+
+                .operation {
+                    flex: 0 0 100px;
+                    text-align: right;
+                    line-height: 32px;
+
+                    &.hover {
+                        span.edit-span {
+                            color: $mainColor;
+                        }
+                    }
+
+                    span {
+                        @include spanStyle;
+
+                        .edit-icon {
+                            margin-right: 8px;
+                        }
+
+                        &.span-cancel {
+                            margin-left: 8px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .upload-img-control-box {
+            flex: 1;
+
+            .upload-img-control-inner-box {
+                display: flex;
+
+                img {
+                    width: 70px;
+                    height: 70px;
+                    margin-right: 24px;
+                }
+
+                .desc-and-upload {
+                    flex: 1;
+
+                    p, button {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+    }
 }
