@@ -53,9 +53,9 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
 
                             return <li className='menu-item' key={menu.key}>
                                 { menu.type === 'icon' && content && <Popover content={content} trigger={menu.trigger}>
-                                        <Icon type={menu.icon} />
+                                        <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/>
                                     </Popover> }
-                                { menu.type === 'icon' && !content && <Icon type={menu.icon} /> }
+                                { menu.type === 'icon' && !content && <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/> }
                             </li>
                         })
                     }
@@ -73,7 +73,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                     {
                         mcg.user.map((item: {name: string, value: string, key: string}) => {
                             return <Col key={item.key} xs={{span: 24}} md={{span: 12}}>
-                                        <li key={`${item.key}-li`} onClick={() => this.userMenuOperation(item.value)}>{ item.name }</li>
+                                        <li key={`${item.key}-li`} onClick={() => this.menuOperation(item.value)}>{ item.name }</li>
                                     </Col>
                         })
                     }
@@ -88,13 +88,25 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
 
     /** 
      * @func
-     * @desc 正对于顶部菜单 user按钮列表中的相关操作
+     * @desc 点击头部菜单
      */
-    public userMenuOperation = (tag: string) => {
+    public clickHeadMenuItem = (menu: IHeadMenu) => {
+        if (menu.value === 'upload') {
+            this.menuOperation(menu.value);
+        }
+    }
+
+    /** 
+     * @func
+     * @desc 跳转
+     */
+    public menuOperation = (tag: string) => {
         if (tag === 'exit') {
             window.location.href = '/user/login';
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
+        } else if (tag === 'upload') {
+            window.location.href = '/upload';
         }
     }
 

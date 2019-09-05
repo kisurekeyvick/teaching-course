@@ -15,3 +15,12 @@ export interface IRecommendProps {
 export interface ILatestUploadProps {
     [key: string]: any;
 }
+
+export interface IBookListItemDetailProps {
+    [key: string]: any;
+}
+
+export interface IBookListProps {
+    searchBook: string;
+    [key: string]: any;
+}

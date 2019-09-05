@@ -8,6 +8,13 @@ export interface IHeadMenu {
 
 export const headMenus: IHeadMenu[] = [
     {
+        icon: 'upload',
+        key: '3',
+        type: 'icon',
+        value: 'upload',
+        trigger: 'click'
+    },
+    {
         icon: 'bell',
         key: '2',
         type: 'icon',

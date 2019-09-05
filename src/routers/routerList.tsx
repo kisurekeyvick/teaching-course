@@ -36,6 +36,26 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/upload',
+        component: Loadable({
+            loader: () => import('../containers/upload/index'),
+            loading: () => null,
+            modules: ['upload']
+        }),
+        key: 4,
+        exact: true
+    },
+    {
+        path: '/book/detail',
+        component: Loadable({
+            loader: () => import('../containers/book/list/detail/index'),
+            loading: () => null,
+            modules: ['bookDetail']
+        }),
+        key: 4,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
             loader: () => import('../containers/exception/index'),

@@ -222,3 +222,29 @@ $secondMainColor: #f9f0ff;
         opacity: 0;
     }
 }
+
+@mixin cleardefaultInputFormStyle {
+  .ant-form-item-label {
+      text-align: left;
+  }
+
+  .ant-form-item-control {
+      input {
+          border: none;
+
+          &:focus {
+              border: none !important;
+              box-shadow:0 0 0 transparent;
+          }
+      }
+  }
+
+  .ant-input {
+    border: none;
+
+    &:focus {
+      border: none;
+      box-shadow:0 0 0 transparent;
+    }
+  }
+}

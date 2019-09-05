@@ -6,14 +6,10 @@ import { PageComponent, IPageComponnetProps } from 'components/pagination/index'
 import QrcodeComponent from 'components/qrcode/index';
 import * as _ from 'lodash';
 import './index.scss';
+import { IBookListProps } from '../interface';
 
-interface IProps {
-    searchBook: string;
-    [key: string]: any;
-}
-
-class BookListContainer extends React.PureComponent<IProps, any> {
-    constructor(public props: IProps) {
+class BookListContainer extends React.PureComponent<IBookListProps, any> {
+    constructor(public props: IBookListProps) {
         super(props);
 
         this.state = {

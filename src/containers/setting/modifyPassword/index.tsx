@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { IFormItem, formItems } from './index.config';
 import * as _ from 'lodash';
 import './index.scss';
@@ -13,10 +13,6 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
 
     constructor(public props: any) {
         super(props);
-
-        this.state = {
-            in: false
-        }
 
         this.config = {
             formItems: this.rebuildFormItem(_.cloneDeep(formItems))
@@ -65,13 +61,9 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
     public handleSubmit = (e: any) => {
         e.preventDefault();
 
-        this.setState({
-            in: !this.state.in
-        });
-
         this.props.form.validateFieldsAndScroll((err: any, values: any) => {
             if (!err) {
-              console.log('Received values of form: ', values);
+                message.success('修改成功');
             }
         });
     }
@@ -82,6 +74,7 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
      */
     public createForm = (formItems: IFormItem[]): React.ReactNode => {
         const { getFieldDecorator } = this.props.form;
+        
         const formItemLayout = {
             labelCol: {
               xs: { span: 24 },
@@ -102,9 +95,9 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
             {
                 formItems.map((item: IFormItem) => {
                     const Control: React.ReactNode = ((): React.ReactNode => {
-                        if (item.controlName === 'input') {
-                            let control: React.ReactNode;
+                        let control: React.ReactNode = <div></div>;
 
+                        if (item.controlName === 'input') {
                             item.controlType === 'text' && (control = <Input placeholder={item.placeholder}/>);
 
                             item.controlType === 'password' && (control = <Input.Password placeholder={item.placeholder}/>)
@@ -112,7 +105,7 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
                             return control;
                         }
 
-                        return <div></div>
+                        return control;
                     })();
 
                     return <Form.Item className='modify-pwd-form-item' label={item.label} key={item.key}>

@@ -1,0 +1,74 @@
+@import '../../assets/styles/global.scss';
+
+@mixin borderBottom {
+    border-bottom: 1px solid #f1f1f1;
+}
+
+@mixin require {
+    &:before {
+        display: inline-block;
+        margin-right: 4px;
+        color: #f5222d;
+        font-size: 14px;
+        font-family: SimSun, sans-serif;
+        line-height: 1;
+        content: '*';
+    }
+}
+
+.upload-container {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 40px 30px;
+    margin-top: 24px;
+
+    &.animateCss {
+        animation: slideInUp 0.5s;
+    }
+
+    .title {
+        font-size: 25px;
+        margin-bottom: 0px;
+        padding-bottom: 12px;
+        @include borderBottom;
+    }
+
+    .upload-content {
+        @include cleardefaultInputFormStyle;
+
+        .upload-form-item {
+            @include borderBottom;
+            padding: 8px 0;
+            margin-bottom: 0;
+
+            &.fileList, &.type {
+                .ant-form-item-label {
+                    &>label {
+                        @include require;
+                    }   
+                }
+
+                .ant-form-explain {
+                    clear: both;
+                    min-height: 22px;
+                    margin-top: -2px;
+                    font-size: 14px;
+                    line-height: 1.5;
+                    color: #f5222d;
+                    transition: color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+                }
+            }
+        }
+    }
+
+    .btn-group-item {
+        margin-right: 8px;
+    }
+
+    .submit-form-item {
+        text-align: right;
+        text-align: right;
+        margin-bottom: 0;
+        margin-top: 24px;
+    }
+}

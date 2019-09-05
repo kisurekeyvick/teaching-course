@@ -93,8 +93,6 @@ export default class SettingPersonalContainer extends React.PureComponent<any, a
      * @desc 控件值还原
      */
     public cancel = (stateName: string, focusStateName: string) => {
-        console.log('取消');
-
         this.setState({
             [stateName]: this.storeState[stateName],
             [focusStateName]: false
