@@ -26,8 +26,19 @@ export default class BookContainer extends React.Component<IProps, any> {
     }
 
     public render() {
+        const { history } = this.props;
+
         const directoryProps: IDirectoryProps = {
-            callBack: this.selectDirectoryMenu
+            callBack: this.selectDirectoryMenu,
+            history
+        };
+
+        const bookListProps = {
+            history
+        };
+
+        const latestUploadProps = {
+            history
         };
 
         return <div className='book-container'>
@@ -36,14 +47,14 @@ export default class BookContainer extends React.Component<IProps, any> {
                             <Directory {...directoryProps}/>
                         </div>
                         <div className='book-center centerAnimate'>
-                            <BookList />
+                            <BookList {...bookListProps}/>
                         </div>
                         <div className='book-right rightAnimate'>
                             <div className='book-right-recommend'>
                                 <Recommend />
                             </div>
                             <div className='book-right-latestUpload'>
-                                <LatestUpload />
+                                <LatestUpload {...latestUploadProps}/>
                             </div>
                         </div>
                     </div>

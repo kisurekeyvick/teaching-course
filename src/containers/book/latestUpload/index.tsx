@@ -32,7 +32,9 @@ export default class LatestUploadContainer extends React.PureComponent<ILatestUp
      * @desc 查看book详情
      */
     public showBookDetail = (book: any) => {
-
+        const { history } = this.props;
+        const url: string = `/book/id/${book.id}`;
+        history.push(url);
     }
 
     public render() {

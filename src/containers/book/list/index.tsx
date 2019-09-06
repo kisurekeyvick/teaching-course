@@ -96,8 +96,10 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
      * @func
      * @desc 选择教材
      */
-    public selectBook = (e: any) => {
-        console.log(e);
+    public selectBook = (item: any) => {
+        const { history } = this.props;
+        const url: string = `/book/id/${item.id}`;
+        history.push(url);
     }
 
     /** 
@@ -171,7 +173,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
                     <div className='booklist-container'>
                         {
                             this.state.booklist.length > 0 ? this.state.booklist.map((item: any) => {
-                                return <div className='booklist-item' key={item.id} onClick={this.selectBook}>
+                                return <div className='booklist-item' key={item.id} onClick={() => this.selectBook(item)}>
                                             <div className='booklist-item-top'>
                                                 <div className='booklist-item-top-left'>
                                                     { item.type === 'zip' && <Icon type="file-zip" /> }

@@ -46,7 +46,7 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
-        path: '/book/detail',
+        path: '/book/id/:id',
         component: Loadable({
             loader: () => import('../containers/book/list/detail/index'),
             loading: () => null,
