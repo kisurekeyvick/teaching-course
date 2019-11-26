@@ -6,9 +6,17 @@
     }
 
     .user-login-form {
-        width: 400px;
         margin: 0 auto;
-        background-color: #fff;
+        padding: 35px;
+
+        p.login-title {
+            color: $color;
+            font-size: 30px;
+            padding-bottom: 8px;
+            margin-bottom: 0;
+            border-bottom: 1px solid $borderColor;
+            animation: bounceInLeft 1s;
+        }
 
         .checkbox-remember {
             float: left;
@@ -21,7 +29,8 @@
         
         .login-form-button {
             width: 100%;
-            margin-top: 24px;
+            margin-top: 12px;
+            animation: flipInX 2s;
         }
 
         .ant-form-explain {
@@ -29,11 +38,61 @@
         }
 
         .formItem-item {
-            margin: 0 2px 24px;
+            margin: 0 2px 12px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
 
             img.verificationImage {
                 border: 1px solid #ddd;
                 border-radius: 5px;
+            }
+
+            .formItem-div {
+                .formItem-label {
+                    color: $color;
+                    padding-left: 12px;
+                }
+
+                .input-control {
+                    &.userName, &.password {
+                        input {
+                            border-color: $borderColor;
+                            border-radius: 25px;
+                            color: $color;
+                            font-size: 14px;
+
+                            &::placeholder {
+                                color: $color;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .has-error {
+            margin-bottom: -12px;
+
+            .formItem-div {
+                .input-control {
+                    input {
+                        border-color: $errorBorderColor !important;
+                        color: $errorColor !important;
+                        background-color: $errorContent !important;
+
+                        &::placeholder {
+                            color: $errorColor !important;
+                        }
+                    }
+                }
+            }
+
+            .ant-form-explain {
+                text-align: right;
+                font-size: 12px;
+                padding-top: 5px;
             }
         }
 

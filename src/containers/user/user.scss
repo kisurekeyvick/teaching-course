@@ -13,11 +13,21 @@
     background-repeat: no-repeat;
     background-position: center 110px;
     background-size: 100%;
+    background-color: #f5f5f5;
     z-index: 9999;
+    position: relative;
+
+    .login-content-box {
+        background-color: #fff;
+        border-radius: 20px;
+        width: 350px;
+        position: absolute;
+        right: 15%;
+        top: 10%;
+    }
 
     .layout-login-box-head {
         text-align: center;
-        margin-bottom: 24px;
 
         img {
             width: 200px;
@@ -26,7 +36,7 @@
     }
 
     .user-container-box{
-        height: 446px;
+        min-height: 400px;
 
         .user-login .ant-tabs-bar {
             text-align: center;

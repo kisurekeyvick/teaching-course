@@ -14,6 +14,13 @@ export interface IForm {
     config: IConfig;
     hasFeedback ?: boolean;
     placeholder?: string;
+    size?: 'small' | 'default' | 'large' | undefined;
+}
+
+export interface LoginParams {
+    password: string;
+    userName: string;
+    [key: string]: any;
 }
 
 // export type Config = IConfig;
