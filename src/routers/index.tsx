@@ -5,6 +5,7 @@ import UserContainer from 'containers/user/user';
 import GlobalLayout from 'containers/globalLayout/index';
 import { pagesRouter, ILoadableRoute } from './routerList';
 import LocalStorageService from 'common/utils/cache/local-storage';
+import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import * as _ from 'lodash';
 import {connect} from 'react-redux';
 
@@ -35,7 +36,7 @@ class RouteClass extends React.Component<IProps, any> {
      * @desc 获取用户登录状态
      */
     public userStatus = () => {
-        const userInfo = this.localStorageService.get('userInfo');
+        const userInfo = this.localStorageService.get(LocalStorageItemName.LOGINCACHE);
         return !(userInfo && userInfo['value']['token']);
     }
 

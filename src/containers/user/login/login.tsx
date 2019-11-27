@@ -77,7 +77,8 @@ class UserLogin extends React.PureComponent<IProps, any> {
      */
     public rememberPwd = (value: LoginParams) => {
         const endTime: any = dayjs().add(30, 'day').toDate();
-        console.log('endTime', endTime);
+        // Todo 写死的token，后面需要后端传递
+        value['token'] = 'YTDFJHDGFHJHDGRDTFYHDTGDHFHDTF';
         this.localStorageService.set(LocalStorageItemName.LOGINCACHE, value, endTime);
     }
 
