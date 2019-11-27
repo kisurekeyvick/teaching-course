@@ -78,7 +78,8 @@ const lessModuleRegex = /\.module\.less$/;
 ```
 (1) 需要加载webpack添加loader：svg-sprite-loader
 (2) 在webpack.config.js中添加如下代码：
-    ``` js
+```
+``` js
     {
         test: /\.svg$/,
         loader: require.resolve('svg-sprite-loader'),
@@ -97,25 +98,26 @@ const lessModuleRegex = /\.module\.less$/;
         // [kisure mark] url-loader 中要将 svg 文件夹排除, 不让 url-loader 处理该文件夹
         exclude: path.resolve(__dirname, 'src/assets/icons/svg')
     }
-    ```
+```
+```
 (3) 在assets文件中 assets/icons/index.ts 中需要将相关的svg导入进去
 (4) 在react项目的入口文件中引用 assets/icons/index.ts，此处引入在app.tsx中
-    ```js
-        import React from 'react';
-        import Page from 'routers/index';
-        import './App.scss';
-        import './theme.less';
-        import 'assets/icons/index';
+```
+```js
+    import React from 'react';
+    import Page from 'routers/index';
+    import './App.scss';
+    import './theme.less';
+    import 'assets/icons/index';
 
-        const App: React.FC = () => {
-        return (
-            <div className="App">
-            <Page />
-            </div>
-        );
-        }
+    const App: React.FC = () => {
+    return (
+        <div className="App">
+        <Page />
+        </div>
+    );
+    }
 
-        export default App;
-    ```
+    export default App;
 ```
 - 有一个坑点需要注意，在[阿里巴巴矢量图](https://www.iconfont.cn/)中添加图标后，需要按照你想引入的svg名字修改一下图标的名字，因为名字写错了，页面会显示不出来
