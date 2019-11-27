@@ -5,6 +5,7 @@ import * as _ from 'lodash';
 import './index.scss';
 // menu是本地写死的数据
 import { menu, IMenuItem } from './index.config';
+import SvgComponent from 'components/icon/icon';
 
 const { TreeNode } = Tree;
 
@@ -51,6 +52,7 @@ export default class DirectoryContainer extends React.PureComponent<IDirectoryPr
         return <div className='directory-box'>
                     <div className='directory-title'>
                         <p>教材目录</p>
+                        <SvgComponent type='icon-book'/>
                         <Icon className='icon' type="star" />
                     </div>
                     <div className='directory-menu-box'>
