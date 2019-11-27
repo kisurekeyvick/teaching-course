@@ -1,22 +1,23 @@
 import * as React from 'react';
+import { Icon } from 'antd';
+import { env } from 'environment/index';
 import './icon.scss';
 
 interface IIconProps {
     type: string;
+    className?: string;
 }
 
-const SvgComponent: React.FC<IIconProps> = props => {
+export const IconFont = Icon.createFromIconfontCN({
+    scriptUrl: env.svgUrl
+});
+
+export const SvgComponent: React.FC<IIconProps> = props => {
     return (
-        <svg className="svg-icon" aria-hidden="true">
-            <use xlinkHref={`#${props.type}`} />
-        </svg>
+        <i aria-hidden="true" className={`anticon ${props.className}`}>
+            <svg className="svg-icon">
+                <use xlinkHref={`#${props.type}`} />
+            </svg>
+        </i>
     )
 };
-
-export default SvgComponent;
-
-// export const iconList: {
-//     [key: string]: React.ReactNode
-// } = {
-//     iconBook: <SvgComponent type='icon-book'></SvgComponent>
-// };

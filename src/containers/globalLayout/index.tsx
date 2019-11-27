@@ -6,7 +6,7 @@ import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
 import { Link } from "react-router-dom";
 import './index.scss';
-import { Layout, Input, Icon, Popover, Row, Col } from 'antd';
+import { Layout, Input, Icon, Popover, Row, Col, Tooltip } from 'antd';
 import * as _ from 'lodash';
 
 const { Header, Content, Footer } = Layout;
@@ -55,7 +55,9 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                                 { menu.type === 'icon' && content && <Popover content={content} trigger={menu.trigger}>
                                         <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/>
                                     </Popover> }
-                                { menu.type === 'icon' && !content && <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/> }
+                                { menu.type === 'icon' && !content && <Tooltip title={menu.tooltipInfo}>
+                                                                        <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/>
+                                                                    </Tooltip> }
                             </li>
                         })
                     }
@@ -64,7 +66,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
 
     /** 
      * @func
-     * @desc 头部菜单内容
+     * @desc 头部菜单拓展内容
      */
     public menusContentList = (mcg: IMenusContentConfig) => {
         const user: React.ReactNode = <div className='global-container-popover-user'>

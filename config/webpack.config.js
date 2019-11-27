@@ -341,6 +341,16 @@ module.exports = function(webpackEnv) {
           // match the requirements. When no loader matches it will fall
           // back to the "file" loader at the end of the loader list.
           oneOf: [
+            // [kisure mark] svg
+            {
+              test: /\.svg$/,
+              loader: require.resolve('svg-sprite-loader'),
+              include: path.resolve(__dirname, 'src/assets/icons/svg'),
+              options: {
+                // symbolId和use使用的名称对应      <use xlinkHref={"#" + iconClass} />
+                symbolId: '[name]'
+              }
+            },
             // "url" loader works like "file" loader except that it embeds assets
             // smaller than specified limit in bytes as data URLs to avoid requests.
             // A missing `test` is equivalent to a match.
@@ -351,6 +361,8 @@ module.exports = function(webpackEnv) {
                 limit: imageInlineSizeLimit,
                 name: 'static/media/[name].[hash:8].[ext]',
               },
+              // [kisure mark] url-loader 中要将 svg 文件夹排除, 不让 url-loader 处理该文件夹
+              exclude: path.resolve(__dirname, 'src/assets/icons/svg')
             },
             // Process application JS with Babel.
             // The preset includes JSX, Flow, TypeScript, and some ESnext features.

@@ -13,4 +13,8 @@ export const env = {
      * 例如：baseURL: 'https://some-domain.com/api/'
      */
     baseURL: '',
+    /** 
+     * @desc 配置svg的url，配合组件(components/icon/icon.tsx)使用
+     */
+    svgUrl: '//at.alicdn.com/t/font_1531539_c1pidro5o3.js'
 };

@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { IDirectoryProps } from '../interface';
-import { Tree, Icon } from 'antd';
+import { Tree } from 'antd';
 import * as _ from 'lodash';
 import './index.scss';
 // menu是本地写死的数据
 import { menu, IMenuItem } from './index.config';
-import SvgComponent from 'components/icon/icon';
+import { SvgComponent } from 'components/icon/icon';
 
 const { TreeNode } = Tree;
 
@@ -51,9 +51,8 @@ export default class DirectoryContainer extends React.PureComponent<IDirectoryPr
     public render() {
         return <div className='directory-box'>
                     <div className='directory-title'>
+                        <SvgComponent className='book-svg' type='icon-book' />
                         <p>教材目录</p>
-                        <SvgComponent type='icon-book'/>
-                        <Icon className='icon' type="star" />
                     </div>
                     <div className='directory-menu-box'>
                         { this.buidlTree() }

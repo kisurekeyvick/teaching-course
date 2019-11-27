@@ -4,6 +4,7 @@ export interface IHeadMenu {
     type: string;
     value: string;
     trigger?: "hover" | "focus" | "click" | "contextMenu" | undefined;
+    tooltipInfo?: string;
 }
 
 export const headMenus: IHeadMenu[] = [
@@ -12,21 +13,24 @@ export const headMenus: IHeadMenu[] = [
         key: '3',
         type: 'icon',
         value: 'upload',
-        trigger: 'click'
+        trigger: 'click',
+        tooltipInfo: '附件上传'
     },
     {
         icon: 'bell',
         key: '2',
         type: 'icon',
         value: 'bell',
-        trigger: 'hover'
+        trigger: 'hover',
+        tooltipInfo: '消息提醒'
     },
     {
         icon: 'user',
         key: '1',
         type: 'icon',
         value: 'user',
-        trigger: 'hover'
+        trigger: 'hover',
+        tooltipInfo: '个人中心'
     }
 ];
 
