@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { httpRequest } from '../http/index';
 import './_mock';
 
 export const api = {
@@ -10,5 +11,6 @@ export const api = {
                 reject(error);
             });
         });
-    }
+    },
+    login: httpRequest(`POST /project/login`)
 };

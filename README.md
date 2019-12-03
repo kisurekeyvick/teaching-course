@@ -15,7 +15,8 @@
     │   ├── containers                  容器性组件目录
     │   ├── assets                      资源目录，这里的资源会被wabpack构建
     │   │   ├── style                   公共样式文件目录
-    │   │   └── image                   图片存放目录
+    │   │   ├── image                   图片存放目录
+    │   │   └── svg                     存放svg图标
     │   ├── store                       应用级数据（state）
     │   │   └── index.js
     │   └── common                      公共文件
@@ -95,7 +96,7 @@ const lessModuleRegex = /\.module\.less$/;
         limit: imageInlineSizeLimit,
         name: 'static/media/[name].[hash:8].[ext]',
         },
-        // [kisure mark] url-loader 中要将 svg 文件夹排除, 不让 url-loader 处理该文件夹
+        // [kisure rmark] url-loader 中要将 svg 文件夹排除, 不让 url-loader 处理该文件夹
         exclude: path.resolve(__dirname, 'src/assets/icons/svg')
     }
 ```
