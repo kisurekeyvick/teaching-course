@@ -88,8 +88,9 @@
                     flex: 1;
                     line-height: 30px;
 
-                    span {
-                        margin-left: 12px;
+                    .icon-like {
+                        margin-left: 5px;
+                        color: $iconRed;
                     }
                 }
 

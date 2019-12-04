@@ -15,6 +15,7 @@ $bgColor: #e6f7ff;
 $errorColor: #FF5B5B;
 $errorBorderColor: #FF5B5B;
 $errorContent: #FFEBEB;
+$iconRed: #FF5B5B;
 
 @mixin border($width:1px, $style: solid) {
     border-width: $width;

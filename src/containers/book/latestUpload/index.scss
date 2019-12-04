@@ -8,10 +8,19 @@
     background-color: #fff;
     
     .latestUpload-title {
+        display: flex;
         padding-left: 20px;
 
         p {
             margin-bottom: 0;
+            line-height: 35px;
+            flex: 1;
+        }
+
+        .upload-svg {
+            flex: 0 0 32px;
+            text-align: left;
+            font-size: 19px;
             line-height: 35px;
         }
     }

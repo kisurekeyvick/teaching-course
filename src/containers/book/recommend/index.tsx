@@ -61,7 +61,8 @@ export default class RecommendContainer extends React.PureComponent<IRecommendPr
 
         return <div className='recommend-box'>
                     <div className='recommend-title'>
-                        <p>特别推荐</p>
+                        <Icon className='icon-bell' type="bell" />
+                        <p>通知中心</p>
                         <span>
                             <Icon className='icon icon-left' type="left" onClick={() => this.turnPage('prev')}/>
                             <Icon className='icon icon-right' type="right" onClick={() => this.turnPage('next')}/>

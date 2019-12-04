@@ -3,6 +3,7 @@ import './index.scss';
 import { ILatestUploadProps } from '../interface';
 import { list, imgList } from './index.config';
 import { Icon } from 'antd';
+import { SvgComponent } from 'components/icon/icon';
 
 export default class LatestUploadContainer extends React.PureComponent<ILatestUploadProps, any> {
     constructor(public props: ILatestUploadProps) {
@@ -40,6 +41,7 @@ export default class LatestUploadContainer extends React.PureComponent<ILatestUp
     public render() {
         return <div className='latestUpload-box'>
                     <div className='latestUpload-title'>
+                        <SvgComponent className='upload-svg' type='icon-upload' />
                         <p>最新上传</p>
                     </div>
                     <div className='latestUpload-list'>

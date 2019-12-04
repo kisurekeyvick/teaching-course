@@ -7,6 +7,7 @@ import QrcodeComponent from 'components/qrcode/index';
 import * as _ from 'lodash';
 import './index.scss';
 import { IBookListProps } from '../interface';
+import { SvgComponent } from 'components/icon/icon';
 
 class BookListContainer extends React.PureComponent<IBookListProps, any> {
     constructor(public props: IBookListProps) {
@@ -176,10 +177,9 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
                                 return <div className='booklist-item' key={item.id} onClick={() => this.selectBook(item)}>
                                             <div className='booklist-item-top'>
                                                 <div className='booklist-item-top-left'>
-                                                    { item.type === 'zip' && <Icon type="file-zip" /> }
-                                                    { item.type === 'ppt' && <Icon type="file-ppt" /> }
-                                                    { item.type === 'doc' && <Icon type="file-word" /> }
                                                     <span>{ item.title }</span>
+                                                    {/* <Icon className='icon-like' type="heart" /> */}
+                                                    <SvgComponent className='lover-svg' type='icon-love' />
                                                 </div>
                                                 <div className='booklist-item-top-right'>
                                                     <Rate disabled defaultValue={item.rate}/>
