@@ -1,0 +1,70 @@
+@import '../../../assets/styles/global.container.scss';
+
+.layout-login-box {
+    @include layout-login-box;
+
+    img.background-image {
+        position: absolute;
+        left: 0;
+        top:0;
+        width: 100%;
+    }
+ 
+     .layout-login-box-head {
+         @include layout-login-box-head;
+     }
+ 
+     .login-container-box{
+        @include content-container-box;
+     }
+ }
+
+.admin-login {
+    .ant-tabs-bar {
+        border-bottom: 0px;
+    }
+
+    .admin-login-form {
+        @include login-form;
+
+        p.login-title {
+            @include login-title;
+        }
+
+        .login-form-button {
+            @include login-form-button;
+        }
+
+        .ant-form-explain {
+            text-align: left;
+        }
+
+        .has-error {
+            @include login-error;
+        }
+
+        .formItem-item {
+            @include login-formItem-item;
+        }
+
+        .ant-form-item:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+@media (min-width: 769px) {
+    .layout-login-box {
+        .login-content-box {
+            @include login-content-box;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .layout-login-box {
+        .login-content-box {
+            @include login-content-box-midScreen;
+        }
+    }
+}

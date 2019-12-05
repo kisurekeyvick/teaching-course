@@ -1,0 +1,55 @@
+@import '../../../assets/styles//global.scss';
+
+.admin-layout {
+    img.slide-logo {
+        width: 200px;
+        padding: 11px 0;
+        background-color: #fff;    
+    }
+
+    .slide-coantainer {
+        ul.ant-menu {
+            li:first-child {
+                margin-top: 0;
+            }
+
+            li {
+                display: block;
+
+                .svg-icon {
+                    color: #fff;
+                    font-size: 18px;
+                }
+            }
+
+            span, a {
+                display: inline-block;
+            }
+        }
+
+        &.collapsed {
+            ul.ant-menu {
+                li {
+                    margin-bottom: 0;
+    
+                    a {
+                        display: block;
+                        height: 100%;
+                        width: 100%;
+                        float: left;
+                    }
+                }
+    
+                .svg-icon {
+                    display: block;
+                    height: 40px;
+                    line-height: 40px;
+                }
+            }
+        }
+    }
+
+    .admin-body {
+        padding: 0 24px;
+    }
+}

@@ -1,6 +1,7 @@
 import Loadable from 'react-loadable';
 import { ILoadableRoute } from './interface';
 
+/** 前台用户登录 */
 export const userRouter: ILoadableRoute[] = [
     {
         path: '/user/:status',
@@ -14,6 +15,7 @@ export const userRouter: ILoadableRoute[] = [
     }
 ];
 
+/** 前台用户路由 */
 export const pagesRouter: ILoadableRoute[] = [
     {
         path: '/book',
@@ -35,16 +37,16 @@ export const pagesRouter: ILoadableRoute[] = [
         key: 3,
         exact: true
     },
-    {
-        path: '/upload',
-        component: Loadable({
-            loader: () => import('../containers/upload/index'),
-            loading: () => null,
-            modules: ['upload']
-        }),
-        key: 4,
-        exact: true
-    },
+    // {
+    //     path: '/upload',
+    //     component: Loadable({
+    //         loader: () => import('../containers/upload/index'),
+    //         loading: () => null,
+    //         modules: ['upload']
+    //     }),
+    //     key: 4,
+    //     exact: true
+    // },
     {
         path: '/book/id/:id',
         component: Loadable({
@@ -59,6 +61,44 @@ export const pagesRouter: ILoadableRoute[] = [
         path: '',
         component: Loadable({
             loader: () => import('../containers/exception/index'),
+            loading: () => null,
+            modules: ['exception']
+        }),
+        key: 300,
+        exact: true
+    }
+];
+
+/** 后台用户登录 */
+export const behindUserRouter: ILoadableRoute[] = [
+    {
+        path: '/admin/:status',
+        component: Loadable({
+            loader: () => import('../containers/admin/login/login'),
+            loading: () => null,
+            modules: ['admin']
+        }),
+        key: 1,
+        exact: true
+    }
+];
+
+/** 后台用户路由 */
+export const behindPagesRouter: ILoadableRoute[] = [
+    {
+        path: '/admin/system/upload',
+        component: Loadable({
+            loader: () => import('../containers/admin/source-upload/source-upload'),
+            loading: () => null,
+            modules: ['upload']
+        }),
+        key: 2,
+        exact: true
+    },
+    {
+        path: '',
+        component: Loadable({
+            loader: () => import('../containers/admin/exception/index'),
             loading: () => null,
             modules: ['exception']
         }),

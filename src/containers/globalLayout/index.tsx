@@ -8,6 +8,8 @@ import { Link } from "react-router-dom";
 import './index.scss';
 import { Layout, Input, Icon, Popover, Row, Col, Tooltip } from 'antd';
 import * as _ from 'lodash';
+import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+import LocalStorageService from 'common/utils/cache/local-storage';
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -19,6 +21,7 @@ type IGlobalLayoutProps = {
 }
 
 class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
+    public localStorageService: LocalStorageService;
     public config: IConfig;
     public childref: any;
 
@@ -29,6 +32,8 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
             headMenus:  _.cloneDeep(headMenus),
             menusContent: this.menusContentList(menusContentConfig),
         };
+
+        this.localStorageService = new LocalStorageService();
 
         this.childref = React.createRef();
     }
@@ -108,7 +113,8 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
         } else if (tag === 'upload') {
-            window.location.href = '/upload';
+            this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'behind' });
+            window.location.href = '/admin/login';
         }
     }
 

@@ -138,6 +138,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
                 // Todo 这一步需要后端接口
                 this.props.updateUserInfo(params);
                 value.remember ? this.rememberPwd(value) : this.forgetPwd();
+                this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'front' });
                 this.props.history.push('/book');
             }
         });
