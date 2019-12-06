@@ -12,5 +12,14 @@ export const api = {
             });
         });
     },
-    login: httpRequest(`POST /project/login`)
+    login: httpRequest(`POST /project/login`),
+    loadTeachingMenu: () => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/teachingMenu', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    }
 };

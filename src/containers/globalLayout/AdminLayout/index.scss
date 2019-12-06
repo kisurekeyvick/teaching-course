@@ -4,10 +4,14 @@
     img.slide-logo {
         width: 200px;
         padding: 11px 0;
-        background-color: #fff;    
+        background-color: #fff;  
     }
 
     .slide-coantainer {
+        .slide-logo-box {
+            background-color: #fff;
+        }
+
         ul.ant-menu {
             li:first-child {
                 margin-top: 0;
@@ -28,6 +32,14 @@
         }
 
         &.collapsed {
+            .slide-logo-box {
+                img.slide-logo {
+                    width: 41px;
+                    margin: 0 auto;
+                    display: block;
+                }
+            }
+
             ul.ant-menu {
                 li {
                     margin-bottom: 0;
@@ -63,5 +75,16 @@
 
     .admin-body {
         padding: 0 24px;
+    }
+
+    .admin-foot {
+        position: fixed;
+        bottom: 0;
+        width: calc(100% - 200px);
+        padding: 12px;
+
+        &.collapsed {
+            width: calc(100% - 80px);
+        }
     }
 }

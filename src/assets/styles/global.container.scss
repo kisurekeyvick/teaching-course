@@ -130,3 +130,16 @@
 @mixin content-container-box {
     min-height: 300px;
 }
+
+/** 页面布局common样式 */
+@mixin commonContainer {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 24px;
+    margin-top: 24px;
+    margin-bottom: 50px;
+
+    &.animateCss {
+        animation: slideInUp 0.5s;
+    }
+}

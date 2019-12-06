@@ -1,4 +1,4 @@
-@import '../../../assets/styles/global.scss';
+@import '../../../assets/styles/global.container.scss';
 
 @mixin borderBottom {
     border-bottom: 1px solid #f1f1f1;
@@ -17,14 +17,7 @@
 }
 
 .upload-container {
-    background-color: #fff;
-    border-radius: 5px;
-    padding: 24px;
-    margin-top: 24px;
-
-    &.animateCss {
-        animation: slideInUp 0.5s;
-    }
+    @include commonContainer;
 
     .title {
         font-size: 25px;

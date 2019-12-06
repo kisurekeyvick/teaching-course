@@ -1,0 +1,13 @@
+@import '../../../assets/styles/global.container.scss';
+
+.directory-manage-container {
+    @include commonContainer;
+
+    .search-box {
+
+    }
+
+    .tree-box {
+
+    }
+}

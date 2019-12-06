@@ -1,6 +1,7 @@
 import loginLogo from 'assets/images/logo.jpg';
 import pageLogo from 'assets/images/logo.jpg';
 import loginBackground from 'assets/images/loginBg.webp';
+import simpleLogo from 'assets/images/simpleLogo.jpg';
 
 /** 当前执行环境 */
 export type CurrentEnv = 'development' | 'production';
@@ -19,6 +20,7 @@ export const env = {
     siderLogo: loginLogo,
     loginLogo,
     pageLogo,
+    simpleLogo,
     loginBackground,
     /** 
      * 接口请求

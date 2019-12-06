@@ -96,6 +96,16 @@ export const behindPagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/admin/system/directoryManage',
+        component: Loadable({
+            loader: () => import('../containers/admin/directory-manage/directory-manage'),
+            loading: () => null,
+            modules: ['directoryManage']
+        }),
+        key: 3,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
             loader: () => import('../containers/admin/exception/index'),
