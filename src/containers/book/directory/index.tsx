@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IDirectoryProps } from '../interface';
 import { Tree } from 'antd';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import './index.scss';
 // menu是本地写死的数据
 import { menu, IMenuItem } from './index.config';
@@ -14,7 +14,7 @@ export default class DirectoryContainer extends React.PureComponent<IDirectoryPr
         super(props);
     
         this.state = {
-            menus: _.cloneDeep(menu)
+            menus: cloneDeep(menu)
         };
     }
 

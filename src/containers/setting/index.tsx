@@ -3,7 +3,7 @@ import { ISettingContainerProps } from './interface';
 import { IHeadTab, headTabs } from './index.config';
 import SettingPersonalContainer from './personal/index';
 import SettingModifyPwdContainer from './modifyPassword/index';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import './index.scss';
 
 interface ISettingContainerState {
@@ -16,7 +16,7 @@ export default class SettingContainer extends React.Component<ISettingContainerP
         super(props);
 
         this.state = {
-            headTabs: _.cloneDeep(headTabs),
+            headTabs: cloneDeep(headTabs),
             currentTab: 'personal'
         };
     }

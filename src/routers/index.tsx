@@ -8,7 +8,7 @@ import AdminLayout from 'containers/globalLayout/AdminLayout/index';
 import { pagesRouter, ILoadableRoute, behindPagesRouter } from './routerList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import {connect} from 'react-redux';
 
 type IProps = {
@@ -28,8 +28,8 @@ class RouteClass extends React.Component<IProps, any> {
         super(props);
 
         this.config = {
-            routes: _.cloneDeep(pagesRouter),
-            behindRoutes: _.cloneDeep(behindPagesRouter) 
+            routes: cloneDeep(pagesRouter),
+            behindRoutes: cloneDeep(behindPagesRouter) 
         };
 
         this.localStorageService = new LocalStorageService();

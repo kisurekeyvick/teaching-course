@@ -25,8 +25,27 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
 
         this.state = {
             collapsed: false,
-            breadcrumb: []
+            breadcrumb: this.initBreadcrumbInfo()
         };
+    }
+
+    public componentDidMount() {
+
+    }
+
+    public initBreadcrumbInfo = (): IMenuItem[] => {
+        const pathname: string = window.location.pathname;
+        const menuLists: IMenuItem[] = this.config.menuList;
+        const result: IMenuItem[] = [];
+
+        for (let i = 0; i < menuLists.length; i++) {
+            if (menuLists[i].path.includes(pathname)) {
+                result.push(menuLists[i]);
+                break;
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -81,7 +100,8 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
         const result: IMenuItem[] = [];
         const keys: string[] = item.key.split('-');
         const repeatKeys = (currentMenu: IMenuItem[], keysIndex: number = 0) => {
-            const target = currentMenu.find((menu: IMenuItem) => menu.key === keys[0]);
+            const matchKeys: string = keys.slice(0, keysIndex + 1).join('-');
+            const target = currentMenu.find((menu: IMenuItem) => menu.key === matchKeys);
             target && (result.push(target));
 
             if (target && keys.length > keysIndex + 1 && target.children.length > 0) {
@@ -128,12 +148,15 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                     <Layout>
                         <Header style={{ background: '#fff', padding: 0}}>
                             <Icon
-                            className="trigger"
+                            className='trigger'
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                             onClick={this.toggle} />
                         </Header>
                         <Content>
-                            { bread }
+                            <div className='admin-bread-box'>
+                                <SvgComponent className='svg-icon' type='icon-breadcrumb' />
+                                { bread }
+                            </div>
                             <div className='admin-body' >
                                 { this.props.children }
                             </div>

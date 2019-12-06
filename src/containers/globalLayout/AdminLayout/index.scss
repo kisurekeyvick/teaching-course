@@ -49,6 +49,18 @@
         }
     }
 
+    .admin-bread-box {
+        padding: 24px 24px 0 24px;
+
+        .svg-icon {
+            margin-right: 5px;
+        }
+
+        .ant-breadcrumb {
+            display: inline-block;
+        }
+    }
+
     .admin-body {
         padding: 0 24px;
     }

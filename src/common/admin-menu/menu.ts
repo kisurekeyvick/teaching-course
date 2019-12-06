@@ -15,19 +15,11 @@ export const menu: IMenuItem[] = [
         tags: 'icon-upload-manage',
         parentKey: null,
         children: [
-            {
-                title: '资源上传',
-                path: '/admin/system/upload',
-                key: '1-1',
-                tags: 'icon-upload-manage',
-                parentKey: '1',
-                children: []
-            }
         ]
     },
     {
         title: '目录管理',
-        path: '/admin/system/treeManage',
+        path: '/admin/system/directoryManage',
         key: '2',
         tags: 'icon-tree-manage',
         parentKey: null,

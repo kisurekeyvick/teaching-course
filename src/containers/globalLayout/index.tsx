@@ -7,7 +7,7 @@ import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig 
 import { Link } from "react-router-dom";
 import './index.scss';
 import { Layout, Input, Icon, Popover, Row, Col, Tooltip } from 'antd';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 
@@ -29,7 +29,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
         super(props);
 
         this.config = {
-            headMenus:  _.cloneDeep(headMenus),
+            headMenus:  cloneDeep(headMenus),
             menusContent: this.menusContentList(menusContentConfig),
         };
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Input, Button, Icon, Row, Col } from 'antd';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import './login.scss';
@@ -31,7 +31,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
         this.localStorageService = new LocalStorageService();
 
         this.config = {
-            loginFormItem: _.cloneDeep(AdminLoginFormItem)
+            loginFormItem: cloneDeep(AdminLoginFormItem)
         };
 
         const { offsetHeight, offsetWidth } = getScreenInfo();

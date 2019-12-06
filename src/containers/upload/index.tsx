@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IUploadContainerProps } from './interface';
 import { IFormItem, formItems, IBtnGroupOptions, typeOptions } from './index.config';
 import { Form, Button, Icon, Input, Upload, message } from 'antd';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { api } from 'common/api/index';
 import './index.scss';
 
@@ -18,7 +18,7 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
 
         this.state = {
             fileList: [],
-            typeOptions: _.cloneDeep(typeOptions),
+            typeOptions: cloneDeep(typeOptions),
             typeSelected: false,
             imageUrl: '',
             loading: false,
@@ -27,7 +27,7 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
         };
 
         this.config = {
-            formItems: _.cloneDeep(formItems)
+            formItems: cloneDeep(formItems)
         }
     }
 

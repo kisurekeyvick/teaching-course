@@ -4,7 +4,7 @@ import { filterConfig, IFilterConfigItem, booklist, imgList } from './index.conf
 import { Divider, Radio, Icon, Rate, Popover } from 'antd';
 import { PageComponent, IPageComponnetProps } from 'components/pagination/index';
 import QrcodeComponent from 'components/qrcode/index';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import './index.scss';
 import { IBookListProps } from '../interface';
 import { SvgComponent } from 'components/icon/icon';
@@ -17,7 +17,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
             /** 资源格式 */
             format: '',
             /** 搜索条件 */
-            filterConfig: _.cloneDeep(filterConfig),
+            filterConfig: cloneDeep(filterConfig),
             /** 教材列表 */
             booklist: [],
             /** 分页 */

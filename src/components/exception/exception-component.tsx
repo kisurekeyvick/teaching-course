@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Button } from 'antd';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { exceptionConfig, IExceptionConfig } from './exception-config';
 import './exception-component.scss';
 
@@ -17,7 +17,7 @@ export default class ExceptionComponent extends React.PureComponent<any, any> {
         super(props);
 
         this.config = {
-            exception: _.cloneDeep(exceptionConfig)
+            exception: cloneDeep(exceptionConfig)
         };
     }
 

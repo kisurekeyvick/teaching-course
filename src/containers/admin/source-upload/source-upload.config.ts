@@ -24,9 +24,16 @@ export const formItems: IFormItem[] = [
         state: 'fileList',
     },
     {
+        label: '教材上传节点',
+        key: '2',
+        controlName: 'button',
+        controlType: 'tree',
+        state: 'location',
+    },
+    {
         label: '标题',
         placeholder: '请输入标题',
-        key: '2',
+        key: '3',
         rules: [
             {
                 required: true,
@@ -40,14 +47,14 @@ export const formItems: IFormItem[] = [
     {
         label: '描述',
         placeholder: '请输入描述',
-        key: '3',
+        key: '4',
         controlName: 'input',
         controlType: 'textarea',
         state: 'desc'
     },
     {
         label: '分类',
-        key: '4',
+        key: '5',
         controlName: 'btn-group',
         state: 'type'
     }
