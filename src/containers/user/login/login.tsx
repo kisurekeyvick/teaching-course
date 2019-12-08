@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Form, Input, Button, Checkbox, Icon, Row, Col} from 'antd';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IForm, loginFormItem } from './login-config';
 import { CookieService } from 'common/utils/cache/cookie';
@@ -35,7 +35,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
         };
 
         this.config = {
-            loginFormItem: _.cloneDeep(loginFormItem),
+            loginFormItem: cloneDeep(loginFormItem),
             tabIndex: '1'
         };
 
@@ -138,6 +138,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
                 // Todo 这一步需要后端接口
                 this.props.updateUserInfo(params);
                 value.remember ? this.rememberPwd(value) : this.forgetPwd();
+                this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'front' });
                 this.props.history.push('/book');
             }
         });

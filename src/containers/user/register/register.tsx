@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Form, Input, Button, Icon, Row, Col, Select, Popover, Progress} from 'antd';
 import { Link } from "react-router-dom";
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import { IForm, registerForm } from './register-config';
 import { validTelePhone, vaildEmail } from '../../../common/utils/validator';
 import './register.scss';
@@ -25,7 +25,7 @@ class UserRegister extends React.PureComponent<any, any> {
         };
 
         this.config = {
-            registerForm: this.rebuildFormItem(_.cloneDeep(registerForm))
+            registerForm: this.rebuildFormItem(cloneDeep(registerForm))
         };
     }
 

@@ -1,0 +1,90 @@
+@import '../../../assets/styles//global.scss';
+
+.admin-layout {
+    img.slide-logo {
+        width: 200px;
+        padding: 11px 0;
+        background-color: #fff;  
+    }
+
+    .slide-coantainer {
+        .slide-logo-box {
+            background-color: #fff;
+        }
+
+        ul.ant-menu {
+            li:first-child {
+                margin-top: 0;
+            }
+
+            li {
+                display: block;
+
+                .svg-icon {
+                    color: #fff;
+                    font-size: 18px;
+                }
+            }
+
+            span, a {
+                display: inline-block;
+            }
+        }
+
+        &.collapsed {
+            .slide-logo-box {
+                img.slide-logo {
+                    width: 41px;
+                    margin: 0 auto;
+                    display: block;
+                }
+            }
+
+            ul.ant-menu {
+                li {
+                    margin-bottom: 0;
+    
+                    a {
+                        display: block;
+                        height: 100%;
+                        width: 100%;
+                        float: left;
+                    }
+                }
+    
+                .svg-icon {
+                    display: block;
+                    height: 40px;
+                    line-height: 40px;
+                }
+            }
+        }
+    }
+
+    .admin-bread-box {
+        padding: 24px 24px 0 24px;
+
+        .svg-icon {
+            margin-right: 5px;
+        }
+
+        .ant-breadcrumb {
+            display: inline-block;
+        }
+    }
+
+    .admin-body {
+        padding: 0 24px;
+    }
+
+    .admin-foot {
+        position: fixed;
+        bottom: 0;
+        width: calc(100% - 200px);
+        padding: 12px;
+
+        &.collapsed {
+            width: calc(100% - 80px);
+        }
+    }
+}

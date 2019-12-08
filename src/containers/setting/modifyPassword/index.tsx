@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { IFormItem, formItems } from './index.config';
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash';
 import './index.scss';
 
 interface IConfig {
@@ -15,7 +15,7 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
         super(props);
 
         this.config = {
-            formItems: this.rebuildFormItem(_.cloneDeep(formItems))
+            formItems: this.rebuildFormItem(cloneDeep(formItems))
         }
     }
 

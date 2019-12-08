@@ -1,0 +1,69 @@
+@import '../../../assets/styles/global.container.scss';
+
+.directory-manage-container {
+    @include commonContainer;
+
+    .operation-box {
+        .operation-box-col {
+            margin-bottom: 20px;
+
+            .add-course-btn {
+                cursor: pointer;
+                color: $color;
+                display: inline-block;
+
+                .add-course-svg {
+                    margin-right: 5px;
+                    font-size: 17px;
+                    margin-top: 3px;
+                    float: left;
+                }
+            }
+        }
+    }
+
+    .table-box {
+        .table-operation-box {
+            p {
+                display: inline-block;
+                cursor: pointer;
+                margin: 0 12px;
+
+                &:first-child {
+                    margin-left: 0;
+                }
+
+                &:hover {
+                    color: $color;
+                }
+            }
+
+            .operation-box-icon {
+                margin-right: 5px;
+            }
+
+            & > span {
+                cursor: pointer;
+
+                &:hover {
+                    color: $color;
+                }
+            }
+        }
+    }
+}
+
+#components-back-top-demo-custom .ant-back-top {
+    bottom: 100px;
+  }
+  
+  #components-back-top-demo-custom .ant-back-top-inner {
+    height: 40px;
+    width: 40px;
+    line-height: 40px;
+    border-radius: 4px;
+    background-color: #1088e9;
+    color: #fff;
+    text-align: center;
+    font-size: 20px;
+  }

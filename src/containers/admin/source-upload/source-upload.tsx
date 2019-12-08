@@ -1,10 +1,11 @@
 import * as React from 'react';
-import { IUploadContainerProps } from './interface';
-import { IFormItem, formItems, IBtnGroupOptions, typeOptions } from './index.config';
+import { IUploadContainerProps } from '../interface';
+import { IFormItem, formItems, IBtnGroupOptions, typeOptions } from './source-upload.config';
 import { Form, Button, Icon, Input, Upload, message } from 'antd';
 import { cloneDeep } from 'lodash';
 import { api } from 'common/api/index';
-import './index.scss';
+import { TreeModalContainer, ITreeModalProps } from './tree-Modal';
+import './source-upload.scss';
 
 interface IConfig {
     formItems: IFormItem[]
@@ -21,9 +22,15 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
             typeOptions: cloneDeep(typeOptions),
             typeSelected: false,
             imageUrl: '',
+            /** 节点位置 */
+            location: '',
             loading: false,
             uploadControlError: false,
-            typeControlError: false
+            typeControlError: false,
+            /** 上传节点出错 */
+            uploadLocationError: false,
+            /** 展示tree节点弹窗 */
+            treeModalVisible: false
         };
 
         this.config = {
@@ -60,12 +67,33 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
     }
 
     /** 
+     * @callback
+     * @desc 显示隐藏tree弹窗
+     */
+    public handleTreeModalClick = (visible: boolean) => {
+        this.setState({
+            treeModalVisible: visible
+        });
+    }
+
+    /** 
+     * @callback
+     * @desc 处理点击后关闭tree组件后
+     */
+    public handeTreeModalCallBack = (callbackParams: any) => {
+        this.setState({
+            location: callbackParams
+        });
+        this.handleTreeModalClick(false);
+    }
+
+    /** 
      * @func
      * @desc 构建表单
      */
     public createForm = (formItems: IFormItem[]): React.ReactNode => {
         const { getFieldDecorator } = this.props.form;
-        const { uploadControlError, typeControlError } = this.state;
+        const { uploadControlError, typeControlError, uploadLocationError } = this.state;
 
         const formItemLayout = {
             labelCol: {
@@ -125,6 +153,12 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
                                     return control;
                                 }
 
+                                if (item.controlName === 'button') {
+                                    control = <Button type='primary' onClick={() => this.handleTreeModalClick(true)}>选择节点</Button>
+
+                                    return control;
+                                }
+
                                 if (item.controlName === 'btn-group') {
                                     control = (this.state.typeOptions as Array<IBtnGroupOptions>).map((item: IBtnGroupOptions) => {
                                         const type = item.selected ? 'primary' : 'default';
@@ -145,13 +179,14 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
                                             })(Control) :
                                             Control
                                         }
+                                        { item.controlName === 'button' && uploadLocationError && <div className='ant-form-explain'>请选择上传节点</div> }
                                         { item.controlName === 'upload' && uploadControlError && <div className='ant-form-explain'>请上传教材</div> }
                                         { item.controlName === 'btn-group' && typeControlError && <div className='ant-form-explain'>请选择分类</div> }
                                     </Form.Item>
                         })
                     } 
                     <Form.Item className='submit-form-item' {...submitFormItemLayout}>
-                        <Button type="primary" htmlType="submit">发布</Button>
+                        <Button type="primary" htmlType="submit">提交</Button>
                     </Form.Item>
                 </Form>
     }
@@ -178,19 +213,21 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
      * @desc 验证特殊控件是否有效
      */
     public validSpecialControl = (): boolean => {
-        const state: { uploadControlError: boolean, typeControlError: boolean } = {
+        const state: { uploadControlError: boolean, typeControlError: boolean, uploadLocationError: boolean } = {
             uploadControlError: false,
-            typeControlError: false
+            typeControlError: false,
+            uploadLocationError: false
         };
 
         state.uploadControlError = this.state.fileList.length === 0;
         state.typeControlError = !this.state.typeSelected;
+        state.uploadLocationError = !this.state.location;
 
         this.setState({
             ...state
         });
 
-        return !(state.uploadControlError && state.typeControlError);
+        return !(state.uploadControlError && state.typeControlError && state.uploadLocationError);
     }
 
     /** 
@@ -210,10 +247,16 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
     }
 
     public render() {
+        const treeModalProps: ITreeModalProps = {
+            handleClick: this.handeTreeModalCallBack
+        };
+
         return <div className='upload-container animateCss'>
-                    <p className='title'>上传</p>
                     <div className='upload-content'>
                         { this.createForm(this.config.formItems) }
+                    </div>
+                    <div className=''>
+                        { this.state.treeModalVisible && <TreeModalContainer {...treeModalProps}/> }
                     </div>
                 </div>
     }
