@@ -1,4 +1,4 @@
-import loginLogo from 'assets/images/loginLogo.png';
+import loginLogo from 'assets/images/logo.jpg';
 import siderLogo from 'assets/images/siderLogo.png';
 import pageLogo from 'assets/images/siderLogo.png';
 
