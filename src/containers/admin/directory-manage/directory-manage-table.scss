@@ -7,15 +7,9 @@
         .operation-box-col {
             margin-bottom: 20px;
 
-            .add-course-btn {
-                cursor: pointer;
-                color: $color;
-                display: inline-block;
-
+            .btn-addCourse {
                 .add-course-svg {
-                    margin-right: 5px;
-                    font-size: 17px;
-                    margin-top: 3px;
+                    margin-top: 4px;
                     float: left;
                 }
             }
@@ -48,6 +42,11 @@
                 &:hover {
                     color: $color;
                 }
+            }
+
+            .cancel-svg {
+                margin-top: 3px;
+                float: left;
             }
         }
     }

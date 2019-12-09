@@ -2,7 +2,7 @@ import * as React from 'react';
 import { env } from 'environment/index';
 import {connect} from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { Layout, Menu, Icon, Breadcrumb, BackTop } from 'antd';
+import { Layout, Menu, Icon, Breadcrumb } from 'antd';
 import { menu, IMenuItem } from 'common/admin-menu/menu';
 import { SvgComponent } from 'components/icon/icon';
 import { Link } from "react-router-dom";
@@ -141,7 +141,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                             }}
                             className={`slide-coantainer ${this.state.collapsed ? 'collapsed' : ''}`} trigger={null} collapsible collapsed={this.state.collapsed}>
                         <div className='slide-logo-box'>
-                            <img className='slide-logo' src={this.state.collapsed ? env.simpleLogo : env.siderLogo} />
+                            <img className='slide-logo' alt='slide-logo' src={this.state.collapsed ? env.simpleLogo : env.siderLogo} />
                         </div>
                         <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
                             { menuList }
