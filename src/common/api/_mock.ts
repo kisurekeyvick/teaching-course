@@ -204,3 +204,53 @@ export const mockCourseDirectory_api = Mock.mock('/api/courseDirectory', 'post',
         }
     ];
 });
+
+export const mockSearchResult_api = Mock.mock('/api/searchResult', 'post', () => {
+    return [
+        {
+            title: '城市轨道交通车辆',
+            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
+            id: 1,
+            createTime: '2017-10-01 18:00',
+            contributors: '林东东',
+            directory: '系统概论>第一课>第一讲',
+            userImg: ''
+        },
+        {
+            title: '城市轨道交通车辆',
+            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
+            id: 2,
+            createTime: '2017-10-01 18:00',
+            contributors: '林东东',
+            directory: '系统概论>第一课>第一讲',
+            userImg: ''
+        },
+        {
+            title: '城市轨道交通车辆',
+            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
+            id: 3,
+            createTime: '2017-10-01 18:00',
+            contributors: '林东东',
+            directory: '系统概论>第一课>第一讲',
+            userImg: ''
+        },
+        {
+            title: '城市轨道交通车辆',
+            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
+            id: 4,
+            createTime: '2017-10-01 18:00',
+            contributors: '林东东',
+            directory: '系统概论>第一课>第一讲',
+            userImg: ''
+        },
+        {
+            title: '城市轨道交通车辆',
+            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
+            id: 5,
+            createTime: '2017-10-01 18:00',
+            contributors: '林东东',
+            directory: '系统概论>第一课>第一讲',
+            userImg: ''
+        }
+    ]
+});

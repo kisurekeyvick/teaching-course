@@ -30,5 +30,14 @@ export const api = {
                 reject(error);
             });
         });
-    }
+    },
+    loadSearchResult: (param?: any) => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/searchResult', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    },
 };

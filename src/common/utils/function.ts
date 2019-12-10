@@ -25,6 +25,10 @@ export function getScreenInfo() {
     return { offsetHeight, offsetWidth }
 }
 
+export const isType = (obj: any) => Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
+export const isArray = (obj: any) => Array.isArray(obj) || isType(obj) === 'array';
+export  const isNullOrUndefined = (obj: any) => obj === null || obj === undefined;
+
 /**
  * @desc 节流
  * @param fn 

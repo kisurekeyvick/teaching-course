@@ -10,6 +10,7 @@ import { Layout, Input, Icon, Popover, Row, Col, Tooltip } from 'antd';
 import { cloneDeep } from 'lodash';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import LocalStorageService from 'common/utils/cache/local-storage';
+import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -44,6 +45,19 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
      */
     public searchBook = (e: string) => {
         this.props.searchBookContent(e);
+
+        console.log('this.props', this.props);
+
+        if (window.location.pathname !== '/search/result') {
+            /** 跳转至搜索结果页 */
+            window.location.href = '/search/result';
+        }
+
+        globalEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, {
+            searchBook: e
+        });
+
+        // console.log('全局的东西');
     }
 
     /** 
@@ -126,7 +140,9 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                     <div className='global-head'>
                         <div className='global-head-left'>
                             <img alt='logo' src={env.pageLogo}/>
-                            <Link className='link-item' to='/book'>首页</Link>
+                            <Link className='link-item' to='/book'>课程资源</Link>
+                            <Link className='link-item' to='/collection'>收藏</Link>
+                            <Link className='link-item' to='/search/result'>检索</Link>
                         </div>
                         <div className='global-head-right'>
                             <Search className='search-control' placeholder='搜索教材' onSearch={this.searchBook}/>

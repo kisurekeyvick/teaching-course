@@ -16,6 +16,11 @@ $errorColor: #FF5B5B;
 $errorBorderColor: #FF5B5B;
 $errorContent: #FFEBEB;
 $iconRed: #FF5B5B;
+$borderBottomColor: rgba(151, 151, 151, 0.1);
+
+@mixin smallsize {
+  font-size: 12px;
+}
 
 @mixin border($width:1px, $style: solid) {
     border-width: $width;

@@ -37,16 +37,6 @@ export const pagesRouter: ILoadableRoute[] = [
         key: 3,
         exact: true
     },
-    // {
-    //     path: '/upload',
-    //     component: Loadable({
-    //         loader: () => import('../containers/upload/index'),
-    //         loading: () => null,
-    //         modules: ['upload']
-    //     }),
-    //     key: 4,
-    //     exact: true
-    // },
     {
         path: '/book/id/:id',
         component: Loadable({
@@ -55,6 +45,16 @@ export const pagesRouter: ILoadableRoute[] = [
             modules: ['bookDetail']
         }),
         key: 4,
+        exact: true
+    },
+    {
+        path: '/search/result',
+        component: Loadable({
+            loader: () => import('../containers/user/search-result/search-result'),
+            loading: () => null,
+            modules: ['searchResult']
+        }),
+        key: 5,
         exact: true
     },
     {

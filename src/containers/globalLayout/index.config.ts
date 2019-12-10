@@ -40,11 +40,11 @@ export interface IConfig {
         [key: string]: React.ReactNode
     };
     [key: string]: any;
-}
+};
 
 export interface IMenusContentConfig {
     user: Array<{ name: string, value: string, key: string }>
-}
+};
 
 export const menusContentConfig = {
     user: [
@@ -59,4 +59,4 @@ export const menusContentConfig = {
             key: '2'
         }
     ]
-}
+};

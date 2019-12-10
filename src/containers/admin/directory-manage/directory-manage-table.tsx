@@ -73,7 +73,9 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 保存所有修改的课程数据
      */
     public saveAllCourse = (key: string) => {
+        notification.close(key);
 
+        this.loadTeachingMenu();
     }
 
     /** 
@@ -432,10 +434,9 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 <div className='operation-box'>
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
-                            <Button.Group>
-                                <Button className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
-                                <Button className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
-                            </Button.Group>
+                            <Button type='primary' className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
+                            <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存</Button>
+                            <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Search style={{ marginBottom: 8 }} placeholder='输入内容快速定位教材目录节点' onChange={this.handleInputSearch} />

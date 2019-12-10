@@ -1,5 +1,5 @@
 /**
- * 本地存储字段
+ * @desc 本地存储字段
  */
 export enum LocalStorageItemName {
     /** 前台登录信息缓存 */
