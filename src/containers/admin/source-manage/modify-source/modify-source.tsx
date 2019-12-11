@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Button, Col, Row, Input, Select, Radio, message, Upload, Icon } from 'antd';
-import { IFormParams, IConfig, IRules, rules, IModifySourceProps } from './modify-source.config';
+import { IFormParams, IConfig, rules, IModifySourceProps } from './modify-source.config';
 import { dictionary, IDictionaryItem } from 'common/dictionary/index';
 import { api } from 'common/api/index';
 import './modify-source.scss';

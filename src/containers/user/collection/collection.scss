@@ -1,0 +1,66 @@
+@import '../../../assets/styles/global.container.scss';
+
+.colleaction-container {
+    @include commonContainer;
+    height: 100%;
+    background-color: transparent;
+    margin-top: 0;
+
+    .collection-item {
+        border-radius: 5px;
+        font-size: 12px;
+        padding: 12px;
+        cursor: pointer;
+        background-color: #fff;
+        margin-bottom: 24px;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.09);
+
+        &:hover {
+
+        }
+
+        .collection-item-top {
+            margin-bottom: 12px;
+
+            label {
+                font-size: 13px;
+            }
+        }
+
+        p.describle {
+            color:rgba(0,0,0,0.45);
+        }
+
+        .collection-item-bottom {
+
+            .bottom-right {
+                text-align: right;
+                z-index: 100;
+
+                .download-btn {
+                    color: $color
+                }
+
+                .svg-component {
+                    color: $iconRed;
+                    margin-right: 8px;
+                    margin-top: -5px;
+                }
+            }
+        }
+    }
+
+    .no-data {
+        img {
+            width: 300px;
+            margin: 0 auto;
+            display: block;
+        }
+
+        p {
+            text-align: center;
+            margin-top: 48px;
+            margin-bottom: 0;
+        }
+    }
+}

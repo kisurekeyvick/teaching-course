@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { api } from 'common/api/index';
 import { cloneDeep } from 'lodash';
-import { Table, Input, Divider, Icon, Row, Col, Popconfirm, BackTop, Skeleton, Form, notification, Button} from 'antd';
+import { Table, Input, Divider, Icon, Row, Col, Popconfirm, BackTop, Skeleton, Form, notification, Button, message } from 'antd';
 import { columns, IConfig, ITableRecord, addCourseFieldTemplate } from './directory-manage-config';
 import { SvgComponent } from 'components/icon/icon';
 import './directory-manage-table.scss';
@@ -344,6 +344,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     }
 
     public loadTeachingMenu(params = {}) {
+        message.loading('加载数据中', 2);
+
         this.setState({
             isLoading: true
         });
@@ -355,6 +357,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     hasData: res.data.length > 0,
                     isLoading: false
                 });
+
+                message.info('加载完成');
             }
         });
     }

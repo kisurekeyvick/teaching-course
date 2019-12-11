@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { Divider, Skeleton, Tag, Row, Col } from 'antd';
+import { Divider, Skeleton, Tag, Row, Col, message } from 'antd';
 import { IDataSource, IConfig } from './search-result.config';
 import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
 import { api } from 'common/api/index';
@@ -62,6 +62,8 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
      * @desc 加载修改结果
      */
     public loadSearchResult = (params = {}) => {
+        message.loading('加载数据中', 2);
+
         this.setState({
             isLoading: true
         });
@@ -78,6 +80,8 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     hasData: dataSource.length > 0,
                     isLoading: false
                 });
+
+                message.info('加载完成');
             }
         });
     }
@@ -164,17 +168,23 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     <span className={`${searchType === 'month' ? 'selected' : ''}`} onClick={() => this.handleSpanClick('month')}>三月内</span>
                 </div>
                 <div className='search-result-content'>
-                    <Skeleton active loading={isLoading} paragraph={{ rows: 10 }}>
-                        <Tag className='source-result-tag' color="blue">共找到{dataSource.length}个结果</Tag>
-                        <div className='content-items-box'>
-                            { this.buildResultItems() }
-                        </div>
-                        {
-                            dataSource.length > 0 && <div className='source-result-pagination'>
-                                <PageComponent {...pageComponentProps}/>
+                    {
+                        isLoading ? <>
+                            <Skeleton active/>
+                            <Skeleton active/>
+                            <Skeleton active/>
+                        </> : <>
+                            <Tag className='source-result-tag' color="blue">共找到{dataSource.length}个结果</Tag>
+                            <div className='content-items-box'>
+                                { this.buildResultItems() }
                             </div>
-                        }
-                    </Skeleton>
+                            {
+                                dataSource.length > 0 && <div className='source-result-pagination'>
+                                    <PageComponent {...pageComponentProps}/>
+                                </div>
+                            }
+                        </>
+                    }
                 </div>
             </div>
         )

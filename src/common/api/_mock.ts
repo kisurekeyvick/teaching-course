@@ -301,3 +301,72 @@ export const mockSourceManageResult_api = Mock.mock('/api/sourceManageResult', '
         },
     ]
 });
+
+export const mockCollectionResult_api = Mock.mock('/api/collection', 'post', () => {
+    return [
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '1',
+            id: 1
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '2',
+            id: 2
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '3',
+            id: 3
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '4',
+            id: 4
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '5',
+            id: 5
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '6',
+            id: 6
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '7',
+            id: 7
+        },
+        {
+            size: '100KB',
+            title: '轨道交通',
+            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
+            url: '',
+            type: '8',
+            id: 8
+        }
+    ];
+});

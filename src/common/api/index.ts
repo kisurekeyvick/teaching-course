@@ -49,4 +49,13 @@ export const api = {
             });
         });
     },
+    loadCollectionResult: (param?: any) => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/collection', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    },
 };

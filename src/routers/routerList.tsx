@@ -58,6 +58,16 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/collection',
+        component: Loadable({
+            loader: () => import('../containers/user/collection/collection'),
+            loading: () => null,
+            modules: ['collection']
+        }),
+        key: 5,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
             loader: () => import('../containers/exception/index'),
@@ -113,6 +123,16 @@ export const behindPagesRouter: ILoadableRoute[] = [
             modules: ['sourceManage']
         }),
         key: 4,
+        exact: true
+    },
+    {
+        path: '/admin/system/state',
+        component: Loadable({
+            loader: () => import('../containers/admin/system-status/system-status'),
+            loading: () => null,
+            modules: ['systemStatus']
+        }),
+        key: 6,
         exact: true
     },
     {
