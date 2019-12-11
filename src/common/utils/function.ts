@@ -30,6 +30,17 @@ export const isArray = (obj: any) => Array.isArray(obj) || isType(obj) === 'arra
 export  const isNullOrUndefined = (obj: any) => obj === null || obj === undefined;
 
 /**
+ * @desc 获取图片的base64
+ * @param img 
+ * @param callback 
+ */
+export function getBase64(img: Blob, callback: Function) {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+}
+
+/**
  * @desc 节流
  * @param fn 
  * @param time 

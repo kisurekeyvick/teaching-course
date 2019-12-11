@@ -4,7 +4,8 @@ export const columns = [
         dataIndex: 'name',
         key: 'name',
         ellipsis: true,
-        editable: true
+        editable: true,
+        width: '250px'
     },
     {
         title: '操作',

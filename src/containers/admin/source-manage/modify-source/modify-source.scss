@@ -1,0 +1,30 @@
+@import '../../../../assets/styles/global.container.scss';
+
+.souce-manage-modify-form {
+    .course-cover {
+        .ant-form-item-label {
+            &>label {
+                @include require;
+            }   
+        }
+    }
+
+    .ant-form-explain {
+        clear: both;
+        min-height: 22px;
+        margin-top: -2px;
+        font-size: 14px;
+        line-height: 1.5;
+        color: #f5222d;
+        transition: color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    .button-group {
+        text-align: right;
+        margin-bottom: 0;
+
+        .form-button {
+            margin-left: 12px;
+        }
+    }
+}

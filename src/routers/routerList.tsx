@@ -106,6 +106,16 @@ export const behindPagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/admin/system/sourceManage',
+        component: Loadable({
+            loader: () => import('../containers/admin/source-manage/source-manage'),
+            loading: () => null,
+            modules: ['sourceManage']
+        }),
+        key: 4,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
             loader: () => import('../containers/admin/exception/index'),

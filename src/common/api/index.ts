@@ -40,4 +40,13 @@ export const api = {
             });
         });
     },
+    loadSourceManageResult: (param?: any) => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/sourceManageResult', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    },
 };
