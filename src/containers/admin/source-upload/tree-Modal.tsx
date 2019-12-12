@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { Modal, Tree } from 'antd';
-import { menu, IMenuItem } from 'containers/book/directory/index.config';
-import { cloneDeep } from 'lodash';
+import { Modal, Tree, Skeleton } from 'antd';
+import { IMenuItem } from 'containers/book/directory/index.config';
+import { api } from 'common/api/index';
 
 export interface ITreeModalProps {
     handleClick: Function;
@@ -13,7 +13,9 @@ interface ICommon {
 }
 
 interface IState {
-    menus: Array<IMenuItem>
+    menus: Array<IMenuItem>;
+    isLoading: boolean;
+    hasData: boolean;
 }
 
 interface ITreeModalConfig extends ICommon {
@@ -29,12 +31,40 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
         super(props);
 
         this.state = {
-            menus: cloneDeep(menu)
+            menus: [],
+            isLoading: false,
+            hasData: false
         };
 
         this.config = {
             currentNode: null
         };
+    }
+
+    public componentDidMount() {
+        this.loadMenu();
+    }
+
+    /** 
+     * @func
+     * @desc 加载目录菜单
+     */
+    public loadMenu = () => {
+        this.setState({
+            isLoading: true
+        });
+
+        api.loadTeachingMaterialDirectory().then((res: any) => {
+            if (res.status === 200) {
+                const menus = res.data;
+
+                this.setState({
+                    menus,
+                    hasData: menus.length > 0,
+                    isLoading: false
+                });
+            }
+        });
     }
 
     /** 
@@ -72,6 +102,8 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
     }
 
     public render() {
+        const { isLoading } = this.state;
+
         return <div>
                     <Modal 
                         title='课程节点选取' 
@@ -81,7 +113,12 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
                         okText='确认'
                         cancelText='取消'>
                             <div className='tree-menu'>
-                                { this.buidlTree() }
+                                {
+                                    isLoading ? <>
+                                        <Skeleton active/>
+                                        <Skeleton active/>
+                                    </> : this.buidlTree()
+                                }
                             </div>
                     </Modal>
                 </div>

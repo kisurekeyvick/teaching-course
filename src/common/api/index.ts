@@ -58,4 +58,22 @@ export const api = {
             });
         });
     },
+    loadTeachingMaterialDirectory: (param?: any) => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/directory', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    },
+    loadBookList: (param?: any) => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/booklist', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    },
 };

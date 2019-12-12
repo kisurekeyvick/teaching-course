@@ -31,7 +31,7 @@ $iconBgColor: #b2bac2;
 $hoverIconBgColor: #6e6e6f;
 
 .book-detail-icon-audio {
-    color: $mainColor !important;
+    color: $color !important;
 }
 
 .book-detail-container {
@@ -223,10 +223,10 @@ $hoverIconBgColor: #6e6e6f;
 
                     p {
                         .icon {
-                            background-color: $secondMainColor;
+                            background-color: $secondBgColor;
                             border-radius: 50%;
                             padding: 5px;
-                            color: $mainColor;
+                            color: $color;
                             margin-right: 8px;
                         }
 

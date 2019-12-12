@@ -1,4 +1,5 @@
 import * as Mock from 'mockjs';
+import picture from 'assets/images/timg.jpg';
 
 /** 设置mock延迟时间 */
 Mock.setup({timeout: '1000-2500'});
@@ -369,4 +370,115 @@ export const mockCollectionResult_api = Mock.mock('/api/collection', 'post', () 
             id: 8
         }
     ];
+});
+
+export const mockDirectoryResult_api = Mock.mock('/api/directory', 'post', () => {
+    return [
+        { 
+            name: '目录',
+            key: '1',
+            value: 'one',
+            children: []
+        },
+        {
+            name: '入学教育',
+            key: '2',
+            value: 'two',
+            children: [],
+        },
+        {
+            name: '识字(一)',
+            key: '3',
+            value: 'three',
+            children: [
+                {
+                    name: '一去二三里',
+                    key: '31',
+                    value: 'three-one',
+                    children: []
+                },
+                {
+                    name: '口耳目',
+                    key: '32',
+                    value: 'three-two',
+                    children: []
+                },
+                {
+                    name: '在家里',
+                    key: '33',
+                    value: 'three-three',
+                    children: []
+                }
+            ]
+        },
+        {
+            name: '课程(一)',
+            key: '4',
+            value: 'four',
+            children: [
+                {
+                    name: '画',
+                    key: '41',
+                    value: 'four-one',
+                    children: []
+                },
+                {
+                    name: '四季',
+                    key: '42',
+                    value: 'four-two',
+                    children: []
+                }
+            ]
+        }
+    ]
+});
+
+export const mockBookListResult_api = Mock.mock('/api/booklist', 'post', () => {
+    return [
+        {
+            title: '一去二三里-资源包',
+            rate: 4.2,
+            pic: picture,
+            desc: '本资源为《一去二三里》的资源包，包含本科的教学设计，可见，习题，素材类型的推荐资源',
+            createTime: '2019年09月02日',
+            size: '11.59MB',
+            viewCount: '24085',
+            downloadCount: '63708',
+            contributors: 'nice fish',
+            currentCount: '319',
+            type: 'zip',
+            qrcode: 'https://juejin.im',
+            id: 1
+        },
+        {
+            title: '人教-上语文《四季》课件',
+            rate: 4.4,
+            pic: picture,
+            desc: '本资源为《一去二三里》的资源包，包含本科的教学设计，可见，习题，素材类型的推荐资源',
+            createTime: '2019年09月02日',
+            size: '11.59MB',
+            viewCount: '24085',
+            downloadCount: '63708',
+            contributors: 'nice fish',
+            currentCount: '119',
+            type: 'ppt',
+            qrcode: 'https://juejin.im',
+            id: 2
+        },
+        {
+            title: '哪座房子最漂亮',
+            rate: 4.6,
+            pic: picture,
+            desc: '',
+            createTime: '2019年09月02日',
+            size: '63.5KB',
+            viewCount: '24085',
+            downloadCount: '63708',
+            contributors: 'nice fish',
+            currentCount: '219',
+            type: 'doc',
+            qrcode: 'https://juejin.im',
+            id: 3
+        },
+    ]
 });

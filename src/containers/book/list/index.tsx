@@ -1,15 +1,25 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { filterConfig, IFilterConfigItem, booklist, imgList } from './index.config';
-import { Divider, Radio, Icon, Rate, Popover } from 'antd';
-import { PageComponent, IPageComponnetProps } from 'components/pagination/index';
+import { filterConfig, IFilterConfigItem, imgList } from './index.config';
+import { Divider, Radio, Icon, Rate, Popover, Skeleton, message } from 'antd';
+import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
 import QrcodeComponent from 'components/qrcode/index';
 import { cloneDeep } from 'lodash';
 import './index.scss';
 import { IBookListProps } from '../interface';
 import { SvgComponent } from 'components/icon/icon';
+import { api } from 'common/api/index';
 
-class BookListContainer extends React.PureComponent<IBookListProps, any> {
+interface IState {
+    format: string;
+    filterConfig: any;
+    booklist: any[];
+    pageInfo: IPageInfo;
+    hasData: boolean;
+    isLoading: boolean;
+}
+
+class BookListContainer extends React.PureComponent<IBookListProps, IState> {
     constructor(public props: IBookListProps) {
         super(props);
 
@@ -28,7 +38,9 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
                 rowCount: 0,
                 totalCount: 0,
                 pageSizeOptions:['10', '20', '30', '40', '50']
-            }
+            },
+            hasData: false,
+            isLoading: false
         };
     }
 
@@ -41,8 +53,24 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
      * @desc 加载book列表
      */
     public loadBookList = () => {
+        message.loading('加载数据中', 2);
+
         this.setState({
-            booklist: booklist
+            isLoading: true
+        });
+
+        api.loadBookList().then((res: any) => {
+            if (res.status === 200) {
+                const booklist = res.data;
+
+                this.setState({
+                    booklist,
+                    hasData: booklist.length > 0,
+                    isLoading: false
+                });
+
+                message.info('加载完成');
+            }
         });
     }
 
@@ -156,6 +184,8 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
             pageChange: this.pageChange
         };
 
+        const { format, booklist, hasData, isLoading } = this.state;
+
         return <div className='book-list'>
                     <div className='filter-box'>
                         <div className='filter-box-type'>
@@ -163,7 +193,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
                         </div>
                         <div className='filter-box-format'>
                             <label>资源格式：</label>
-                            { this.buildfilterContent({ sourceKey: 'format', componentType: 'radio', state: this.state.format }) }
+                            { this.buildfilterContent({ sourceKey: 'format', componentType: 'radio', state: format }) }
                         </div>
                         <div className='filter-box-sort'>
                             <label>排序：</label>
@@ -173,7 +203,10 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
 
                     <div className='booklist-container'>
                         {
-                            this.state.booklist.length > 0 ? this.state.booklist.map((item: any) => {
+                            isLoading ? <div className='booklist-container-skeleton'>
+                                <Skeleton active/>
+                                <Skeleton active/>
+                            </div> : hasData ? booklist.map((item: any) => {
                                 return <div className='booklist-item' key={item.id} onClick={() => this.selectBook(item)}>
                                             <div className='booklist-item-top'>
                                                 <div className='booklist-item-top-left'>
@@ -215,7 +248,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, any> {
                         }
                     </div>
                     {
-                        this.state.booklist.length > 0 && <div className='booklist-pagination'>
+                        booklist.length > 0 && <div className='booklist-pagination'>
                             <PageComponent {...pageComponentProps}/>
                         </div>
                     }
