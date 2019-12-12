@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, Row, Col, Popconfirm, message } from 'antd';
+import { Skeleton, Row, Col, Popconfirm, message, Icon } from 'antd';
 import { api } from 'common/api/index';
 import { IDataSource } from './collection.config';
 import noDataImg from 'assets/images/noData.png';
@@ -26,7 +26,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
             dataSource: [],
             isLoading: false,
             hasData: false,
-            canScrollLoad: false
+            canScrollLoad: true
         };
     }
 
@@ -48,7 +48,8 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                 this.setState({
                     dataSource,
                     hasData: dataSource.length > 0,
-                    isLoading: false
+                    isLoading: false,
+                    canScrollLoad: true
                 });
 
                 message.info('加载完成');
@@ -61,7 +62,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
      * @desc  取消收藏
      */
     public cancelCollection = (source: IDataSource) => {
-        message.success('完成取消收藏');
+        message.success('已取消收藏');
     }
 
     /** 
@@ -72,17 +73,30 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
         message.success('完成下载');
     }
 
+    /** 
+     * @func
+     * @desc 构建骨架屏
+     */
+    public buildSkeleton = (num: number = 3): React.ReactNode => {
+        return <Row className='skeleton-box' gutter={24}>
+            {
+                Array.apply(null, Array(num)).map((x, i: number) => {
+                    return <Col className='skeleton-col' key={`skeleton-col-${i}`} xs={{span: 12}} sm={{span: 8}} lg={{span: 6}}>
+                                <Skeleton active/>
+                            </Col>
+                })
+            }
+        </Row>
+    }
+
     public render() {
-        const { hasData, dataSource = [], isLoading } = this.state;
+        const { hasData, dataSource = [], isLoading, canScrollLoad } = this.state;
+        const skeleton: React.ReactNode = this.buildSkeleton();
 
         return (
             <div className='colleaction-container animateCss'>
                 {
-                    isLoading ?  <>
-                        <Skeleton active/>
-                        <Skeleton active/>
-                        <Skeleton active/>
-                    </> : hasData ? <div>
+                    isLoading ? skeleton : hasData ? <div>
                         <Row gutter={24}>
                             {
                                 dataSource.map((source: IDataSource) => {
@@ -105,11 +119,10 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                                 <label>文件大小：{source.size}</label>
                                                             </Col>
                                                             <Col className='bottom-right' span={12}>
+                                                                <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
                                                                 <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source)} okText='确认' cancelText='取消'>
-                                                                    <SvgComponent className='svg-component' type='icon-love_fill' />
+                                                                    <span><SvgComponent className='svg-component' type='icon-love_fill' /></span>
                                                                 </Popconfirm>
-                                                                
-                                                                <span className='download-btn' onClick={() => this.downloadCollection(source)}>下载</span>
                                                             </Col>
                                                         </Row>
                                                     </div>
@@ -124,6 +137,11 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         <p>您暂时没有搜藏记录，赶快搜索课程资源，选择您喜欢的课程并收藏吧！</p>
                     </div>
                 }
+                <div className='colleaction-bottom'>
+                    {
+                        canScrollLoad ? <p className='can-load-more'>加载更多...</p> : <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p>
+                    }
+                </div>
             </div>
         )
     }

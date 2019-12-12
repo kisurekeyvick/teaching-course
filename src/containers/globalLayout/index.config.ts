@@ -9,21 +9,21 @@ export interface IHeadMenu {
 
 export const headMenus: IHeadMenu[] = [
     {
-        icon: 'upload',
+        icon: 'icon-admin-system',
         key: '3',
-        type: 'icon',
-        value: 'upload',
+        type: 'SvgComponent',
+        value: 'admin-system',
         trigger: 'click',
-        tooltipInfo: '附件上传'
+        tooltipInfo: '后台管理'
     },
-    {
-        icon: 'bell',
-        key: '2',
-        type: 'icon',
-        value: 'bell',
-        trigger: 'hover',
-        tooltipInfo: '消息提醒'
-    },
+    // {
+    //     icon: 'bell',
+    //     key: '2',
+    //     type: 'icon',
+    //     value: 'bell',
+    //     trigger: 'hover',
+    //     tooltipInfo: '消息提醒'
+    // },
     {
         icon: 'user',
         key: '1',

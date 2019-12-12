@@ -61,6 +61,16 @@
         }
     }
 
+    .head-right-box {
+        display: inline-block;
+        float: right;
+        padding-right: 24px;
+
+        &>i.anticon-user {
+            font-size: 17px;
+        }
+    }
+
     .admin-bread-box {
         padding: 24px 24px 0 24px;
 
@@ -85,6 +95,28 @@
 
         &.collapsed {
             width: calc(100% - 80px);
+        }
+    }
+}
+
+.admin-system-user-menulist {
+    li {
+        padding: 6px;
+        cursor: pointer;
+        border-radius: 3px;
+
+        .svg-head-user {
+            margin-right: 10px;
+            float: left;
+            margin-top: 4px;
+
+            &.icon-switch-account {
+                font-size: 18px;
+            }
+        }
+
+        &:hover {
+            background-color: #eee;
         }
     }
 }

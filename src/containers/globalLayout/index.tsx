@@ -4,13 +4,14 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import './index.scss';
 import { Layout, Input, Icon, Popover, Row, Col, Tooltip } from 'antd';
 import { cloneDeep } from 'lodash';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
+import { SvgComponent } from 'components/icon/icon';
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -18,10 +19,14 @@ const { Search } = Input;
 type IGlobalLayoutProps = {
     children: any;
     searchBookContent: Function;
-    [key: string]: any
+    [key: string]: any;
 }
 
-class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
+interface IState {
+    [key: string]: any;
+}
+
+class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     public localStorageService: LocalStorageService;
     public config: IConfig;
     public childref: any;
@@ -56,8 +61,6 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
         globalEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, {
             searchBook: e
         });
-
-        // console.log('全局的东西');
     }
 
     /** 
@@ -77,6 +80,9 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                                 { menu.type === 'icon' && !content && <Tooltip title={menu.tooltipInfo}>
                                                                         <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/>
                                                                     </Tooltip> }
+                                { menu.type === 'SvgComponent' && !content && <Tooltip title={menu.tooltipInfo}>
+                                        <span className='menu-svg-box' onClick={() => this.clickHeadMenuItem(menu)}><SvgComponent className={`svg-component ${menu.icon}`} type={menu.icon!} /></span>
+                                    </Tooltip> }
                             </li>
                         })
                     }
@@ -112,7 +118,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
      * @desc 点击头部菜单
      */
     public clickHeadMenuItem = (menu: IHeadMenu) => {
-        if (menu.value === 'upload') {
+        if (menu.value === 'admin-system') {
             this.menuOperation(menu.value);
         }
     }
@@ -126,7 +132,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
             window.location.href = '/user/login';
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
-        } else if (tag === 'upload') {
+        } else if (tag === 'admin-system') {
             this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'behind' });
             window.location.href = '/admin/login';
         }
@@ -140,9 +146,9 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                     <div className='global-head'>
                         <div className='global-head-left'>
                             <img alt='logo' src={env.pageLogo}/>
-                            <Link className='link-item' to='/book'>课程资源</Link>
-                            <Link className='link-item' to='/collection'>收藏</Link>
-                            <Link className='link-item' to='/search/result'>检索</Link>
+                            <NavLink className='link-item' to='/book' activeClassName='selected'>课程资源</NavLink>
+                            <NavLink className='link-item' to='/collection' activeClassName='selected'>收藏</NavLink>
+                            <NavLink className='link-item' to='/search/result' activeClassName='selected'>检索</NavLink>
                         </div>
                         <div className='global-head-right'>
                             <Search className='search-control' placeholder='搜索教材' onSearch={this.searchBook}/>
@@ -154,7 +160,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, any> {
                 </Header>
                 <Content>
                     <div className='global-body' >
-                        { this.props.children }
+                        { this.props.children },
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>

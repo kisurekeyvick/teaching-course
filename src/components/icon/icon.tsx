@@ -5,6 +5,7 @@ import './icon.scss';
 
 interface IIconProps {
     type: string;
+    onClick?: Function;
     className?: string;
 }
 

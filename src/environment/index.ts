@@ -30,5 +30,5 @@ export const env = {
     /** 
      * @desc 配置svg的url，配合组件(components/icon/icon.tsx)使用
      */
-    svgUrl: '//at.alicdn.com/t/font_1531539_kc9b0qlfak.js'    
+    svgUrl: '//at.alicdn.com/t/font_1531539_zhyg6npvdyf.js'    
 };

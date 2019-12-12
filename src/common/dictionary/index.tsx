@@ -23,7 +23,8 @@ export const dictionary = new Map([
 
 export interface IDictionaryItem {
     name: string;
-    value: number | string
+    value: number | string;
+    src?: string;
 };
 
 export const findTarget = (source: IDictionaryItem[], value: number | string) => {

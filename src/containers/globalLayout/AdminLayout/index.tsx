@@ -2,26 +2,32 @@ import * as React from 'react';
 import { env } from 'environment/index';
 import {connect} from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { Layout, Menu, Icon, Breadcrumb } from 'antd';
+import { Layout, Menu, Icon, Breadcrumb, Popover, Row } from 'antd';
 import { menu, IMenuItem } from 'common/admin-menu/menu';
 import { SvgComponent } from 'components/icon/icon';
 import { Link } from "react-router-dom";
 import './index.scss';
 import { cloneDeep } from 'lodash';
-import { IAdminLayoutProps, IAdminLayoutState, IConfig } from './index.config';
+import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
+import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+import LocalStorageService from 'common/utils/cache/local-storage';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
 
 class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> {
-    public config: IConfig; 
+    public config: IConfig;
+    public localStorageService: LocalStorageService;
 
     constructor(public props: IAdminLayoutProps) {
         super(props);
 
         this.config = {
-            menuList: cloneDeep(menu)
+            menuList: cloneDeep(menu),
+            userMenuList: cloneDeep(userMenuList)
         };
+
+        this.localStorageService = new LocalStorageService();
 
         this.state = {
             collapsed: false,
@@ -130,9 +136,49 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                 </Breadcrumb>
     }
 
+    /** 
+     * @func
+     * @desc 构建用户下拉菜单
+     */
+    public buildUserPopMenu = (): React.ReactNode => {
+        const content: React.ReactNode = <div className='admin-system-user-menulist'>
+            {
+                this.config.userMenuList.map((item: IHeadMenu) => {
+                    return <li onClick={() => this.handleUserMenuClick(item)} key={item.key}>
+                            <Row>
+                                {
+                                    item.type === 'SvgComponent' ? <SvgComponent className={`svg-head-user ${item.icon}`} type={item.icon!}/> : <Icon type={item.icon} />
+                                }
+                                <span>{item.context}</span>
+                            </Row>
+                        </li>;
+                })
+            }
+        </div>
+
+        return <Popover  content={content} placement='bottomRight' trigger={'click'}>
+                    <Icon type='user'/>
+                </Popover>
+    }
+
+    /** 
+     * @callback
+     * @desc 处理用户菜单点击
+     */
+    public handleUserMenuClick = (menu: IHeadMenu) => {
+        if (menu.value === 'exit') {
+            window.location.href = '/admin/login';
+        } else if (menu.value === 'skip-to-user-system') {
+            /** 跳转至前台登录页 */
+            this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'front' });
+            window.location.href = '/user/login';
+        }
+    }
+
     public render() {
         const menuList: React.ReactNode = this.buildMenu();
         const bread: React.ReactNode = this.reateBreadcrumb();
+        const userOperation: React.ReactNode = this.buildUserPopMenu();
 
         return <Layout className='admin-layout'>
                     <Sider style={{
@@ -153,6 +199,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                             className='trigger'
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
                             onClick={this.toggle} />
+                            <div className='head-right-box'>{ userOperation }</div>
                         </Header>
                         <Content>
                             <div className='admin-bread-box'>
