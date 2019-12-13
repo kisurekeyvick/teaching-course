@@ -2,7 +2,7 @@ import * as React from 'react';
 import { api } from 'common/api/index';
 import { columns, IConfig, ITableRecord } from './source-manage.config';
 import { cloneDeep } from 'lodash';
-import { Table, Skeleton, Row, Col, Button, Input, Icon, Divider, Popconfirm, message, Drawer } from 'antd';
+import { Table, Skeleton, Row, Col, Button, Icon, Divider, Popconfirm, message, Drawer } from 'antd';
 import { SvgComponent } from 'components/icon/icon';
 import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
 import { dictionary, IDictionaryItem, findTarget } from 'common/dictionary/index';
@@ -22,7 +22,7 @@ interface IState {
     [key: string]: any;
 }
 
-const { Search } = Input;
+// const { Search } = Input;
 
 class SourceManageContainer extends React.PureComponent<ISourceManageContainerProps, IState> {
     public config: IConfig;
@@ -204,9 +204,9 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                             <Button type='primary' className='btn-addCourse' onClick={this.addSource}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加资源</Button>
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
-                        <Col className='operation-box-col' sm={24} md={12}>
+                        {/* <Col className='operation-box-col' sm={24} md={12}>
                             <Search style={{ marginBottom: 8 }} placeholder='搜索资源' onChange={this.handleInputSearch} />
-                        </Col>
+                        </Col> */}
                     </Row>
                 </div>
                 <div className='table-box'>

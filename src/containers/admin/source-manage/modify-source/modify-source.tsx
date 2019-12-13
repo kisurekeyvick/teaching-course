@@ -165,7 +165,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                     </Col>
                     <Col xs={{span: 24}}>
                         <Row gutter={16}>
-                            <Col xs={{span: 10}}>
+                            <Col xs={{span: 12}}>
                                 <Item label='所属课程'>
                                     {
                                         getFieldDecorator('name', {rules: rules.name})(
@@ -174,7 +174,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                                     }
                                 </Item>
                             </Col>
-                            <Col xs={{span: 7}}>
+                            <Col xs={{span: 12}}>
                                 <Item label='章节'>
                                     {
                                         getFieldDecorator('chapter', {rules: rules.chapter})(
@@ -183,7 +183,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                                     }
                                 </Item>
                             </Col>
-                            <Col xs={{span: 7}}>
+                            {/* <Col xs={{span: 7}}>
                                 <Item label='小节'>
                                     {
                                         getFieldDecorator('section', {rules: rules.section})(
@@ -191,7 +191,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                                         )
                                     }
                                 </Item>
-                            </Col>
+                            </Col> */}
                         </Row>
                     </Col>
                     <Col xs={{span: 24}}>

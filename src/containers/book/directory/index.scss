@@ -1,12 +1,13 @@
 @import '../../../assets/styles/global.scss';
 
 .directory-box {
-    background-color: #fff;
+    // background-color: #fff;
     min-height: 300px;
+    padding: 0 12px 24px;
 
     .directory-title {
         display: flex;
-        padding: 0 20px;
+        padding: 0 8px;
 
         p {
             margin-bottom: 0;
@@ -22,8 +23,12 @@
         }
     }
 
+    span.ant-tree-switcher {
+        background: transparent !important;
+    }
+
     .directory-menu-box {
-        padding: 10px;
+        padding: 0 10px 0 3px;
 
         .no-data-img {
             width: 100px;
@@ -36,5 +41,24 @@
             margin-top: 24px;
             font-size: 12px;
         }
+    }
+
+    .svg-icon-course {
+        font-size: 15px !important;
+        transform: rotate(90deg) !important;
+        float: left;
+        margin: 5px;
+    }
+
+    .ant-tree-switcher_open {
+        .svg-icon-course {
+            transform: rotate(0deg) !important;
+        }
+    }
+
+    .svg-icon-chapter {
+        font-size: 15px !important;
+        float: left;
+        margin: 5px;
     }
 }

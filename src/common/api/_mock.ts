@@ -373,112 +373,231 @@ export const mockCollectionResult_api = Mock.mock('/api/collection', 'post', () 
 });
 
 export const mockDirectoryResult_api = Mock.mock('/api/directory', 'post', () => {
-    return [
-        { 
-            name: '目录',
-            key: '1',
-            value: 'one',
-            children: []
-        },
-        {
-            name: '入学教育',
-            key: '2',
-            value: 'two',
-            children: [],
-        },
-        {
-            name: '识字(一)',
-            key: '3',
-            value: 'three',
-            children: [
+    return {
+        'desc': '查询成功',
+        'isAdministrators': 0,
+        'result': {
+          'teachMaterialList': [
                 {
-                    name: '一去二三里',
-                    key: '31',
-                    value: 'three-one',
-                    children: []
+                'contributors': 'yangheng',
+                'desc': '语文',
+                'id': 2,
+                'materlId': 'MATERL201912102307538478638',
+                'pic': 'C://test',
+                'score': '10',
+                'size': '100K',
+                'title': '语文书',
+                'type': 'Type1',
+                'weight': 105
                 },
                 {
-                    name: '口耳目',
-                    key: '32',
-                    value: 'three-two',
-                    children: []
+                'contributors': 'yangheng',
+                'desc': '数学',
+                'id': 4,
+                'materlId': 'MATERL201912102335181864896',
+                'pic': 'C://test',
+                'score': '10',
+                'size': '100K',
+                'title': '数学书',
+                'type': 'Type1',
+                'weight': 101
                 },
                 {
-                    name: '在家里',
-                    key: '33',
-                    value: 'three-three',
-                    children: []
+                    'contributors': 'yangheng',
+                    'desc': '英语',
+                    'id': 5,
+                    'materlId': 'MATERL201912102335181864896',
+                    'pic': 'C://test',
+                    'score': '10',
+                    'size': '100K',
+                    'title': '英语书',
+                    'type': 'Type1',
+                    'weight': 101
+                },
+                {
+                    'contributors': 'yangheng',
+                    'desc': '化学',
+                    'id': 6,
+                    'materlId': 'MATERL201912102335181864896',
+                    'pic': 'C://test',
+                    'score': '10',
+                    'size': '100K',
+                    'title': '化学书',
+                    'type': 'Type1',
+                    'weight': 103
+                },
+                {
+                    'contributors': 'yangheng',
+                    'desc': '物理',
+                    'id': 7,
+                    'materlId': 'MATERL201912102335181864896',
+                    'pic': 'C://test',
+                    'score': '10',
+                    'size': '100K',
+                    'title': '物理书',
+                    'type': 'Type1',
+                    'weight': 102
                 }
             ]
         },
-        {
-            name: '课程(一)',
-            key: '4',
-            value: 'four',
-            children: [
-                {
-                    name: '画',
-                    key: '41',
-                    value: 'four-one',
-                    children: []
-                },
-                {
-                    name: '四季',
-                    key: '42',
-                    value: 'four-two',
-                    children: []
+        'success': true
+    }
+});
+
+export const mockSectionResult_api = Mock.mock('/api/section', 'post', () => {
+    return {
+        'desc': '查询成功',
+        'isAdministrators': 0,
+        'chapterResponseDtoList': [
+            {
+              "section": {
+                "name": "第13章",
+                "type": 1,
+                "id": 13,
+                "weight": 13
+              }
+            },
+            {
+              "section": {
+                "name": "第12章",
+                "type": 1,
+                "weight": 4,
+                "id": 12,
+              }
+            },
+            {
+                "section": {
+                  "name": "第10章",
+                  "type": 1,
+                  "weight": 3,
+                  "id": 10,
                 }
-            ]
-        }
-    ]
+            },
+            {
+                "section": {
+                  "name": "第23章",
+                  "type": 1,
+                  "weight": 1,
+                  "id": 23,
+                }
+            },
+            {
+                "section": {
+                  "name": "第6章",
+                  "type": 1,
+                  "weight": 102,
+                  "id": 6,
+                }
+            }
+        ]          
+    };
 });
 
 export const mockBookListResult_api = Mock.mock('/api/booklist', 'post', () => {
-    return [
-        {
-            title: '一去二三里-资源包',
-            rate: 4.2,
-            pic: picture,
-            desc: '本资源为《一去二三里》的资源包，包含本科的教学设计，可见，习题，素材类型的推荐资源',
-            createTime: '2019年09月02日',
-            size: '11.59MB',
-            viewCount: '24085',
-            downloadCount: '63708',
-            contributors: 'nice fish',
-            currentCount: '319',
-            type: 'zip',
-            qrcode: 'https://juejin.im',
-            id: 1
+    return {
+        "desc": "搜索成功",
+        "isAdministrators": 0,
+        "result": {
+          "teachMaterialDto": {
+            "endRow": 1,
+            "firstPage": 1,
+            "hasNextPage": false,
+            "hasPreviousPage": false,
+            "isFirstPage": true,
+            "isLastPage": true,
+            "lastPage": 1,
+            "list": [
+              {
+                "contributors": "yangheng",
+                "desc": "语文书111",
+                "id": 1,
+                "materlId": "MATERL201912120917561231791",
+                "pic": picture,
+                "score": "10",
+                "size": "100K",
+                "title": "语文书111",
+                "type": "Type111",
+                "updateTime": 1576119323000,
+                "weight": 100
+              },
+              {
+                "contributors": "yangheng",
+                "desc": "语文",
+                "id": 3,
+                "materlId": "MATERL201912121106019186655",
+                "pic": picture,
+                "score": "10",
+                "size": "100K",
+                "title": "数学书",
+                "type": "Type1",
+                "updateTime": 1576123025000,
+                "weight": 101
+              }
+            ],
+            "navigateFirstPage": 1,
+            "navigateLastPage": 1,
+            "navigatePages": 8,
+            "navigatepageNums": [
+              1
+            ],
+            "nextPage": 0,
+            "pageNum": 1,
+            "pageSize": 2,
+            "pages": 1,
+            "prePage": 0,
+            "size": 2,
+            "startRow": 0,
+            "total": 2
+          }
         },
-        {
-            title: '人教-上语文《四季》课件',
-            rate: 4.4,
-            pic: picture,
-            desc: '本资源为《一去二三里》的资源包，包含本科的教学设计，可见，习题，素材类型的推荐资源',
-            createTime: '2019年09月02日',
-            size: '11.59MB',
-            viewCount: '24085',
-            downloadCount: '63708',
-            contributors: 'nice fish',
-            currentCount: '119',
-            type: 'ppt',
-            qrcode: 'https://juejin.im',
-            id: 2
-        },
-        {
-            title: '哪座房子最漂亮',
-            rate: 4.6,
-            pic: picture,
-            desc: '',
-            createTime: '2019年09月02日',
-            size: '63.5KB',
-            viewCount: '24085',
-            downloadCount: '63708',
-            contributors: 'nice fish',
-            currentCount: '219',
-            type: 'doc',
-            qrcode: 'https://juejin.im',
-            id: 3
-        },
-    ]
+        "success": true
+      }
+    
+    // [
+    //     {
+    //         title: '一去二三里-资源包',
+    //         rate: 4.2,
+    //         pic: picture,
+    //         desc: '本资源为《一去二三里》的资源包，包含本科的教学设计，可见，习题，素材类型的推荐资源',
+    //         createTime: '2019年09月02日',
+    //         size: '11.59MB',
+    //         viewCount: '24085',
+    //         downloadCount: '63708',
+    //         contributors: 'nice fish',
+    //         currentCount: '319',
+    //         type: 'zip',
+    //         qrcode: 'https://juejin.im',
+    //         id: 1
+    //     },
+    //     {
+    //         title: '人教-上语文《四季》课件',
+    //         rate: 4.4,
+    //         pic: picture,
+    //         desc: '本资源为《一去二三里》的资源包，包含本科的教学设计，可见，习题，素材类型的推荐资源',
+    //         createTime: '2019年09月02日',
+    //         size: '11.59MB',
+    //         viewCount: '24085',
+    //         downloadCount: '63708',
+    //         contributors: 'nice fish',
+    //         currentCount: '119',
+    //         type: 'ppt',
+    //         qrcode: 'https://juejin.im',
+    //         id: 2
+    //     },
+    //     {
+    //         title: '哪座房子最漂亮',
+    //         rate: 4.6,
+    //         pic: picture,
+    //         desc: '',
+    //         createTime: '2019年09月02日',
+    //         size: '63.5KB',
+    //         viewCount: '24085',
+    //         downloadCount: '63708',
+    //         contributors: 'nice fish',
+    //         currentCount: '219',
+    //         type: 'doc',
+    //         qrcode: 'https://juejin.im',
+    //         id: 3
+    //     },
+    // ]
 });

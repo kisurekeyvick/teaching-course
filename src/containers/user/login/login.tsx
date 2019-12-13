@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IForm, loginFormItem } from './login-config';
 import { CookieService } from 'common/utils/cache/cookie';
-// import { api } from '../../../common/api/index';
+// import { api } from 'common/api/index';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import './login.scss';
 import {connect} from 'react-redux';
@@ -121,6 +121,10 @@ class UserLogin extends React.PureComponent<IProps, any> {
                     userName: value.userName,
                     password: value.password
                 };
+
+                // api.login(params).then((res: any) => {
+                //     console.log('nice fish kisure');
+                // })
 
                 // api.userLogin(params).then((res: any) => {
                 //     if (res && res.status === 200) {

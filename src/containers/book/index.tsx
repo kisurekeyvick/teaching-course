@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Directory from './directory/index';
-import Recommend from './recommend/index';
-import LatestUpload from './latestUpload/index';
+// import Recommend from './recommend/index';
+// import LatestUpload from './latestUpload/index';
 import BookList from './list/index';
 import { IDirectoryProps } from './interface';
 import './index.scss';
@@ -37,9 +37,9 @@ export default class BookContainer extends React.Component<IProps, any> {
             history
         };
 
-        const latestUploadProps = {
-            history
-        };
+        // const latestUploadProps = {
+        //     history
+        // };
 
         return <div className='book-container'>
                     <div className='book-body'>
@@ -49,14 +49,14 @@ export default class BookContainer extends React.Component<IProps, any> {
                         <div className='book-center centerAnimate'>
                             <BookList {...bookListProps}/>
                         </div>
-                        <div className='book-right rightAnimate'>
+                        {/* <div className='book-right rightAnimate'>
                             <div className='book-right-recommend'>
                                 <Recommend />
                             </div>
                             <div className='book-right-latestUpload'>
                                 <LatestUpload {...latestUploadProps}/>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
     }

@@ -91,7 +91,7 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
                 return <TreeNode title={child.name} key={child.key} nodeInfo={child}>
-                    { child.children.length > 0 && buildTreeNode(child.children) }
+                    { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
         };

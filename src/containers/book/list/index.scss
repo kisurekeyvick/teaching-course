@@ -92,9 +92,15 @@
                     flex: 1;
                     line-height: 30px;
 
-                    .icon-like {
+                    span {
+                        color: #333;
+                    }
+
+                    .lover-svg {
                         margin-left: 5px;
                         color: $iconRed;
+                        font-size: 18px;
+                        margin-top: -2px;
                     }
                 }
 

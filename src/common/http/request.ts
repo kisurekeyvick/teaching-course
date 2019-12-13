@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { message } from 'antd';
 import { getToken } from '../utils/function';
-import { env } from 'environment';
+import { env } from 'environment/index';
 
 const service = axios.create({
     timeout: 120000,

@@ -41,6 +41,15 @@ export function getBase64(img: Blob, callback: Function) {
 }
 
 /**
+ * @desc 计算分数
+ * @param maxScore 
+ * @param currentScore 
+ */
+export function calculateScore(maxScore: number, currentScore: number) {
+    return (currentScore/maxScore) * 5;
+}
+
+/**
  * @desc 节流
  * @param fn 
  * @param time 

@@ -6,11 +6,11 @@ import simpleLogo from 'assets/images/simpleLogo.jpg';
 /** 当前执行环境 */
 export type CurrentEnv = 'development' | 'production';
 
-export const currentEnv: CurrentEnv = process.env.BUILD_ENV as CurrentEnv;
+export const currentEnv: CurrentEnv = process.env.NODE_ENV as CurrentEnv;
 
 /** 环境地址列表 */
 export const baseUrlList = {
-    development: '',
+    development: '/api/microspicy', //'http://api.microspicy.com:8078',
     production: ''
 };
 
@@ -30,5 +30,5 @@ export const env = {
     /** 
      * @desc 配置svg的url，配合组件(components/icon/icon.tsx)使用
      */
-    svgUrl: '//at.alicdn.com/t/font_1531539_zhyg6npvdyf.js'    
+    svgUrl: '//at.alicdn.com/t/font_1531539_spfi0ro89tc.js'    
 };

@@ -9,6 +9,9 @@ import './index.scss';
 import { IBookListProps } from '../interface';
 import { SvgComponent } from 'components/icon/icon';
 import { api } from 'common/api/index';
+import { ICourseMaterialListRequest, ICourseMaterialDto } from 'common/api/api-interface';
+import dayjs from 'dayjs';
+import { calculateScore } from 'common/utils/function';
 
 interface IState {
     format: string;
@@ -19,7 +22,13 @@ interface IState {
     isLoading: boolean;
 }
 
+interface IConifg {
+    maxScore: number;
+}
+
 class BookListContainer extends React.PureComponent<IBookListProps, IState> {
+    public config: IConifg;
+
     constructor(public props: IBookListProps) {
         super(props);
 
@@ -42,26 +51,41 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             hasData: false,
             isLoading: false
         };
+
+        this.config = {
+            maxScore: 10
+        };
     }
 
     componentDidMount() {
-        this.loadBookList();
+        const { pageInfo: { currentPage, pageSize} } = this.state;
+        const params: ICourseMaterialListRequest = {
+            pageNum: currentPage,
+            pageSize: pageSize,
+        };
+        this.loadBookList(params);
     }
 
     /** 
      * @func
      * @desc 加载book列表
      */
-    public loadBookList = () => {
+    public loadBookList = (params: ICourseMaterialListRequest) => {
         message.loading('加载数据中', 2);
 
         this.setState({
             isLoading: true
         });
 
-        api.loadBookList().then((res: any) => {
+        api.loadBookList(params).then((res: any) => {
             if (res.status === 200) {
-                const booklist = res.data;
+                const { result: { teachMaterialDto } } = res.data;
+                const { list }: { list: ICourseMaterialDto[] } = teachMaterialDto;
+                const booklist: any[] = list.map((item: ICourseMaterialDto) => {
+                    item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
+                    item.rate = calculateScore(this.config.maxScore, +(item.score));
+                    return item;
+                });
 
                 this.setState({
                     booklist,
@@ -149,6 +173,14 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
     /** 
      * @func
+     * @desc 收藏
+     */
+    public collect = (item: any) => {
+        message.success('收藏成功');
+    }
+
+    /** 
+     * @func
      * @desc 构建过滤条件
      * @params 
      *      items   数据源
@@ -212,15 +244,15 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                 <div className='booklist-item-top-left'>
                                                     <span>{ item.title }</span>
                                                     {/* <Icon className='icon-like' type="heart" /> */}
-                                                    <SvgComponent className='lover-svg' type='icon-love' />
+                                                    <SvgComponent className='lover-svg' type='icon-love' onClick={() => this.collect(item)}/>
                                                 </div>
                                                 <div className='booklist-item-top-right'>
                                                     <Rate disabled defaultValue={item.rate}/>
                                                     <i className='i-rate'>{item.rate}</i>
                                                     <label>({item.currentCount})</label>
-                                                    <Popover title='' content={ <QrcodeComponent url={item.qrcode}/> } trigger="hover">
+                                                    {/* <Popover title='' content={ <QrcodeComponent url={item.qrcode}/> } trigger="hover">
                                                         <Icon className='booklist-item-top-right-qrcode' type="qrcode"/>
-                                                    </Popover>
+                                                    </Popover> */}
                                                 </div>
                                             </div>
                                             <div className='booklist-item-bottom'>
@@ -257,9 +289,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 }
 
 function mapStateToProps(state: any) {
-    return {
-        searchBook: state.globalReducer.bookName
-    }
+    return {}
 }
 
 export default connect(

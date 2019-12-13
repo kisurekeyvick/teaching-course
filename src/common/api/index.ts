@@ -12,7 +12,7 @@ export const api = {
             });
         });
     },
-    login: httpRequest(`POST /project/login`),
+    login: httpRequest(`POST /user/login`),
     loadTeachingMenu: () => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/teachingMenu', {}).then(res => {
@@ -61,6 +61,15 @@ export const api = {
     loadTeachingMaterialDirectory: (param?: any) => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/directory', {}).then(res => {
+                resolve(res);
+            }, error => {
+                reject(error);
+            });
+        });
+    },
+    loadSectionDirectory: (param?: any) => {
+        return new Promise((resolve: any, reject: any) => {
+            axios.post('/api/section', {}).then(res => {
                 resolve(res);
             }, error => {
                 reject(error);

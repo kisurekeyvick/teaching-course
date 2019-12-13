@@ -12,6 +12,7 @@ import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
 import { SvgComponent } from 'components/icon/icon';
+import userBg from 'assets/images/userBg.jpg';
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -142,6 +143,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         const headMenu: React.ReactNode = this.buildHeadMenu();
 
         return <Layout className='global-layout'>
+                {/* <img className='user-bg' src={userBg} alt='user-bg' /> */}
                 <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
                     <div className='global-head'>
                         <div className='global-head-left'>
@@ -160,7 +162,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                 </Header>
                 <Content>
                     <div className='global-body' >
-                        { this.props.children },
+                        { this.props.children }
                     </div>
                 </Content>
                 <Footer style={{ textAlign: 'center' }}>
