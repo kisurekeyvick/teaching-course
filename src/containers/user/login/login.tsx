@@ -1,17 +1,18 @@
 import * as React from 'react';
-import { Form, Input, Button, Checkbox, Icon, Row, Col} from 'antd';
+import { Form, Input, Button, Checkbox, Icon, Row, Col, message } from 'antd';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IForm, loginFormItem } from './login-config';
 import { CookieService } from 'common/utils/cache/cookie';
-// import { api } from 'common/api/index';
+import { api } from 'common/api/index';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import './login.scss';
 import {connect} from 'react-redux';
 import { updateUserInfo } from 'store/user/action';
 import { bindActionCreators } from 'redux';
 import { LoginParams } from 'containers/user/interface';
-import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
+import { ILogin } from 'common/api/api-interface';
 
 const FormItem = Form.Item;
 
@@ -20,7 +21,12 @@ interface IProps {
     [key: string]: any;
 }
 
-class UserLogin extends React.PureComponent<IProps, any> {
+interface IState {
+    verificationImage: string;
+    errorMsg: string;
+}
+
+class UserLogin extends React.PureComponent<IProps, IState> {
     private _cookie: CookieService;
     public localStorageService: LocalStorageService;
     public config: any;
@@ -30,7 +36,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
         super(props);
 
         this.state = {
-            seconds: 0,
+            errorMsg: '',
             verificationImage: ''
         };
 
@@ -73,13 +79,13 @@ class UserLogin extends React.PureComponent<IProps, any> {
 
     /**
      * @func
-     * @desc 记住账号密码
+     * @desc TODO 记住账号密码
      */
-    public rememberPwd = (value: LoginParams) => {
+    public rememberPwd = (value: any) => {
         const endTime: any = dayjs().add(30, 'day').toDate();
         // Todo 写死的token，后面需要后端传递
         value['token'] = 'YTDFJHDGFHJHDGRDTFYHDTGDHFHDTF';
-        this.localStorageService.set(LocalStorageItemName.LOGINCACHE, value, endTime);
+        this.localStorageService.set(StorageItemName.LOGINCACHE, value, endTime);
     }
 
     /** 
@@ -87,7 +93,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
      * @desc 不记住账号密码
      */
     public forgetPwd = () => {
-        this.localStorageService.remove(LocalStorageItemName.LOGINCACHE);
+        this.localStorageService.remove(StorageItemName.LOGINCACHE);
     }
 
     /**
@@ -95,12 +101,12 @@ class UserLogin extends React.PureComponent<IProps, any> {
      * @desc 读取账号密码
      */
     public readRememberPwd = () => {
-        const loginInfo = this.localStorageService.get(LocalStorageItemName.LOGINCACHE);
+        const loginInfo = this.localStorageService.get(StorageItemName.LOGINCACHE);
 
         if (loginInfo) {
             const { value } = loginInfo;
             this.props.form.setFieldsValue({
-                userName: value.userName,
+                userName: value.loginName,
                 password: value.password,
                 remember: value.remember
             });
@@ -118,32 +124,29 @@ class UserLogin extends React.PureComponent<IProps, any> {
         this.props.form.validateFields((error: any, value: LoginParams) => {
             if (!error) {
                 const params = {
-                    userName: value.userName,
+                    loginName: value.userName,
                     password: value.password
                 };
 
-                // api.login(params).then((res: any) => {
-                //     console.log('nice fish kisure');
-                // })
+                api.login(params).then((res: ILogin) => {
+                    if (res.status === 200) {
+                        const { data: { success, result, isAdministrators, desc }, headers } = res;
 
-                // api.userLogin(params).then((res: any) => {
-                //     if (res && res.status === 200) {
-                //         const endTime: any = params['remember'] ? dayjs().add(30, 'days').toDate() : '';
-
-                //         for(const key in res.data.result) {
-                //             this._cookie.setCookie(`_${key}`, res.data.result[key], endTime);
-                //         }
-                        
-                //         this.props.history.push('/saas/customer/list');
-                //     }
-                // }); 
-                // api.login.post()
-
-                // Todo 这一步需要后端接口
-                this.props.updateUserInfo(params);
-                value.remember ? this.rememberPwd(value) : this.forgetPwd();
-                this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'front' });
-                this.props.history.push('/book');
+                        /** 登录不成功 */
+                        if (!success) {
+                            message.error(desc);
+                            this.setState({
+                                errorMsg: desc
+                            })
+                        } else {
+                            this.props.updateUserInfo({...result, isAdministrators});
+                            value.remember ? this.rememberPwd({...result, isAdministrators, remember: true}) : this.forgetPwd();
+                            this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
+                            this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
+                            this.props.history.push('/book');
+                        }
+                    }
+                });
             }
         });
     }
@@ -155,6 +158,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
      */
     public createForm = (form: IForm, getFieldDecorator:any) => {
         let formItem: any;
+        const { errorMsg } = this.state;
         
         switch(form.type) {
             case 'input':
@@ -195,6 +199,7 @@ class UserLogin extends React.PureComponent<IProps, any> {
                                         valuePropName: 'checked',
                                     })( <Checkbox className='checkbox-remember'>记住密码</Checkbox> )
                                 }
+                                { errorMsg && <p className='error-message error-animate'>{ errorMsg }</p> }
                                 <Button size='large' type="primary" htmlType="submit" className="login-form-button">登录</Button>
                             </div>;
                 break;

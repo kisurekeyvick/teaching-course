@@ -1,7 +1,11 @@
 import * as React from 'react';
-import { Modal, Tree, Skeleton } from 'antd';
+import { Modal, Tree, Skeleton, message } from 'antd';
 import { IMenuItem } from 'containers/book/directory/index.config';
 import { api } from 'common/api/index';
+import { ITeachDirectoryMaterialList, IMaterialSectionResponseResult, IChapterResponseDtoListItem,
+    ISectionItem, IMaterialListResponseResult } from 'common/api/api-interface';
+import { cloneDeep } from 'lodash';
+import { SvgComponent } from 'components/icon/icon';
 
 export interface ITreeModalProps {
     handleClick: Function;
@@ -42,7 +46,99 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
     }
 
     public componentDidMount() {
-        this.loadMenu();
+        this.loadFirstLayerMenu();
+    }
+
+    /** 
+     * @func
+     * @desc 加载最外层级目录菜单
+     */
+    public loadFirstLayerMenu = () => {
+        this.setState({
+            isLoading: true
+        });
+
+        api.materialList().then((res: IMaterialListResponseResult) => {
+            if (res.status === 200) {
+                const { result } = res.data;
+                const { teachMaterialList }: {teachMaterialList: ITeachDirectoryMaterialList[]} = result
+                const menus: IMenuItem[] = teachMaterialList.map((item: ITeachDirectoryMaterialList) => {
+                    return {
+                        name: item.title,
+                        key: String(item.id),
+                        value: item.materlId,
+                        children: [],
+                        id: item.id,
+                        isLeaf: false,
+                        weight: item.weight
+                    };
+                }).sort((x: IMenuItem, y: IMenuItem) => {
+                    return y.weight - x.weight;
+                });
+
+                this.setState({
+                    menus,
+                    hasData: menus.length > 0,
+                    isLoading: false
+                });
+            }
+        });
+    }
+
+    /**
+     * @callback
+     * @desc 加载课程章节
+     */
+    public handleTreeNodeLoad = (treeNode: any): Promise<any> => {
+        return new Promise((resolve) => {
+            if (treeNode.props.children) {
+                resolve();
+                return;
+            }
+
+            const params: FormData = new FormData();
+            params.set('id', treeNode.props.dataRef.value);
+
+            api.sectionList(params).then((res: IMaterialSectionResponseResult) => {
+                if (res.status === 200 && res.data.result) {
+                    const { chapterResponseDtoList }: { chapterResponseDtoList: IChapterResponseDtoListItem[] } = res.data.result;
+                    const { value } = treeNode.props.dataRef;
+                    const menus: IMenuItem[] = chapterResponseDtoList.map((chapter: IChapterResponseDtoListItem, index: number) => {
+                        const item: ISectionItem = chapter.section;
+                        return {
+                            name: item.name,
+                            key: `${value}-${index}-${item.id}`,
+                            value: item.id,
+                            id: item.id,
+                            isLeaf: true,
+                            weight: item.weight,
+                            children: []
+                        };
+                    }).sort((x: IMenuItem, y: IMenuItem) => {
+                        return y.weight - x.weight;
+                    });
+
+                    menus.forEach((menu: IMenuItem) => {
+                        treeNode.props.dataRef.children.push({
+                            title: menu.name,
+                            key: menu.key
+                        });
+                    });
+
+                    const menusState: IMenuItem[] = cloneDeep(this.state.menus);
+                    const target: IMenuItem = menusState.find((item: IMenuItem) => item.value === value)!;
+                    target.children! = menus;
+
+                    this.setState({
+                        menus: menusState
+                    });
+                } else {
+                    res.data && message.warn(res.data.desc);
+                }
+
+                resolve();
+            });
+        });
     }
 
     /** 
@@ -90,15 +186,18 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
     public buidlTree = () => {
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
-                return <TreeNode title={child.name} key={child.key} nodeInfo={child}>
+                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
         };
 
-        return <Tree onSelect={this.handleTreeNodalSelect}>
-                { buildTreeNode(this.state.menus) }
-            </Tree>
+        return <Tree 
+                    showLine
+                    loadData={this.handleTreeNodeLoad}
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-course'/>}>
+                    { buildTreeNode(this.state.menus) }
+                </Tree>
     }
 
     public render() {

@@ -9,7 +9,7 @@
     cursor: pointer;
 
     &:hover {
-        color: $mainColor;
+        color: $color;
     }
 }
 
@@ -61,7 +61,7 @@
 
                     &.hover {
                         span.edit-span {
-                            color: $mainColor;
+                            color: $color;
                         }
                     }
 
@@ -101,5 +101,10 @@
                 }
             }
         }
+    }
+
+    .submit-box {
+        text-align: right;
+        margin-top: 24px;
     }
 }

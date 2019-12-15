@@ -5,14 +5,15 @@ import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
 import { NavLink } from "react-router-dom";
-import './index.scss';
-import { Layout, Input, Icon, Popover, Row, Col, Tooltip } from 'antd';
+import { Layout, Input, Icon, Popover, Row, Col, Tooltip, message } from 'antd';
 import { cloneDeep } from 'lodash';
-import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
 import { SvgComponent } from 'components/icon/icon';
-import userBg from 'assets/images/userBg.jpg';
+import { ISignOutResponseResult } from 'common/api/api-interface';
+import { api } from 'common/api/index';
+import './index.scss';
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -34,13 +35,14 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
 
     constructor(public props: IGlobalLayoutProps) {
         super(props);
+        
+        this.localStorageService = new LocalStorageService();
 
         this.config = {
             headMenus:  cloneDeep(headMenus),
             menusContent: this.menusContentList(menusContentConfig),
+            teacherCache: this.localStorageService.get(StorageItemName.LOGINCACHE)
         };
-
-        this.localStorageService = new LocalStorageService();
 
         this.childref = React.createRef();
     }
@@ -130,11 +132,27 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
      */
     public menuOperation = (tag: string) => {
         if (tag === 'exit') {
-            window.location.href = '/user/login';
+            /** 用户退出 */
+            const params: FormData = new FormData();
+            
+            params.set('teacherId', this.config.teacherCache.value.teacherId);
+
+            api.signOut(params).then((res: ISignOutResponseResult) => {
+                if (res.status === 200) {
+                    const { desc, success } = res.data;
+
+                    if (!success) {
+                        message.error(desc);
+                    } else {
+                        message.success(desc);
+                        window.location.href = '/user/login';
+                    }
+                }
+            });
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
         } else if (tag === 'admin-system') {
-            this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'behind' });
+            this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'behind' });
             window.location.href = '/admin/login';
         }
     }

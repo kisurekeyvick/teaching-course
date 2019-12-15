@@ -1,13 +1,41 @@
 import * as React from 'react';
 import { Button, Upload, Icon, Input, message } from 'antd';
-import { IStoreState, IControl, controlArray } from './index.config';
+import { IControl, controlArray } from './index.config';
+import { api } from 'common/api/index';
+import { IPersonUpdateRequestParams, IPersonUpdateResponseResult } from 'common/api/api-interface';
+import { getUserBaseInfo } from 'common/utils/function';
 import './index.scss';
 
-export default class SettingPersonalContainer extends React.PureComponent<any, any> {
-    /** 状态值备份 */
-    public storeState: IStoreState;
+interface IConfig {
+    userInfo: any
+}
 
-    constructor(public props: any) {
+interface IState {
+    img: string;
+    userName: string;
+    userNameControlFocus: boolean;
+    job: string;
+    jobControlFocus: boolean;
+    introduction: string;
+    introductionControlFocus: boolean;
+    isLoading: boolean;
+    [key: string]: any;
+}
+
+export interface ISettingPersonalProps {
+    img: string;
+    userName: string;
+    job: string;
+    introduction: string;
+    password: string;
+    loginName: string;
+    [key: string]: any;
+}
+
+export class SettingPersonalContainer extends React.PureComponent<ISettingPersonalProps, IState> {
+    public config: IConfig;
+
+    constructor(public props: ISettingPersonalProps) {
         super(props);
 
         this.state = {
@@ -17,37 +45,30 @@ export default class SettingPersonalContainer extends React.PureComponent<any, a
             job: '',
             jobControlFocus: false,
             introduction: '',
-            introductionControlFocus: false
+            introductionControlFocus: false,
+            isLoading: false
         };
 
-        this.storeState = {
-            userName: '',
-            job: '',
-            introduction: ''
-        };
+        this.config = {
+            userInfo: getUserBaseInfo()
+        }
+    }
+
+    static getDerivedStateFromProps(props: ISettingPersonalProps, state: IState) {
+        if (props.loginName) {
+            const { img, introduction, userName, job } = props;
+            return {
+                img,
+                userName,
+                job,
+                introduction,
+            };
+        }
+
+        return null;
     }
 
     componentDidMount() {
-        this.loadUserInfo();
-    }
-
-    /** 
-     * @func
-     * @desc 加载用户信息
-     */
-    public loadUserInfo = () => {
-        this.setState({
-            img: 'https://mirror-gold-cdn.xitu.io/1693d70320728da3b28?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1',
-            userName: 'Nice fish',
-            job: '搬砖工',
-            introduction: '唱跳rap篮球'
-        }, () => {
-            this.storeState = {
-                userName: 'Nice fish',
-                job: '搬砖工',
-                introduction: '唱跳rap篮球'
-            };
-        });
     }
 
     /** 
@@ -80,11 +101,8 @@ export default class SettingPersonalContainer extends React.PureComponent<any, a
      * @desc 控件值保存
      */
     public save = (stateName: string, focusStateName: string) => {
-        this.storeState[stateName] = this.state[stateName];
         this.setState({
             [focusStateName]: false
-        }, () => {
-            message.success('保存成功');
         });
     }
 
@@ -94,7 +112,7 @@ export default class SettingPersonalContainer extends React.PureComponent<any, a
      */
     public cancel = (stateName: string, focusStateName: string) => {
         this.setState({
-            [stateName]: this.storeState[stateName],
+            [stateName]: this.props[stateName],
             [focusStateName]: false
         });
     }
@@ -105,6 +123,27 @@ export default class SettingPersonalContainer extends React.PureComponent<any, a
      */
     public edit = (focusStateName: string) => {
         this.controlFocus(focusStateName, true);
+    }
+
+    /** 
+     * @callback
+     * @desc 更新老师信息
+     */
+    public updateTeacherInfo = () => {
+        const { loginName, password } = this.props;
+
+        const params: IPersonUpdateRequestParams = {
+            loginName,
+            password
+        };
+
+        api.updateTeacher(params).then((res: IPersonUpdateResponseResult) => {
+            if (res.status === 200) {
+                res.data.success && message.success('修改成功');
+            } else {
+                message.error('修改失败');
+            }
+        });
     }
 
     public render() {
@@ -147,6 +186,11 @@ export default class SettingPersonalContainer extends React.PureComponent<any, a
                                 </div>
                         })
                     }
+                    <div className='submit-box'>
+                        <Button type="primary" onClick={this.updateTeacherInfo}>
+                            保存修改
+                        </Button>
+                    </div>
                 </div>
     }
 }

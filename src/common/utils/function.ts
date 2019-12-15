@@ -1,8 +1,14 @@
+import LocalStorageService from 'common/utils/cache/local-storage';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
+
+export const localStorageService =  new LocalStorageService();
+
 /** 
  * @desc 获取token
  */
 export function getToken() {
-    const token: string = '';
+    const result = localStorageService.get(StorageItemName.TOKEN);
+    const token: string = result && result.value.token || '';
     return token;
 }
 
@@ -10,10 +16,8 @@ export function getToken() {
  * @desc 获取用户基本信息
  */
 export function getUserBaseInfo() {
-    const userInfo = {
-        loginName: '',
-        id: ''
-    };
+    const result = localStorageService.get(StorageItemName.LOGINCACHE);
+    const userInfo = result && result.value || null;
     return userInfo;
 }
 

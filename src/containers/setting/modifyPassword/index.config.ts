@@ -1,3 +1,9 @@
+export interface ISettingModifyPwdProps {
+    loginName: string;
+    password: string;
+    [key: string]: any;
+}
+
 export interface IFormItem {
     label: string;
     placeholder: string;

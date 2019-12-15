@@ -3,6 +3,7 @@ import { httpRequest } from '../http/index';
 import './_mock';
 
 export const api = {
+    /** 前端mock上传进度 */
     mockUpload: (param?: any) => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/upload', {}).then(res => {
@@ -12,7 +13,24 @@ export const api = {
             });
         });
     },
-    login: httpRequest(`POST /user/login`),
+    /** 用户登录 */
+    login: httpRequest(`POST /teacher/login`),
+    /** 用户退出 */
+    signOut: httpRequest(`POST /teacher/signOut`),
+    /** 教材列表 */
+    materialList: httpRequest(`POST /material/list`),
+    /** 教材章节 */
+    sectionList: httpRequest(`POST /material/section`),
+    /** 查询个人信息 */
+    queryPerson: httpRequest(`POST /teacher/queryPerson`),
+    /** 上传文件 */
+    uploadFile: httpRequest(`POST /material/uploadFile`),
+    /** 下载文件 */
+    download: httpRequest(`GET /material/download`),
+    /** 更新个人信息 */
+    updateTeacher: httpRequest(`POST /teacher/update`),
+    
+
     loadTeachingMenu: () => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/teachingMenu', {}).then(res => {

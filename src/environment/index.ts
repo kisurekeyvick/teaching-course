@@ -10,7 +10,7 @@ export const currentEnv: CurrentEnv = process.env.NODE_ENV as CurrentEnv;
 
 /** 环境地址列表 */
 export const baseUrlList = {
-    development: '/api/microspicy', //'http://api.microspicy.com:8078',
+    development: 'http://api.microspicy.com:8078',  // '/api/microspicy', //'/api/microspicy', //
     production: ''
 };
 

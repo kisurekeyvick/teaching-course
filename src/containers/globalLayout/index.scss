@@ -2,39 +2,39 @@
 
 .global-layout {
     height: 100%;
-    position: relative;
-    background: transparent url('../../assets/images/userBg.png') no-repeat fixed top !important;
-    background-size: 100% 100% !important;
+    // position: relative;
+    // background: transparent url('../../assets/images/userBg.png') no-repeat fixed top !important;
+    // background-size: 100% 100% !important;
 
-    .user-bg {
-        position: absolute;
-        z-index: -1;
-        width: 100%;
-    }
+    // .user-bg {
+    //     position: absolute;
+    //     z-index: -1;
+    //     width: 100%;
+    // }
 
     .ant-layout-header {
         height: 65px;
         padding: 0;
-        // background: #fff;
+        background: #fff;
         line-height: 0;
-        background-color: transparent;
+        // background-color: transparent;
     }
 
     .ant-layout-content {
         margin-top: 65px;
         min-height: initial;
-        // background-color: #f0f2f5;
+        background-color: #f0f2f5;
     }
 
-    .ant-layout-footer {
-        background: transparent !important;
-    }
+    // .ant-layout-footer {
+    //     background: transparent !important;
+    // }
 
     .global-head {
         display: flex;
         max-width: 992px;
         margin: 0 auto;
-        // background-color: #fff;
+        background-color: #fff;
 
         .global-head-left {
             flex: 0 0 500px;
@@ -52,8 +52,8 @@
                 border-radius: 5px;
 
                 &.selected, &:hover {
-                    // color:#fff;
-                    // background-color: $color;
+                    color:#fff;
+                    background-color: $color;
                 }
             }
         }

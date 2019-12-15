@@ -1,7 +1,7 @@
 @import '../../../assets/styles/global.scss';
 
 .directory-box {
-    // background-color: #fff;
+    background-color: #fff;
     min-height: 300px;
     padding: 0 12px 24px;
 
@@ -23,9 +23,9 @@
         }
     }
 
-    span.ant-tree-switcher {
-        background: transparent !important;
-    }
+    // span.ant-tree-switcher {
+    //     background: transparent !important;
+    // }
 
     .directory-menu-box {
         padding: 0 10px 0 3px;

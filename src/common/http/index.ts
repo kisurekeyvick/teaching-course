@@ -25,7 +25,7 @@ const httpRequest: IHttpRequest = (config: Config) => {
      * @params overrideConfig   请求的配置
      */
     return (payload, overrideConfig) => {
-        request({
+        return request({
             url,
             method,
             /** 
@@ -37,7 +37,11 @@ const httpRequest: IHttpRequest = (config: Config) => {
              */
             [method === 'GET' ? 'params' : 'data']: payload,
             // paramsSerializer: params => '',
-            ...overrideConfig
+            ...overrideConfig,
+            headers: {
+                'Access-Control-Expose-Headers': 'token',
+                // 'Content-Type': 'multipart/form-data;charset=UTF-8'
+            }
         });
     };
 }

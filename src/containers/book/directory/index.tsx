@@ -1,14 +1,19 @@
 import * as React from 'react';
 import { IDirectoryProps } from '../interface';
-import { Tree, Skeleton } from 'antd';
+import { Tree, Skeleton, message } from 'antd';
 import './index.scss';
 // menu是本地写死的数据
 import { IMenuItem } from './index.config';
 import { SvgComponent } from 'components/icon/icon';
-import { api } from 'common/api/index';
+// import { api } from 'common/api/index';
 import noDataImg from 'assets/images/noData.png';
-import { ITeachDirectoryMaterialList, ISection } from 'common/api/api-interface';
-import { cloneDeep } from 'lodash';
+// import { ITeachDirectoryMaterialList, IMaterialSectionResponseResult, IChapterResponseDtoListItem,
+//     ISectionItem, IMaterialListResponseResult } from 'common/api/api-interface';
+// import { cloneDeep } from 'lodash';
+import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
+import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { updateChapterMaterial } from 'store/material-chapter/action';
 
 const { TreeNode } = Tree;
 
@@ -18,7 +23,7 @@ interface IState {
     isLoading: boolean;
 }
 
-export default class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
+class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
     constructor(public props: IDirectoryProps) {
         super(props);
     
@@ -38,30 +43,21 @@ export default class DirectoryContainer extends React.PureComponent<IDirectoryPr
             isLoading: true
         });
 
-        api.loadTeachingMaterialDirectory().then((res: any) => {
-            if (res.status === 200) {
-                const { result } = res.data;
-                const { teachMaterialList }: {teachMaterialList: ITeachDirectoryMaterialList[]} = result
-                const menus: IMenuItem[] = teachMaterialList.map((item: ITeachDirectoryMaterialList) => {
-                    return {
-                        name: item.title,
-                        key: String(item.id),
-                        value: item.id,
-                        children: [],
-                        id: item.id,
-                        isLeaf: false,
-                        weight: item.weight
-                    };
-                }).sort((x: IMenuItem, y: IMenuItem) => {
-                    return y.weight - x.weight;
-                });
-
-                this.setState({
-                    menus,
-                    hasData: menus.length > 0,
-                    isLoading: false
+        loadMaterialMenu().then((res: IMenuItem[]) => {
+            const state = {
+                isLoading: false
+            };
+            
+            if (res.length) {
+                Object.assign(state, {
+                    menus: res,
+                    hasData: res.length > 0
                 });
             }
+
+            this.setState({
+                ...state
+            });
         });
     }
 
@@ -88,45 +84,22 @@ export default class DirectoryContainer extends React.PureComponent<IDirectoryPr
                 return;
             }
 
-            const params = {
-                /** 教材id */
-                materialId: ''
-            };
-            
-            api.loadSectionDirectory(params).then((res: any) => {
-                if (res.status === 200) {
-                    const { chapterResponseDtoList }: {chapterResponseDtoList: ISection[]} = res.data;
-                    const { value } = treeNode.props.dataRef;
-                    const menus: IMenuItem[] = chapterResponseDtoList.map((section: any, index: number) => {
-                        const { section: item }: { section: ISection } = section;
-                        return {
-                            name: item.name,
-                            key: `${value}-${index}-${item.id}`,
-                            value: item.id,
-                            id: item.id,
-                            isLeaf: true,
-                            weight: item.weight,
-                            children: []
-                        };
-                    }).sort((x: IMenuItem, y: IMenuItem) => {
-                        return y.weight - x.weight;
-                    });
+            const params: FormData = new FormData();
+            params.set('id', treeNode.props.dataRef.value);
 
-                    menus.forEach((menu: IMenuItem) => {
-                        treeNode.props.dataRef.children.push({
-                            title: menu.name,
-                            key: menu.key
-                        });
-                    });
+            loadSectionList(params, treeNode, this.state.menus).then(({ menusState, showList }) => {
+                menusState.length && this.setState({
+                    menus: menusState
+                });
 
-                    const menusState: IMenuItem[] = cloneDeep(this.state.menus);
-                    const target: IMenuItem = menusState.find((item: IMenuItem) => item.value === value)!;
-                    target.children! = menus;
-
-                    this.setState({
-                        menus: menusState
-                    });
-                }
+                this.props.updateChapterMaterial({
+                    materialSource: menusState,
+                    showList,
+                    isLoading: 'false'
+                });
+                resolve();
+            }, (reject: string) => {
+                message.warn(reject);
                 resolve();
             });
         });
@@ -175,3 +148,18 @@ export default class DirectoryContainer extends React.PureComponent<IDirectoryPr
                 </div>
     }
 }
+
+function mapStateToProps() {
+    return {};
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return {
+        updateChapterMaterial: bindActionCreators(updateChapterMaterial, dispatch)
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(DirectoryContainer);

@@ -237,10 +237,22 @@ class UploadContainer extends React.Component<IUploadContainerProps, any> {
     public handleSubmit = (e: any) => {
         e.preventDefault();
 
-        const isvalid: boolean = this.validSpecialControl();
+        const isvalid: boolean = true;// this.validSpecialControl();
 
         this.props.form.validateFieldsAndScroll((err: any, values: any) => {
             if (!err && isvalid) {
+                const params: FormData = new FormData();
+                params.set('file', this.state.fileList[0].originFileObj);
+                const a: any = {
+                    'chapterId': 'CHAPTER201912121106019366537', 
+                    'materialId': 'MATERL201912121106019186655'
+                };
+                params.set('uploadRequestDto', JSON.stringify(a));
+
+                api.uploadFile(params).then((res: any) => {
+                    console.log('上传结果', res);
+                })
+
                 message.success('发布成功');
             }
         });

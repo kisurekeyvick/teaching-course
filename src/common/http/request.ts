@@ -14,7 +14,7 @@ service.interceptors.request.use(
     async config => {
         let { url = '' } = config;
         const { headers = {} } = config;
-        const token = getToken();
+        const token: string = '123'; //getToken();
         /** 请求的具体地址 */
         url = `${env.baseURL}${url}`;
 
@@ -23,13 +23,14 @@ service.interceptors.request.use(
             { url },
             {
                 headers: Object.assign(headers, {
-                    'Access-Token': token
+                    'token': token
                 })
             }
         );
     }, 
     error => {
-        throw new Error(error);
+        message.error(error);
+        // throw new Error(error);
     }
 );
 
@@ -38,41 +39,49 @@ service.interceptors.response.use(
       return response
     },
     error => {
-      throw new Error(error)
+        message.error(error);
+    //   throw new Error(error)
     },
 )
 
 export function request(config: AxiosRequestConfig) {
-    return service.request(config).then(
-        async response => {
-            const { data: content = {} } = response;
-            const { responseType } = config;
+    return new Promise((resolve, reject) => {
+        service.request(config).then(
+            response => {
+                if (response) {
+                    const { data, status, statusText, headers } = response;
 
-            /** 文件流形式返回 */
-            if (responseType === 'blob') {
-                return response;
+                    resolve({ data, status, statusText, headers });
+                }
+                // const { data: content = {} } = response;
+                // const { responseType } = config;
+    
+                // /** 文件流形式返回 */
+                // if (responseType === 'blob') {
+                //     return response;
+                // }
+    
+                // /** 
+                //  * TODO:
+                //  * 如果出现code为401,则需要重新登录 */
+                // if (content.code === 401 ) {
+                //     relogin();
+                // }
+    
+                // /** 
+                //  * TODO:
+                //  * 其他错误情况还需要处理
+                //  */
+    
+                //  /** 返回结果 */
+                //  return content;
+            },
+            err => {
+                message.error(err.message);
+                reject(err);
             }
-
-            /** 
-             * TODO:
-             * 如果出现code为401,则需要重新登录 */
-            if (content.code === 401 ) {
-                relogin();
-            }
-
-            /** 
-             * TODO:
-             * 其他错误情况还需要处理
-             */
-
-             /** 返回结果 */
-             return content;
-        },
-        err => {
-            message.error(err.message);
-            return Promise.reject(err);
-        }
-    );
+        );
+    });
 }
 
 function relogin() {

@@ -26,5 +26,7 @@ export interface IBookListItemDetailProps {
 export interface IBookListProps {
     searchBook: string;
     history: any;
+    showList: any[];
+    isLoading: string;
     [key: string]: any;
 }

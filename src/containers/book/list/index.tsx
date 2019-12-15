@@ -1,17 +1,17 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import { filterConfig, IFilterConfigItem, imgList } from './index.config';
-import { Divider, Radio, Icon, Rate, Popover, Skeleton, message } from 'antd';
+import { Divider, Radio, Icon, Rate, Skeleton, message } from 'antd';
 import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
-import QrcodeComponent from 'components/qrcode/index';
 import { cloneDeep } from 'lodash';
-import './index.scss';
 import { IBookListProps } from '../interface';
 import { SvgComponent } from 'components/icon/icon';
 import { api } from 'common/api/index';
 import { ICourseMaterialListRequest, ICourseMaterialDto } from 'common/api/api-interface';
 import dayjs from 'dayjs';
 import { calculateScore } from 'common/utils/function';
+import { IMenuItem } from 'common/service/tree-ajax';
+import './index.scss';
 
 interface IState {
     format: string;
@@ -64,6 +64,28 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             pageSize: pageSize,
         };
         this.loadBookList(params);
+    }
+
+    static getDerivedStateFromProps(nextProps: IBookListProps, prevState: IState) {
+        if (nextProps.showList) {
+            const result = nextProps.showList.reduce((current: Array<any>, next: IMenuItem) => {
+                const list: Array<any> = next.teachChapterList;
+                return current.concat(...list);
+            }, []).map((item: any) => {
+                item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
+                item.title = item.name;
+                return {    
+                    ...item,
+                    isLoading: false
+                }
+            });
+
+            return {
+                booklist: result
+            }
+        }
+
+        return null;
     }
 
     /** 
@@ -150,9 +172,9 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
      * @desc 选择教材
      */
     public selectBook = (item: any) => {
-        const { history } = this.props;
-        const url: string = `/book/id/${item.id}`;
-        history.push(url);
+        // const { history } = this.props;
+        // const url: string = `/book/id/${item.id}`;
+        // history.push(url);
     }
 
     /** 
@@ -289,7 +311,9 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 }
 
 function mapStateToProps(state: any) {
-    return {}
+    return {
+        showList: state.chapterMaterial.chaperMaterial['showList']
+    }
 }
 
 export default connect(

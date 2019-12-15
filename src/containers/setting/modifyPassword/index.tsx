@@ -1,14 +1,20 @@
 import * as React from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { IFormItem, formItems } from './index.config';
+import { IFormItem, formItems, ISettingModifyPwdProps } from './index.config';
 import { cloneDeep } from 'lodash';
+import { api } from 'common/api/index';
+import { IPersonUpdateRequestParams, IPersonUpdateResponseResult } from 'common/api/api-interface';
 import './index.scss';
 
 interface IConfig {
     formItems: IFormItem[]
 }
 
-class SettingModifyPwdContainer extends React.PureComponent<any, any> {
+interface IState {
+    [key: string]: any;
+}
+
+class SettingModifyPwdContainer extends React.PureComponent<ISettingModifyPwdProps, IState> {
     public config: IConfig;
 
     constructor(public props: any) {
@@ -63,7 +69,19 @@ class SettingModifyPwdContainer extends React.PureComponent<any, any> {
 
         this.props.form.validateFieldsAndScroll((err: any, values: any) => {
             if (!err) {
-                message.success('修改成功');
+                const { loginName } = this.props;
+                const params: IPersonUpdateRequestParams = {
+                    loginName,
+                    password: values.password
+                };
+
+                api.updateTeacher(params).then((res: IPersonUpdateResponseResult) => {
+                    if (res.status === 200) {
+                        res.data.success && message.success('修改成功');
+                    } else {
+                        message.error('修改失败');
+                    }
+                });
             }
         });
     }

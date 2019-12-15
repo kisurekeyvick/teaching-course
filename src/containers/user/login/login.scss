@@ -13,7 +13,7 @@
         }
 
         .checkbox-remember {
-            float: left;
+            // float: left;
         }
 
         .login-form-forgot {
@@ -31,6 +31,16 @@
 
         .formItem-item {
             @include login-formItem-item;
+
+            .error-message {
+                display: block;
+                margin-bottom: 0;
+                color: $errorColor;
+
+                &.error-animate {
+                    animation: flipInX 2s;
+                }
+            }
         }
 
         .has-error {
