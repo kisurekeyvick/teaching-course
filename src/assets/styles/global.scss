@@ -93,6 +93,24 @@ $secondMainColor: #f9f0ff;
     width: 992px;
 }
 
+@keyframes rotateInDownRight {
+  0% {
+      -webkit-transform-origin: right bottom;
+      transform-origin: right bottom;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      opacity: 0
+  }
+
+  to {
+      -webkit-transform-origin: right bottom;
+      transform-origin: right bottom;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      opacity: 1
+  }
+}
+
 @keyframes bounceInLeft {
   0%,60%,75%,90%,to {
       -webkit-animation-timing-function: cubic-bezier(.215,.61,.355,1);

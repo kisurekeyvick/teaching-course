@@ -20,7 +20,7 @@ export interface IMenuItem {
 export const loadMaterialMenu = (): Promise<any> => {
     return new Promise((resolve, reject) => {
         api.materialList().then((res: IMaterialListResponseResult) => {
-            if (res.status === 200) {
+            if (res.status === 200 && res.data.success) {
                 const { result } = res.data;
                 const { teachMaterialList }: {teachMaterialList: ITeachDirectoryMaterialList[]} = result
                 const menus: IMenuItem[] = teachMaterialList.map((item: ITeachDirectoryMaterialList) => {
@@ -39,7 +39,7 @@ export const loadMaterialMenu = (): Promise<any> => {
 
                 resolve(menus);
             } else {
-                reject();
+                resolve([]);
             }
         });
     });

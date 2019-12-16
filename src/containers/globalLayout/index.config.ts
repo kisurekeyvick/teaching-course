@@ -27,7 +27,7 @@ export const headMenus: IHeadMenu[] = [
     {
         icon: 'user',
         key: '1',
-        type: 'icon',
+        type: 'img',
         value: 'user',
         trigger: 'hover',
         tooltipInfo: '个人中心'

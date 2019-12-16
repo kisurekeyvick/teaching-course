@@ -11,7 +11,7 @@ const initialState = {};
 function chaperMaterial(state = initialState, action: IMaterialChaperUpdateAction) {
     switch(action.type) {
         case ActionTypes.CHAPTER_UPDATE:
-            return action.data;
+            return {...state, ...action.data};
         default:
             return state;
     }

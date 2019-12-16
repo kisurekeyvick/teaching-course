@@ -7,10 +7,11 @@ import { cloneDeep } from 'lodash';
 import { IBookListProps } from '../interface';
 import { SvgComponent } from 'components/icon/icon';
 import { api } from 'common/api/index';
-import { ICourseMaterialListRequest, ICourseMaterialDto } from 'common/api/api-interface';
 import dayjs from 'dayjs';
-import { calculateScore } from 'common/utils/function';
-import { IMenuItem } from 'common/service/tree-ajax';
+import { defaultBookPic } from 'common/service/img-collection';
+import { dictionary, IDictionaryItem, findTarget } from 'common/dictionary/index';
+import { getUserBaseInfo } from 'common/utils/function';
+import { IMaterialOptionRequest, IMaterialOptionResponseResult } from 'common/api/api-interface';
 import './index.scss';
 
 interface IState {
@@ -24,6 +25,8 @@ interface IState {
 
 interface IConifg {
     maxScore: number;
+    teacherCache: any;
+    materialOperation: IDictionaryItem[]
 }
 
 class BookListContainer extends React.PureComponent<IBookListProps, IState> {
@@ -53,71 +56,34 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
         };
 
         this.config = {
-            maxScore: 10
+            maxScore: 10,
+            teacherCache: getUserBaseInfo(),
+            materialOperation: dictionary.get('material-operation')!
         };
     }
 
     componentDidMount() {
-        const { pageInfo: { currentPage, pageSize} } = this.state;
-        const params: ICourseMaterialListRequest = {
-            pageNum: currentPage,
-            pageSize: pageSize,
-        };
-        this.loadBookList(params);
     }
 
     static getDerivedStateFromProps(nextProps: IBookListProps, prevState: IState) {
         if (nextProps.showList) {
-            const result = nextProps.showList.reduce((current: Array<any>, next: IMenuItem) => {
-                const list: Array<any> = next.teachChapterList;
-                return current.concat(...list);
-            }, []).map((item: any) => {
+            const result = nextProps.showList.map((item: any) => {
                 item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
                 item.title = item.name;
+                item.pic = item.pic || defaultBookPic;
                 return {    
-                    ...item,
-                    isLoading: false
+                    ...item
                 }
             });
 
             return {
-                booklist: result
+                booklist: result,
+                hasData: result.length > 0,
+                isLoading: nextProps.isLoading === 'true' ? true : false
             }
         }
 
         return null;
-    }
-
-    /** 
-     * @func
-     * @desc 加载book列表
-     */
-    public loadBookList = (params: ICourseMaterialListRequest) => {
-        message.loading('加载数据中', 2);
-
-        this.setState({
-            isLoading: true
-        });
-
-        api.loadBookList(params).then((res: any) => {
-            if (res.status === 200) {
-                const { result: { teachMaterialDto } } = res.data;
-                const { list }: { list: ICourseMaterialDto[] } = teachMaterialDto;
-                const booklist: any[] = list.map((item: ICourseMaterialDto) => {
-                    item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
-                    item.rate = calculateScore(this.config.maxScore, +(item.score));
-                    return item;
-                });
-
-                this.setState({
-                    booklist,
-                    hasData: booklist.length > 0,
-                    isLoading: false
-                });
-
-                message.info('加载完成');
-            }
-        });
     }
 
     /** 
@@ -171,11 +137,11 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
      * @func
      * @desc 选择教材
      */
-    public selectBook = (item: any) => {
-        // const { history } = this.props;
-        // const url: string = `/book/id/${item.id}`;
-        // history.push(url);
-    }
+    // public selectBook = (item: any) => {
+    //     const { history } = this.props;
+    //     const url: string = `/book/id/${item.id}`;
+    //     history.push(url);
+    // }
 
     /** 
      * @func
@@ -195,10 +161,42 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
     /** 
      * @func
-     * @desc 收藏
+     * @desc 收藏 点赞
      */
-    public collect = (item: any) => {
-        message.success('收藏成功');
+    public handleMaterialOperation = (item: any, typeStr: string) => {
+        const { materialOperation, teacherCache } = this.config;
+        const type: number = +(findTarget(materialOperation, typeStr)!);
+
+        const params: IMaterialOptionRequest = {
+            type,
+            teacherId: teacherCache.teacherId,
+            ...(type === 3 || type === 4) && { confirm: 1 },
+            id: item.materialId
+        };
+
+        api.materialOption(params).then((res: IMaterialOptionResponseResult) => {
+            if (res.status === 200 && res.data.success) {
+                message.success('收藏成功');
+            } else {
+                message.error(res.data.desc);
+            }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 查看详情
+     */
+    public showDetail = (item: any) => {
+
+    }
+
+    /** 
+     * @func
+     * @desc 下载
+     */
+    public download = (item: any) => {
+
     }
 
     /** 
@@ -261,12 +259,10 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                 <Skeleton active/>
                                 <Skeleton active/>
                             </div> : hasData ? booklist.map((item: any) => {
-                                return <div className='booklist-item' key={item.id} onClick={() => this.selectBook(item)}>
+                                return <div className='booklist-item' key={item.id}>
                                             <div className='booklist-item-top'>
                                                 <div className='booklist-item-top-left'>
                                                     <span>{ item.title }</span>
-                                                    {/* <Icon className='icon-like' type="heart" /> */}
-                                                    <SvgComponent className='lover-svg' type='icon-love' onClick={() => this.collect(item)}/>
                                                 </div>
                                                 <div className='booklist-item-top-right'>
                                                     <Rate disabled defaultValue={item.rate}/>
@@ -293,6 +289,24 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                     <p className='contributor'>贡献者：{item.contributors}</p>
                                                 </div>
                                             </div>
+                                            <div className='booklist-operation'>
+                                                <div className='booklist-operation-item' onClick={() => this.handleMaterialOperation(item, 'collect')}>
+                                                    <SvgComponent className='icon-svg' type='icon-collect'/>
+                                                    <p>收藏</p>
+                                                </div>
+                                                <div className='booklist-operation-item' onClick={() => this.handleMaterialOperation(item, 'praise')}>
+                                                    <SvgComponent className='icon-svg' type='icon-praise'/>
+                                                    <p>点赞</p>
+                                                </div>
+                                                <div className='booklist-operation-item' onClick={() => this.handleMaterialOperation(item, 'see')}>
+                                                    <SvgComponent className='icon-svg' type='icon-see'/>
+                                                    <p>查看</p>
+                                                </div>
+                                                <div className='booklist-operation-item' onClick={() => this.download(item)}>
+                                                    <SvgComponent className='icon-svg' type='icon-download'/>
+                                                    <p>下载</p>
+                                                </div>
+                                            </div>
                                         </div>
                             }) :
                             <div className='noData'>
@@ -311,8 +325,10 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 }
 
 function mapStateToProps(state: any) {
+    const { showList = [], isLoading } = state.chapterMaterial.chaperMaterial;
     return {
-        showList: state.chapterMaterial.chaperMaterial['showList']
+        showList,
+        isLoading 
     }
 }
 

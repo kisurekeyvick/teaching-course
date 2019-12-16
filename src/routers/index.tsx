@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom";
-// import { env } from 'environment/index';
 import UserContainer from 'containers/user/user';
 import BehindUserContainer from 'containers/admin/login/login';
 import UserLayout from 'containers/globalLayout/index';
 import AdminLayout from 'containers/globalLayout/AdminLayout/index';
 import { pagesRouter, ILoadableRoute, behindPagesRouter } from './routerList';
-import LocalStorageService from 'common/utils/cache/local-storage';
-import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+// import LocalStorageService from 'common/utils/cache/local-storage';
+// import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+import { localStorageService } from 'common/utils/function';
 import { cloneDeep } from 'lodash';
 import {connect} from 'react-redux';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
 
 type IProps = {
     [key: string]: any
@@ -22,7 +23,6 @@ type IConfig = {
 
 class RouteClass extends React.Component<IProps, any> {
     public config: IConfig;
-    public localStorageService: LocalStorageService;
 
     constructor(public props: IProps) {
         super(props);
@@ -31,8 +31,6 @@ class RouteClass extends React.Component<IProps, any> {
             routes: cloneDeep(pagesRouter),
             behindRoutes: cloneDeep(behindPagesRouter) 
         };
-
-        this.localStorageService = new LocalStorageService();
     }
 
     /** 
@@ -40,8 +38,8 @@ class RouteClass extends React.Component<IProps, any> {
      * @desc 获取前台用户登录状态
      */
     public userStatus = (storageName: string) => {
-        const userInfo = this.localStorageService.get(storageName);
-        return !(userInfo && userInfo['value']['token']);
+        const userToken = localStorageService.get(storageName);
+        return !(userToken && userToken['value']['token']);
     }
 
     /** 
@@ -66,15 +64,15 @@ class RouteClass extends React.Component<IProps, any> {
      *       返回behind 代表后台页面
      */
     public judgePageType = (): string => {
-        const pageType = this.localStorageService.get(LocalStorageItemName.PAGETYPE);
+        const pageType = localStorageService.get(StorageItemName.PAGETYPE);
         const result: string = pageType ? pageType.value['type'] : 'front';
         return result;
     }
 
     public render() {
         const pageType: string = this.judgePageType();
-        const frontPageNeedLogin: boolean = this.userStatus(LocalStorageItemName.LOGINCACHE);
-        const behindPageNeedLogin: boolean = this.userStatus(LocalStorageItemName.BEHINDLOGINCACHE);
+        const frontPageNeedLogin: boolean = this.userStatus(StorageItemName.TOKEN);
+        const behindPageNeedLogin: boolean = this.userStatus(StorageItemName.BEHINDLOGINCACHE);
         const frontPageRoutes:React.ReactNode[] = this.buildPageRoute(this.config.routes);
         const behindPageRoutes:React.ReactNode[] = this.buildPageRoute(this.config.behindRoutes);
 

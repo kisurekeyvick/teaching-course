@@ -21,6 +21,9 @@ export const api = {
     materialList: httpRequest(`POST /material/list`),
     /** 教材章节 */
     sectionList: httpRequest(`POST /material/section`),
+    /** 收藏，阅读，点赞 */
+    materialOption: httpRequest(`POST /material/option`),
+    
     /** 查询个人信息 */
     queryPerson: httpRequest(`POST /teacher/queryPerson`),
     /** 上传文件 */
@@ -29,6 +32,8 @@ export const api = {
     download: httpRequest(`GET /material/download`),
     /** 更新个人信息 */
     updateTeacher: httpRequest(`POST /teacher/update`),
+    /** 更新密码 */
+    updatePassword: httpRequest(`POST /teacher/updatePassword`),
     
 
     loadTeachingMenu: () => {

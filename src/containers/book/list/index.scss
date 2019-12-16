@@ -82,8 +82,10 @@
         .booklist-item {
             padding: 12px;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
 
-            @include backgroundAnimate(rgba(0,0,0,.03));
+            @include backgroundAnimate(rgba(0,0,0,.07));
 
             .booklist-item-top {
                 display: flex;
@@ -154,6 +156,44 @@
                         margin: 12px 0 0 0;
                         @include smallsize;
                     }
+                }
+            }
+
+            .booklist-operation {
+                position: absolute;
+                background-color: rgba(0,0,0,.7);
+                color: #bbb;
+                height: 100%;
+                top: -300px;
+                right:0;
+                width: 267px;
+
+                .booklist-operation-item {
+                    display: inline-block;
+                    width: 25%;
+                    text-align: center;
+                    padding: 0 12px;
+                    height: 100%;
+
+                    &:hover {
+                        color: #fff;
+                        background-color: #000;
+                    }
+
+                    .icon-svg {
+                        margin-top: 60px;
+                        margin-bottom: 5px;
+                        font-size: 17px;
+                    }
+                }
+            }
+
+            &:hover {
+                .booklist-operation {
+                    top: 0;
+                    right: 0;
+                    display: block;
+                    animation: bounceInRight 1s;
                 }
             }
         }

@@ -1,5 +1,6 @@
 import LocalStorageService from 'common/utils/cache/local-storage';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
+import { message } from 'antd';
 
 export const localStorageService =  new LocalStorageService();
 
@@ -8,7 +9,7 @@ export const localStorageService =  new LocalStorageService();
  */
 export function getToken() {
     const result = localStorageService.get(StorageItemName.TOKEN);
-    const token: string = result && result.value.token || '';
+    const token: string = result ? result.value.token : '';
     return token;
 }
 
@@ -17,7 +18,7 @@ export function getToken() {
  */
 export function getUserBaseInfo() {
     const result = localStorageService.get(StorageItemName.LOGINCACHE);
-    const userInfo = result && result.value || null;
+    const userInfo = result ? result.value : null;
     return userInfo;
 }
 
@@ -51,6 +52,31 @@ export function getBase64(img: Blob, callback: Function) {
  */
 export function calculateScore(maxScore: number, currentScore: number) {
     return (currentScore/maxScore) * 5;
+}
+
+/**
+ * @desc 消息提示
+ * @param loadDesc 
+ * @param successDesc 
+ * @param errorDesc 
+ */
+export function messageFunc(loadDesc: string = '加载数据中') {
+    const loading = message.loading(loadDesc, 0);
+
+    return {
+        success: function( successDesc: string = '加载完成') {
+            loading();
+            message.success(successDesc, 2);
+        },
+        error: function(errorDesc: string = '') {
+            loading();
+            message.error(errorDesc, 2);
+        },
+        warn: function(wornDesc: string = '') {
+            loading();
+            message.warning(wornDesc, 2);
+        },
+    }
 }
 
 /**

@@ -8,11 +8,12 @@ import { NavLink } from "react-router-dom";
 import { Layout, Input, Icon, Popover, Row, Col, Tooltip, message } from 'antd';
 import { cloneDeep } from 'lodash';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
-import LocalStorageService from 'common/utils/cache/local-storage';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
 import { SvgComponent } from 'components/icon/icon';
 import { ISignOutResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
+import { getUserBaseInfo, localStorageService } from 'common/utils/function';
+import { defaultUserPic } from 'common/service/img-collection';
 import './index.scss';
 
 const { Header, Content, Footer } = Layout;
@@ -29,19 +30,16 @@ interface IState {
 }
 
 class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
-    public localStorageService: LocalStorageService;
     public config: IConfig;
     public childref: any;
 
     constructor(public props: IGlobalLayoutProps) {
         super(props);
-        
-        this.localStorageService = new LocalStorageService();
 
         this.config = {
             headMenus:  cloneDeep(headMenus),
             menusContent: this.menusContentList(menusContentConfig),
-            teacherCache: this.localStorageService.get(StorageItemName.LOGINCACHE)
+            teacherCache: getUserBaseInfo(),
         };
 
         this.childref = React.createRef();
@@ -53,8 +51,6 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
      */
     public searchBook = (e: string) => {
         this.props.searchBookContent(e);
-
-        console.log('this.props', this.props);
 
         if (window.location.pathname !== '/search/result') {
             /** 跳转至搜索结果页 */
@@ -71,6 +67,8 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
      * @desc 构建头部菜单
      */
     public buildHeadMenu = (): React.ReactNode  => {
+        const { teacherCache } = this.config;
+
         return <React.Fragment>
                     {
                         this.config.headMenus.map((menu: IHeadMenu) => {
@@ -86,6 +84,11 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                                 { menu.type === 'SvgComponent' && !content && <Tooltip title={menu.tooltipInfo}>
                                         <span className='menu-svg-box' onClick={() => this.clickHeadMenuItem(menu)}><SvgComponent className={`svg-component ${menu.icon}`} type={menu.icon!} /></span>
                                     </Tooltip> }
+                                {
+                                    menu.type === 'img' && content && <Popover content={content} trigger={menu.trigger}>
+                                        <img className='user-portrait' src={teacherCache.link || defaultUserPic} alt='user-img'/>
+                                    </Popover>
+                                }
                             </li>
                         })
                     }
@@ -133,17 +136,20 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     public menuOperation = (tag: string) => {
         if (tag === 'exit') {
             /** 用户退出 */
+            const loading = message.loading('正在退出中......', 0);
+
             const params: FormData = new FormData();
-            
-            params.set('teacherId', this.config.teacherCache.value.teacherId);
+            params.set('teacherId', this.config.teacherCache.teacherId);
 
             api.signOut(params).then((res: ISignOutResponseResult) => {
+                loading();
+
                 if (res.status === 200) {
                     const { desc, success } = res.data;
-
+                    
                     if (!success) {
                         message.error(desc);
-                    } else {
+                    } else {    
                         message.success(desc);
                         window.location.href = '/user/login';
                     }
@@ -152,7 +158,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
         } else if (tag === 'admin-system') {
-            this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'behind' });
+            localStorageService.set(StorageItemName.PAGETYPE, { type: 'behind' });
             window.location.href = '/admin/login';
         }
     }
@@ -161,7 +167,6 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         const headMenu: React.ReactNode = this.buildHeadMenu();
 
         return <Layout className='global-layout'>
-                {/* <img className='user-bg' src={userBg} alt='user-bg' /> */}
                 <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
                     <div className='global-head'>
                         <div className='global-head-left'>
@@ -171,7 +176,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                             <NavLink className='link-item' to='/search/result' activeClassName='selected'>检索</NavLink>
                         </div>
                         <div className='global-head-right'>
-                            <Search className='search-control' placeholder='搜索教材' onSearch={this.searchBook}/>
+                            <Search className='search-control' placeholder='搜索教材资源' onSearch={this.searchBook}/>
                             <ul className='right-menu'>
                                 { headMenu }
                             </ul>

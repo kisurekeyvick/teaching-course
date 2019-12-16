@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IDirectoryProps } from '../interface';
-import { Tree, Skeleton, message } from 'antd';
+import { Tree, Skeleton } from 'antd';
 import './index.scss';
 // menu是本地写死的数据
 import { IMenuItem } from './index.config';
@@ -14,6 +14,7 @@ import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateChapterMaterial } from 'store/material-chapter/action';
+import { messageFunc } from 'common/utils/function';
 
 const { TreeNode } = Tree;
 
@@ -39,6 +40,8 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @desc 加载最外层级目录菜单
      */
     public loadFirstLayerMenu = () => {
+        const loading = messageFunc();
+
         this.setState({
             isLoading: true
         });
@@ -48,25 +51,17 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                 isLoading: false
             };
             
-            if (res.length) {
-                Object.assign(state, {
-                    menus: res,
-                    hasData: res.length > 0
-                });
-            }
+            res.length && Object.assign(state, {
+                menus: res,
+                hasData: res.length > 0
+            });
 
             this.setState({
                 ...state
             });
+
+            loading.success();
         });
-    }
-
-    /** 
-     * @func
-     * @desc 加载章节的目录
-     */
-    public loadSectionMenu = () => {
-
     }
 
     public componentDidMount() {
@@ -78,11 +73,17 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @desc 加载课程章节
      */
     public handleTreeNodeLoad = (treeNode: any): Promise<any> => {
+        this.props.updateChapterMaterial({
+            isLoading: 'true'
+        });
+
         return new Promise((resolve) => {
             if (treeNode.props.children) {
                 resolve();
                 return;
             }
+
+            const loading = messageFunc(); 
 
             const params: FormData = new FormData();
             params.set('id', treeNode.props.dataRef.value);
@@ -92,16 +93,47 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                     menus: menusState
                 });
 
-                this.props.updateChapterMaterial({
-                    materialSource: menusState,
-                    showList,
+                this.pushChapterMaterial(`${treeNode.props.dataRef.value}-0`, {
                     isLoading: 'false'
-                });
+                }, menusState);
+
+                loading.success();
                 resolve();
             }, (reject: string) => {
-                message.warn(reject);
+                loading.warn(reject);
+
+                this.props.updateChapterMaterial({
+                    showList: [],
+                    isLoading: 'false'
+                });
+
                 resolve();
             });
+        });
+    }
+
+    /** 
+     * @callback
+     * @desc 选择节点 
+     */
+    public selectNode = (selectedKeys: string[], e?: any) => {
+        this.pushChapterMaterial(selectedKeys[0], {}, this.state.menus);
+    }
+
+    /**
+     * @func
+     * @desc 推送相关的节点对应的章节材料
+     * @param selectedKeys 该参数的结构为：materialId-章节的index-章节的id
+     * @param otherParmas 
+     */
+    public pushChapterMaterial(selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[]) {
+        const keysArr: string[] = selectedKeys.split('-');
+        const materialID: string = keysArr[0];
+        const sectionIndex: number = +keysArr[1];
+        const targetMaterial: IMenuItem = stateMenus.find((menu: IMenuItem) => menu.value === materialID)!;
+        this.props.updateChapterMaterial({
+            showList: (targetMaterial.children!)[sectionIndex].teachChapterList,
+            ...otherParmas
         });
     }
 
@@ -121,7 +153,8 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         return <Tree 
                     showLine
                     loadData={this.handleTreeNodeLoad}
-                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-course'/>}>
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-course'/>}
+                    onSelect={this.selectNode}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>
     }

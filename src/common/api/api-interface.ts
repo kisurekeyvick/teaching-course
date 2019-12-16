@@ -90,6 +90,16 @@ export interface IMaterialSectionResponseResult extends IAjaxCommonResponse {
     }
 }
 
+/** 收藏 阅读 点赞 请求格式*/
+export interface IMaterialOptionRequest {
+    id: string;
+    teacherId: string;
+    type: number;
+    confirm?: number;
+}
+
+export interface IMaterialOptionResponseResult extends IAjaxCommonResponse {}
+
 
 /** 课程资源列表 */
 /** 请求格式 */
@@ -174,4 +184,12 @@ export interface IPersonUpdateRequestParams {
 }
 
 export interface IPersonUpdateResponseResult extends IAjaxCommonResponse {
+}
+
+/** 更新密码 */
+export interface IUpdatePasswordRequestParams {
+    oldPassword: string;
+    newPassword: string;
+    againNewPassword: string;
+    teacherId: string;
 }
