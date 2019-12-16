@@ -100,6 +100,26 @@ export interface IMaterialOptionRequest {
 
 export interface IMaterialOptionResponseResult extends IAjaxCommonResponse {}
 
+/** 教材是否被点赞收藏 请求参数 */
+export interface IMaterialStatusRequest {
+    teacherId: string;
+    /** 材料 eachChapterList chapterId */
+    idList: string[];
+}
+
+/** 教材是否被点赞收藏 返回结果 */
+export interface IMaterialStatusResponse extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: {
+            idList: string[];
+            isCollectionList: string[];
+        };
+        success: boolean;
+    }
+}
+
 
 /** 课程资源列表 */
 /** 请求格式 */
