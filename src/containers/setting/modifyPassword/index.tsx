@@ -1,13 +1,15 @@
 import * as React from 'react';
 import { Form, Input, Button, message } from 'antd';
-import { IFormItem, formItems, ISettingModifyPwdProps } from './index.config';
+import { IFormItem, formItems, ISettingModifyPwdProps, IValue } from './index.config';
 import { cloneDeep } from 'lodash';
 import { api } from 'common/api/index';
-import { IPersonUpdateRequestParams, IPersonUpdateResponseResult } from 'common/api/api-interface';
+import { IPersonUpdateResponseResult, IUpdatePasswordRequestParams } from 'common/api/api-interface';
+import { getUserBaseInfo } from 'common/utils/function';
 import './index.scss';
 
 interface IConfig {
-    formItems: IFormItem[]
+    formItems: IFormItem[];
+    teacherCahe: any;
 }
 
 interface IState {
@@ -21,7 +23,8 @@ class SettingModifyPwdContainer extends React.PureComponent<ISettingModifyPwdPro
         super(props);
 
         this.config = {
-            formItems: this.rebuildFormItem(cloneDeep(formItems))
+            formItems: this.rebuildFormItem(cloneDeep(formItems)),
+            teacherCahe: getUserBaseInfo()
         }
     }
 
@@ -67,15 +70,17 @@ class SettingModifyPwdContainer extends React.PureComponent<ISettingModifyPwdPro
     public handleSubmit = (e: any) => {
         e.preventDefault();
 
-        this.props.form.validateFieldsAndScroll((err: any, values: any) => {
+        this.props.form.validateFieldsAndScroll((err: any, values: IValue) => {
             if (!err) {
-                const { loginName } = this.props;
-                const params: IPersonUpdateRequestParams = {
-                    loginName,
-                    password: values.password
+                const { teacherCahe } = this.config;
+                const params: IUpdatePasswordRequestParams = {
+                    oldPassword: values.oldPassword,
+                    newPassword: values.newPassword,
+                    againNewPassword: values.againNewPassword,
+                    teacherId: teacherCahe.teacherId
                 };
 
-                api.updateTeacher(params).then((res: IPersonUpdateResponseResult) => {
+                api.updatePassword(params).then((res: IPersonUpdateResponseResult) => {
                     if (res.status === 200) {
                         res.data.success && message.success('修改成功');
                     } else {

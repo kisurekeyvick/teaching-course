@@ -98,7 +98,7 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                 };
 
                 this.setState({
-                    personInfo: Object.assign(this.state.personInfo, state)
+                    personInfo: {...this.state.personInfo, ...state}
                 });
 
                 message.info('加载完成');

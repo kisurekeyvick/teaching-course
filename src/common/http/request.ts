@@ -51,8 +51,14 @@ export function request(config: AxiosRequestConfig) {
                 if (response) {
                     const { data, status, statusText, headers } = response;
 
-                    if (response.data.desc === '会话过期，请重新登陆') {
+                    /** 会话过期 */
+                    if (response.data.desc === '会话过期，请重新登陆' || response.data.code === 302) {
                         return relogin(response.data.desc);
+                    }
+
+                    /** 权限不足 */
+                    if (response.data.code === 305) {
+                        return message.error(response.data.desc);
                     }
 
                     resolve({ data, status, statusText, headers });
@@ -71,14 +77,6 @@ export function request(config: AxiosRequestConfig) {
                 // if (content.code === 401 ) {
                 //     relogin();
                 // }
-    
-                // /** 
-                //  * TODO:
-                //  * 其他错误情况还需要处理
-                //  */
-    
-                //  /** 返回结果 */
-                //  return content;
             },
             err => {
                 message.error(err.message);

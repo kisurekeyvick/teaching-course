@@ -10,11 +10,13 @@ import noDataImg from 'assets/images/noData.png';
 // import { ITeachDirectoryMaterialList, IMaterialSectionResponseResult, IChapterResponseDtoListItem,
 //     ISectionItem, IMaterialListResponseResult } from 'common/api/api-interface';
 // import { cloneDeep } from 'lodash';
+import { IMaterialStatusRequest, IMaterialStatusResponse } from 'common/api/api-interface';
 import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateChapterMaterial } from 'store/material-chapter/action';
-import { messageFunc } from 'common/utils/function';
+import { messageFunc, getUserBaseInfo } from 'common/utils/function';
+import { api } from 'common/api';
 
 const { TreeNode } = Tree;
 
@@ -24,7 +26,13 @@ interface IState {
     isLoading: boolean;
 }
 
+interface IConfig {
+    teacherCache: any;
+}
+
 class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
+    public config: IConfig;
+
     constructor(public props: IDirectoryProps) {
         super(props);
     
@@ -32,6 +40,10 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
             menus: [],
             hasData: false,
             isLoading: false
+        };
+
+        this.config = {
+            teacherCache: getUserBaseInfo()
         };
     }
 
@@ -47,14 +59,14 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         });
 
         loadMaterialMenu().then((res: IMenuItem[]) => {
-            const state = {
+            let state = {
                 isLoading: false
             };
             
-            res.length && Object.assign(state, {
+            res.length && (state = {...state, ...{
                 menus: res,
                 hasData: res.length > 0
-            });
+            }});
 
             this.setState({
                 ...state
@@ -113,6 +125,26 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
     }
 
     /** 
+     * @func
+     * @desc 
+     */
+    public loadMaterialStatus = async (showList: any[]) => {
+        const { teacherCache } = this.config;
+
+        const params: IMaterialStatusRequest = {
+            teacherId: teacherCache.teacherId,
+            idList: []
+        };
+
+        await api.materialStatus(params).then((res: IMaterialStatusResponse) => {
+            if (res.status === 200) {
+                const { idList, isCollectionList } = res.data.result;
+                return { idList, isCollectionList };
+            }
+        });
+    }
+
+    /** 
      * @callback
      * @desc 选择节点 
      */
@@ -126,13 +158,16 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @param selectedKeys 该参数的结构为：materialId-章节的index-章节的id
      * @param otherParmas 
      */
-    public pushChapterMaterial(selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[]) {
+    public pushChapterMaterial = async (selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[]) => {
         const keysArr: string[] = selectedKeys.split('-');
         const materialID: string = keysArr[0];
         const sectionIndex: number = +keysArr[1];
         const targetMaterial: IMenuItem = stateMenus.find((menu: IMenuItem) => menu.value === materialID)!;
+        const showList: any[] = (targetMaterial.children!)[sectionIndex].teachChapterList!;
+        // const statusList: any[] = await this.loadMaterialStatus(showList);
+
         this.props.updateChapterMaterial({
-            showList: (targetMaterial.children!)[sectionIndex].teachChapterList,
+            showList,
             ...otherParmas
         });
     }

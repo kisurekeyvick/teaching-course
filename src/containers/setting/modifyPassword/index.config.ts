@@ -14,6 +14,12 @@ export interface IFormItem {
     state: string;
 }
 
+export interface IValue {
+    oldPassword: string;
+    newPassword: string;
+    againNewPassword: string;
+}
+
 export const formItems: IFormItem[] = [
     {
         label: '旧密码',
@@ -27,7 +33,7 @@ export const formItems: IFormItem[] = [
             }
         ],
         key: '1',
-        state: 'oldPwd',
+        state: 'oldPassword',
     },
     {
         label: '新密码',
@@ -41,7 +47,7 @@ export const formItems: IFormItem[] = [
             }
         ],
         key: '2',
-        state: 'newPwd',
+        state: 'newPassword',
     },
     {
         label: '确认新密码',
@@ -55,6 +61,6 @@ export const formItems: IFormItem[] = [
             }
         ],
         key: '3',
-        state: 'secondNewPwd',
+        state: 'againNewPassword',
     }
 ];
