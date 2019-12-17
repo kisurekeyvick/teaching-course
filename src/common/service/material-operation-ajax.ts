@@ -7,15 +7,25 @@ import { api } from 'common/api/index';
 
 const materialOperation: IDictionaryItem[] = dictionary.get('material-operation')!
 
-export type IHandleMaterialOperation = ({ operation }: {
+// export type IHandleMaterialOperation = ({ operation, sourceItem }: {
+//     operation: string;
+//     sourceItem: ITeachChapterList;
+// }) => {}
+
+export interface IMaterialOperationparams {
     operation: string;
     sourceItem: ITeachChapterList;
-}) => {}
+}
 
-export const handleMaterialOperation: IHandleMaterialOperation = async ({
+export interface IPromiseResolve {
+    bool: boolean;
+    desc: string;
+}
+
+export function handleMaterialOperation ({
     operation,
     sourceItem
-}) => {
+}: IMaterialOperationparams): Promise<IPromiseResolve> {
     const type: number = +(matchFieldFindeTarget(materialOperation, { name: operation })!.value);
     const getConfirm = (): number => {
         /** 如果处于收藏状态，那么返回2，2代表取消点赞 */
@@ -36,11 +46,19 @@ export const handleMaterialOperation: IHandleMaterialOperation = async ({
         id: sourceItem.chapterId
     };
 
-    await api.materialOption(params).then((res: IMaterialOptionResponseResult) => {
-        if (res.status === 200 && res.data.success) {
-            return true;
-        } else {
-            return false;
-        }
+    return new Promise((resolve, reject) => {
+        api.materialOption(params).then((res: IMaterialOptionResponseResult) => {
+            if (res.status === 200 && res.data.success) {
+                resolve({
+                    bool: true,
+                    desc: res.data.desc
+                });
+            } else {
+                resolve({
+                    bool: false,
+                    desc: res.data.desc
+                });
+            }
+        });
     });
 }

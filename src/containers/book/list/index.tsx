@@ -12,6 +12,7 @@ import { defaultBookPic } from 'common/service/img-collection';
 import { dictionary, IDictionaryItem, matchFieldFindeTarget } from 'common/dictionary/index';
 import { downloadFile } from 'common/utils/function';
 import { IMaterialOptionRequest, IMaterialOptionResponseResult, ITeachChapterList } from 'common/api/api-interface';
+import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
 import './index.scss';
 
 interface IState {
@@ -169,32 +170,11 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
      * @desc 收藏 点赞
      */
     public handleMaterialOperation = (item: ITeachChapterList, typeStr: string) => {
-        const { materialOperation } = this.config;
-        const type: number = +(matchFieldFindeTarget(materialOperation, { name: typeStr })!.value);
-        const getConfirm = (): number => {
-            /** 如果处于收藏状态，那么返回2，2代表取消点赞 */
-            if (typeStr === 'collect' && item.isCollect) {
-                return 2;
-            }
-            /** 逻辑同上 */
-            if (typeStr === 'praise' && item.isPraise) {
-                return 2;
-            }
-
-            return 1;
-        }
-
-        const params: IMaterialOptionRequest = {
-            type,
-            ...(type === 3 || type === 4) && { confirm: getConfirm() },
-            id: item.chapterId
-        };
-
-        api.materialOption(params).then((res: IMaterialOptionResponseResult) => {
-            if (res.status === 200 && res.data.success) {
+        handleMaterialOperation({ operation: typeStr, sourceItem: item }).then(({ bool, desc }: IPromiseResolve) => {
+            if (bool) {
                 let { booklist } = this.state;
                 booklist = booklist.map((book: ITeachChapterList) => {
-                    if (params.id === book.chapterId) {
+                    if (item.chapterId === book.chapterId) {
                         typeStr === 'praise' && (book.isPraise = !book.isPraise);
                         typeStr === 'collect' && (book.isCollect = !book.isCollect);
                     }
@@ -207,11 +187,55 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                     updateTime: Date.now()
                 });
 
-                message.success(res.data.desc);
+                message.success(desc);
             } else {
-                message.error(res.data.desc);
+                message.error(desc);
             }
-        });
+        })
+
+        // const { materialOperation } = this.config;
+        // const type: number = +(matchFieldFindeTarget(materialOperation, { name: typeStr })!.value);
+        // const getConfirm = (): number => {
+        //     /** 如果处于收藏状态，那么返回2，2代表取消点赞 */
+        //     if (typeStr === 'collect' && item.isCollect) {
+        //         return 2;
+        //     }
+        //     /** 逻辑同上 */
+        //     if (typeStr === 'praise' && item.isPraise) {
+        //         return 2;
+        //     }
+
+        //     return 1;
+        // }
+
+        // const params: IMaterialOptionRequest = {
+        //     type,
+        //     ...(type === 3 || type === 4) && { confirm: getConfirm() },
+        //     id: item.chapterId
+        // };
+
+        // api.materialOption(params).then((res: IMaterialOptionResponseResult) => {
+        //     if (res.status === 200 && res.data.success) {
+        //         let { booklist } = this.state;
+        //         booklist = booklist.map((book: ITeachChapterList) => {
+        //             if (params.id === book.chapterId) {
+        //                 typeStr === 'praise' && (book.isPraise = !book.isPraise);
+        //                 typeStr === 'collect' && (book.isCollect = !book.isCollect);
+        //             }
+                    
+        //             return book;
+        //         });
+
+        //         this.setState({
+        //             booklist: cloneDeep(booklist),
+        //             updateTime: Date.now()
+        //         });
+
+        //         message.success(res.data.desc);
+        //     } else {
+        //         message.error(res.data.desc);
+        //     }
+        // });
     }
 
     /** 
