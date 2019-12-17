@@ -1,5 +1,6 @@
 import { Method, AxiosResponse, AxiosRequestConfig } from 'axios';
 import { request } from './request';
+import { getUserBaseInfo } from 'common/utils/function';
 
 type Config = string;
 
@@ -25,6 +26,18 @@ const httpRequest: IHttpRequest = (config: Config) => {
      * @params overrideConfig   请求的配置
      */
     return (payload, overrideConfig) => {
+        let value = payload;
+        const teacherInfo = getUserBaseInfo();
+
+        if (Object.prototype.toString.call(value) === '[object Object]') {
+            value = {...value, 
+                ...teacherInfo && {teacherId: teacherInfo.teacherId}}
+        }
+
+        if (Object.prototype.toString.call(value) === '[object FormData]') {
+            (value as FormData).set('teacherId', teacherInfo.teacherId);
+        }
+
         return request({
             url,
             method,
@@ -35,7 +48,7 @@ const httpRequest: IHttpRequest = (config: Config) => {
              * `data` 是作为请求主体被发送的数据
              * 只适用于这些请求方法 'PUT', 'POST', 和 'PATCH'
              */
-            [method === 'GET' ? 'params' : 'data']: payload,
+            [method === 'GET' ? 'params' : 'data']: value,
             // paramsSerializer: params => '',
             ...overrideConfig,
             headers: {

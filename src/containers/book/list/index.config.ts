@@ -1,5 +1,6 @@
 // import picture from 'assets/images/timg.jpg';
 import noData from 'assets/images/noData.png';
+import { dictionary } from 'common/dictionary/index';
 
 export const imgList: any = {
     // picture,
@@ -8,7 +9,7 @@ export const imgList: any = {
 
 export interface IFilterConfigItem {
     name?: string;
-    value: string;
+    value: string | number;
     selected?: boolean;
     label?: string;
     order?: string;
@@ -21,13 +22,19 @@ interface IFilterConfig {
     sort: IFilterConfigItem[];
 }
 
+/** 资源类型 */
+let sourceType: IFilterConfigItem[] = (dictionary.get('source-type')!);
+sourceType.unshift({ name: '全部', value: '0' });
+sourceType = sourceType.map((item: IFilterConfigItem) => {
+    return {
+        ...item,
+        value: String(item.value),
+        selected: false
+    };
+});
+
 export const filterConfig: IFilterConfig = {
-    type: [
-        { name: '全部', value: '0', selected: false },
-        { name: '微课', value: '1', selected: false },
-        { name: '电子教材', value: '2', selected: false },
-        { name: '教学设计', value: '3', selected: false },
-    ],
+    type: [...sourceType],
     format: [
         { label: '全部', value: 'all' },
         { label: '文档', value: 'document' },

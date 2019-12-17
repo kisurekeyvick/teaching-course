@@ -36,9 +36,17 @@
 
         .collection-item-top {
             margin-bottom: 12px;
+            position: relative;
 
             label {
                 font-size: 13px;
+            }
+
+            .file-format-logo {
+                width: 65px;
+                position: absolute;
+                right: -10px;
+                top: -60px;
             }
         }
 

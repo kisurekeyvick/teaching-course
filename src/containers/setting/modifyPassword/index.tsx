@@ -1,15 +1,15 @@
 import * as React from 'react';
-import { Form, Input, Button, message } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { IFormItem, formItems, ISettingModifyPwdProps, IValue } from './index.config';
 import { cloneDeep } from 'lodash';
 import { api } from 'common/api/index';
 import { IPersonUpdateResponseResult, IUpdatePasswordRequestParams } from 'common/api/api-interface';
-import { getUserBaseInfo } from 'common/utils/function';
+import { messageFunc, relogin } from 'common/utils/function';
 import './index.scss';
 
 interface IConfig {
     formItems: IFormItem[];
-    teacherCahe: any;
+    // teacherCahe: any;
 }
 
 interface IState {
@@ -24,7 +24,7 @@ class SettingModifyPwdContainer extends React.PureComponent<ISettingModifyPwdPro
 
         this.config = {
             formItems: this.rebuildFormItem(cloneDeep(formItems)),
-            teacherCahe: getUserBaseInfo()
+            // teacherCahe: getUserBaseInfo()
         }
     }
 
@@ -72,19 +72,20 @@ class SettingModifyPwdContainer extends React.PureComponent<ISettingModifyPwdPro
 
         this.props.form.validateFieldsAndScroll((err: any, values: IValue) => {
             if (!err) {
-                const { teacherCahe } = this.config;
+                const loading = messageFunc('正在修改密码中......');
+
                 const params: IUpdatePasswordRequestParams = {
                     oldPassword: values.oldPassword,
                     newPassword: values.newPassword,
                     againNewPassword: values.againNewPassword,
-                    teacherId: teacherCahe.teacherId
                 };
 
                 api.updatePassword(params).then((res: IPersonUpdateResponseResult) => {
-                    if (res.status === 200) {
-                        res.data.success && message.success('修改成功');
+                    if (res.status === 200 && res.data.success) {
+                        loading.success(res.data.desc);
+                        relogin();
                     } else {
-                        message.error('修改失败');
+                        loading.error(res.data.desc, 4);
                     }
                 });
             }

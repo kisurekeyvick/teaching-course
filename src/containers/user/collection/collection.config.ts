@@ -4,6 +4,6 @@ export interface IDataSource {
     desc: string;
     url: string;
     type: string;
-    typeImg: string;
+    typeImg: any;
     id: number;
 } 

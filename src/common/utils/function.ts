@@ -64,19 +64,41 @@ export function messageFunc(loadDesc: string = '加载数据中') {
     const loading = message.loading(loadDesc, 0);
 
     return {
-        success: function( successDesc: string = '加载完成') {
+        success: function( successDesc: string = '加载完成', seconds: number = 2) {
             loading();
-            message.success(successDesc, 2);
+            message.success(successDesc, seconds);
         },
-        error: function(errorDesc: string = '') {
+        error: function(errorDesc: string = '', seconds: number = 2) {
             loading();
-            message.error(errorDesc, 2);
+            message.error(errorDesc, seconds);
         },
-        warn: function(wornDesc: string = '') {
+        warn: function(wornDesc: string = '', seconds: number = 2) {
             loading();
-            message.warning(wornDesc, 2);
+            message.warning(wornDesc, seconds);
         },
     }
+}
+
+/**
+ * @desc 重新登录
+ * @param desc 
+ */
+export function relogin(desc: string = '', seconds: number = 5) {
+    message.info(`${desc}, ${seconds}秒钟后将跳转至登录页。`, seconds, () => {
+        window.location.href = '/user/login';
+    });
+}
+
+/**
+ * @desc 下载文件
+ * @param param0 
+ */
+export function downloadFile({ fileName, fileFormat, url }: { fileName: string; fileFormat: number | string; url: string }) {
+    const aEle: HTMLAnchorElement = document.createElement('a');
+    aEle.href = url;
+    aEle.download = fileName;
+    aEle.target = '_blank';
+    aEle.click();
 }
 
 /**

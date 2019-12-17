@@ -10,12 +10,12 @@ import noDataImg from 'assets/images/noData.png';
 // import { ITeachDirectoryMaterialList, IMaterialSectionResponseResult, IChapterResponseDtoListItem,
 //     ISectionItem, IMaterialListResponseResult } from 'common/api/api-interface';
 // import { cloneDeep } from 'lodash';
-import { IMaterialStatusRequest, IMaterialStatusResponse } from 'common/api/api-interface';
+import { IMaterialStatusRequest, IMaterialStatusResponse, ITeachChapterList } from 'common/api/api-interface';
 import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateChapterMaterial } from 'store/material-chapter/action';
-import { messageFunc, getUserBaseInfo } from 'common/utils/function';
+import { messageFunc } from 'common/utils/function';
 import { api } from 'common/api';
 
 const { TreeNode } = Tree;
@@ -27,7 +27,6 @@ interface IState {
 }
 
 interface IConfig {
-    teacherCache: any;
 }
 
 class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
@@ -43,7 +42,6 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         };
 
         this.config = {
-            teacherCache: getUserBaseInfo()
         };
     }
 
@@ -86,7 +84,8 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      */
     public handleTreeNodeLoad = (treeNode: any): Promise<any> => {
         this.props.updateChapterMaterial({
-            isLoading: 'true'
+            isLoading: 'true',
+            updateTime: Date.now()
         });
 
         return new Promise((resolve) => {
@@ -107,16 +106,15 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
 
                 this.pushChapterMaterial(`${treeNode.props.dataRef.value}-0`, {
                     isLoading: 'false'
-                }, menusState);
-
-                loading.success();
+                }, menusState, loading.success);
                 resolve();
             }, (reject: string) => {
                 loading.warn(reject);
 
                 this.props.updateChapterMaterial({
                     showList: [],
-                    isLoading: 'false'
+                    isLoading: 'false',
+                    updateTime: Date.now()
                 });
 
                 resolve();
@@ -128,18 +126,17 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @func
      * @desc 
      */
-    public loadMaterialStatus = async (showList: any[]) => {
-        const { teacherCache } = this.config;
-
+    public loadMaterialStatus = async (showList: ITeachChapterList[]) => {
         const params: IMaterialStatusRequest = {
-            teacherId: teacherCache.teacherId,
-            idList: []
+            idList: showList.map((item: ITeachChapterList) => item.chapterId)
         };
 
-        await api.materialStatus(params).then((res: IMaterialStatusResponse) => {
+        return await api.materialStatus(params).then((res: IMaterialStatusResponse) => {
             if (res.status === 200) {
-                const { idList, isCollectionList } = res.data.result;
-                return { idList, isCollectionList };
+                let { idList, idCollectionList } = res.data.result;
+                idList = idList ? idList : [];
+                idCollectionList = idCollectionList ? idCollectionList : [];
+                return { idList, idCollectionList };
             }
         });
     }
@@ -158,17 +155,39 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @param selectedKeys 该参数的结构为：materialId-章节的index-章节的id
      * @param otherParmas 
      */
-    public pushChapterMaterial = async (selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[]) => {
+    public pushChapterMaterial = async (selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[], func?: Function) => {
+        this.props.updateChapterMaterial({
+            isLoading: 'true',
+            updateTime: Date.now()
+        });
+
         const keysArr: string[] = selectedKeys.split('-');
         const materialID: string = keysArr[0];
         const sectionIndex: number = +keysArr[1];
-        const targetMaterial: IMenuItem = stateMenus.find((menu: IMenuItem) => menu.value === materialID)!;
-        const showList: any[] = (targetMaterial.children!)[sectionIndex].teachChapterList!;
-        // const statusList: any[] = await this.loadMaterialStatus(showList);
+        const course: IMenuItem = stateMenus.find((menu: IMenuItem) => menu.value === materialID)!;
+        const section =  (course.children!)[sectionIndex];
+        /** 面包屑 */
+        const breadcrumb: string[] = [course.name, section.name];
+        /** 展示列表 */
+        let showList: ITeachChapterList[] = section.teachChapterList || [];
+        /** 查看点赞 收藏 */
+        const { idList = [], idCollectionList = [] } = await this.loadMaterialStatus(showList);
+        showList = showList.map((item: ITeachChapterList) => {
+            const idListIndex = idList.findIndex((i: string) => i === item.chapterId);
+            const collectionIndex = idCollectionList.findIndex((i: string) => i === item.chapterId);
+            item.isCollect = collectionIndex > -1;
+            item.isPraise = idListIndex > -1;
+            return item;
+        });
+
+        func && func();
 
         this.props.updateChapterMaterial({
+            breadcrumb,
             showList,
-            ...otherParmas
+            ...otherParmas,
+            isLoading: 'false',
+            updateTime: Date.now()
         });
     }
 

@@ -25,6 +25,8 @@ export const api = {
     materialOption: httpRequest(`POST /material/option`),
     /** 查看教材是否被点赞和收藏 */
     materialStatus: httpRequest(`POST /material/isCollection`),
+    /** 收藏列表 */
+    collectionList: httpRequest(`POST /material/collectionList`),
     
     /** 查询个人信息 */
     queryPerson: httpRequest(`POST /teacher/queryPerson`),

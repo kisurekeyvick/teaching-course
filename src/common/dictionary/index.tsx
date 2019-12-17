@@ -69,3 +69,18 @@ export interface IDictionaryItem {
 export const findTarget = (source: IDictionaryItem[], value: number | string) => {
     return source.find((i: IDictionaryItem) => i.value === value);
 };
+
+export interface IMatch {
+    name?: string;
+    value?: string | number;
+}
+
+export const matchFieldFindeTarget = (source: IDictionaryItem[], match: IMatch): IDictionaryItem | undefined => {
+    if (match.name) {
+        return source.find((i: IDictionaryItem) => i.name === match.name);
+    }
+
+    if (match.value) {
+        return source.find((i: IDictionaryItem) => i.value === match.value);
+    }
+};

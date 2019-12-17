@@ -73,9 +73,38 @@ export interface ISectionItem {
     weight: number;
 }
 
+export interface ITeachChapterList {
+    chapterId: string;
+    collectionCount: number;
+    createTime: string;
+    desc: string;
+    downloadCount: number;
+    fabulousCount: number;
+    fileFormat: number;
+    fileName: string;
+    fileType: string;
+    id: number;
+    link: string;
+    materialId: string;
+    name: string;
+    parentId: string;
+    pic: string;
+    realFileName: string;
+    size: string;
+    title: string;
+    type: string;
+    updateTime: string;
+    uploadTime: string;
+    viewCount: number;
+    weight: number;
+    isCollect?: boolean;
+    isPraise?: boolean;
+    [key: string]: any;
+}
+
 export interface IChapterResponseDtoListItem {
     section: ISectionItem;
-    teachChapterList: any[];
+    teachChapterList: ITeachChapterList[];
 }
 
 /** 章节接口数据返回格式 */
@@ -93,7 +122,7 @@ export interface IMaterialSectionResponseResult extends IAjaxCommonResponse {
 /** 收藏 阅读 点赞 请求格式*/
 export interface IMaterialOptionRequest {
     id: string;
-    teacherId: string;
+    teacherId?: string;
     type: number;
     confirm?: number;
 }
@@ -102,7 +131,7 @@ export interface IMaterialOptionResponseResult extends IAjaxCommonResponse {}
 
 /** 教材是否被点赞收藏 请求参数 */
 export interface IMaterialStatusRequest {
-    teacherId: string;
+    teacherId?: string;
     /** 材料 eachChapterList chapterId */
     idList: string[];
 }
@@ -114,7 +143,59 @@ export interface IMaterialStatusResponse extends IAjaxCommonResponse {
         isAdministrators: number;
         result: {
             idList: string[];
-            isCollectionList: string[];
+            idCollectionList: string[];
+        };
+        success: boolean;
+    }
+}
+
+/** 收藏列表 请求参数 */
+export interface ICollectionListsRequest {
+    pageInfo: {
+        pageNum: number;
+        pageSize: number;
+    },
+    // teacherId?: string;
+}
+
+export interface ITeachChapterResList {
+    chapterId: string;
+    collectionCount: number;
+    createTime: string;
+    desc: string;
+    downloadCount: number;
+    fabulousCount: number;
+    fileName: string;
+    fileType: string;
+    id: number;
+    link: string;
+    materialId: string;
+    name: string;
+    parentId: string;
+    pic: string;
+    realFileName: string;
+    size: string;
+    title: string;
+    type: string;
+    updateTime: string;
+    uploadTime: string;
+    viewCount: number;
+    weight: number;
+    [key: string]: any;
+}
+
+export interface ICollectionListsResponse extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: {
+            teachChapterList: {
+                hasNextPage: boolean;
+                list: ITeachChapterResList[];
+                pageNum: number;
+                pageSize: number;
+                total: number;
+            };
         };
         success: boolean;
     }
@@ -211,5 +292,5 @@ export interface IUpdatePasswordRequestParams {
     oldPassword: string;
     newPassword: string;
     againNewPassword: string;
-    teacherId: string;
+    teacherId?: string;
 }

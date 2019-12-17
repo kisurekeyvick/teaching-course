@@ -12,6 +12,20 @@
 .book-list {
     .filter-box {
         @include smallsize;
+
+        .breadcrumb-box {
+            @include filterLayout;
+
+            .svg-breadcrumb {
+                margin-right: 8px;
+                font-size: 16px;
+            }
+
+            .ant-breadcrumb {
+                display: inline-block;
+                @include smallsize;
+            }
+        }
         
         .filter-box-type {
             @include filterLayout;
@@ -175,7 +189,7 @@
                     padding: 0 12px;
                     height: 100%;
 
-                    &:hover {
+                    &:hover, &.selected {
                         color: #fff;
                         background-color: #000;
                     }

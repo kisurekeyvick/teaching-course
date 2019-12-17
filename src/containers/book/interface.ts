@@ -28,5 +28,7 @@ export interface IBookListProps {
     history: any;
     showList: any[];
     isLoading: string;
+    breadcrumb: string[];
+    updateTime: number;
     [key: string]: any;
 }

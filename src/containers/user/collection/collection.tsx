@@ -1,9 +1,13 @@
 import React from 'react';
 import { Skeleton, Row, Col, Popconfirm, message, Icon } from 'antd';
-import { api } from 'common/api/index';
 import { IDataSource } from './collection.config';
 import noDataImg from 'assets/images/noData.png';
 import { SvgComponent } from 'components/icon/icon';
+import { api } from 'common/api/index';
+import { ICollectionListsRequest, ICollectionListsResponse, ITeachChapterResList } from 'common/api/api-interface';
+import { IPageInfo } from 'components/pagination/index';
+import { messageFunc } from 'common/utils/function';
+import { sourceFormat, matchFieldFindeTarget, IDictionaryItem } from 'common/dictionary/index';
 import './collection.scss';
 
 interface IColleactionProps {
@@ -15,6 +19,7 @@ interface IState {
     isLoading: boolean;
     hasData: boolean;
     canScrollLoad: boolean;
+    pageInfo: IPageInfo;
     [key: string]: any;
 }
 
@@ -24,36 +29,78 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
 
         this.state = {
             dataSource: [],
-            isLoading: false,
+            isLoading: true,
             hasData: false,
-            canScrollLoad: true
+            canScrollLoad: true,
+            pageInfo: {
+                currentPage: 1,
+                pageCount: 0,
+                pageSize: 10,
+                rowCount: 0,
+                totalCount: 0,
+                pageSizeOptions:['10', '20', '30', '40', '50']
+            }
         };
     }
 
     public componentDidMount() {
-        this.loadColleaction();
+        const params: ICollectionListsRequest = {
+            pageInfo: {
+                pageSize: 10,
+                pageNum: 1
+            }
+        };
+
+        this.loadColleaction(params);
     }
 
-    public loadColleaction = (params = {}) => {
-        message.loading('加载数据中', 2);
+    public loadColleaction = (params: ICollectionListsRequest) => {
+        const loading = messageFunc();
 
         this.setState({
             isLoading: true
         });
 
-        api.loadCollectionResult(params).then((res: any) => {
-            if (res.status === 200) {
-                const dataSource = res.data;
+        api.collectionList(params).then((res: ICollectionListsResponse) => {
+            let state = {};
 
-                this.setState({
-                    dataSource,
-                    hasData: dataSource.length > 0,
-                    isLoading: false,
-                    canScrollLoad: true
+            if (res.status === 200 && res.data.success) {
+                const { hasNextPage, list } = res.data.result.teachChapterList;
+                const dataSource: IDataSource[] = list.map((item: ITeachChapterResList) => {
+                    const typeImg: IDictionaryItem = matchFieldFindeTarget(sourceFormat, { value: String(item.fileFormat) })!;
+
+                    return {
+                        size: item.size,
+                        title: item.name,
+                        desc: item.desc,
+                        url: item.link,
+                        type: item.fileType,
+                        typeImg: typeImg.src,
+                        id: item.id
+                    };
                 });
 
-                message.info('加载完成');
+                state = {
+                    dataSource,
+                    hasData: dataSource.length > 0,
+                    canScrollLoad: hasNextPage
+                };
+
+                loading.success('加载完成');
+            } else {
+                state = {
+                    dataSource: [],
+                    hasData: false,
+                    canScrollLoad: false
+                };
+
+                loading.error(res.data.desc);
             }
+
+            this.setState({
+                ...state,
+                isLoading: false
+            });
         });
     }
 
@@ -99,16 +146,16 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     isLoading ? skeleton : hasData ? <div>
                         <Row gutter={24}>
                             {
-                                dataSource.map((source: IDataSource) => {
+                                dataSource.map((source: IDataSource, index: number) => {
                                     return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}}>
-                                                <div className='collection-item' key={source.id}>
+                                                <div className='collection-item' key={`${source.id}-${index}`}>
                                                     <div className='collection-item-top'>
                                                         <Row>
                                                             <Col>
                                                                 <label>{source.title}</label>
                                                             </Col>
                                                             <Col>
-                                                                {/* <img src={source.typeImg}/> */}
+                                                                <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/>
                                                             </Col>
                                                         </Row>
                                                     </div>
@@ -138,9 +185,8 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     </div>
                 }
                 <div className='colleaction-bottom'>
-                    {
-                        canScrollLoad ? <p className='can-load-more'>加载更多...</p> : <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p>
-                    }
+                    { canScrollLoad && <p className='can-load-more'>加载更多...</p> }
+                    { hasData && !canScrollLoad && <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p> }
                 </div>
             </div>
         )
