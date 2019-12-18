@@ -337,10 +337,13 @@ export interface IQueryPersonResponse extends IAjaxCommonResponse {
     }
 }
 
-/** 更新个人信息千秋参数 */
+/** 更新个人信息请求参数 */
 export interface IPersonUpdateRequestParams {
     loginName: string;
     password: string;
+    position: string;
+    userName: string;
+    desc: string;
     [key: string]: any;
 }
 

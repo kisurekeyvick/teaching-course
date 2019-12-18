@@ -29,40 +29,23 @@ export const api = {
     collectionList: httpRequest(`POST /material/collectionList`),
     /** 检索教材 */
     materialSearch: httpRequest(`POST /material/search`),
-    
     /** 查询个人信息 */
     queryPerson: httpRequest(`POST /teacher/queryPerson`),
+    /** 更新密码 */
+    updatePassword: httpRequest(`POST /teacher/updatePassword`),
+
+    /** 未解决的接口 */
     /** 上传文件 */
     uploadFile: httpRequest(`POST /material/uploadFile`),
     /** 下载文件 */
     download: httpRequest(`GET /material/download`),
     /** 更新个人信息 */
     updateTeacher: httpRequest(`POST /teacher/update`),
-    /** 更新密码 */
-    updatePassword: httpRequest(`POST /teacher/updatePassword`),
     
-
-    loadTeachingMenu: () => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/teachingMenu', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
+    /** mock */
     loadCourseDirectory: (param?: any) => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/courseDirectory', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
-    loadSearchResult: (param?: any) => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/searchResult', {}).then(res => {
                 resolve(res);
             }, error => {
                 reject(error);
@@ -78,36 +61,9 @@ export const api = {
             });
         });
     },
-    loadCollectionResult: (param?: any) => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/collection', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
     loadTeachingMaterialDirectory: (param?: any) => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/directory', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
-    loadSectionDirectory: (param?: any) => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/section', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
-    loadBookList: (param?: any) => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/booklist', {}).then(res => {
                 resolve(res);
             }, error => {
                 reject(error);

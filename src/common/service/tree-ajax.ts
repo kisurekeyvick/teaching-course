@@ -13,6 +13,10 @@ export interface IMenuItem {
     children?: IMenuItem[];
     [key: string]: any;
 }
+
+/** 匹配最外层节点的key的关键内容 */
+export const matchOutermostLayerKey = 'outermost';
+
 /** 
  * @func
  * @desc 加载最外层级目录菜单
@@ -26,7 +30,7 @@ export const loadMaterialMenu = (): Promise<any> => {
                 const menus: IMenuItem[] = teachMaterialList.map((item: ITeachDirectoryMaterialList) => {
                     return {
                         name: item.title,
-                        key: String(item.id),
+                        key: `${item.materlId}-${matchOutermostLayerKey}`,
                         value: item.materlId,
                         children: [],
                         id: item.id,

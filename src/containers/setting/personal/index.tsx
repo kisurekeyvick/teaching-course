@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { Button, Upload, Icon, Input, message } from 'antd';
+import { Button, Upload, Icon, Input } from 'antd';
 import { IControl, controlArray } from './index.config';
 import { api } from 'common/api/index';
 import { IPersonUpdateRequestParams, IPersonUpdateResponseResult } from 'common/api/api-interface';
-import { getUserBaseInfo } from 'common/utils/function';
+import { getUserBaseInfo, messageFunc } from 'common/utils/function';
 import './index.scss';
 
 interface IConfig {
@@ -14,11 +14,12 @@ interface IState {
     img: string;
     userName: string;
     userNameControlFocus: boolean;
-    job: string;
+    position: string;
     jobControlFocus: boolean;
-    introduction: string;
+    desc: string;
     introductionControlFocus: boolean;
     isLoading: boolean;
+    updateTime: number;
     [key: string]: any;
 }
 
@@ -29,6 +30,8 @@ export interface ISettingPersonalProps {
     introduction: string;
     password: string;
     loginName: string;
+    updateTime: number;
+    eventEmitterFunc: Function
     [key: string]: any;
 }
 
@@ -42,11 +45,12 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
             img: '',
             userName: '',
             userNameControlFocus: false,
-            job: '',
+            position: '',
             jobControlFocus: false,
-            introduction: '',
+            desc: '',
             introductionControlFocus: false,
-            isLoading: false
+            isLoading: false,
+            updateTime: 0
         };
 
         this.config = {
@@ -55,13 +59,13 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
     }
 
     static getDerivedStateFromProps(props: ISettingPersonalProps, state: IState) {
-        if (props.loginName) {
+        if (props.loginName && props.updateTime >  state.updateTime) {
             const { img, introduction, userName, job } = props;
             return {
                 img,
                 userName,
-                job,
-                introduction,
+                position: job,
+                desc: introduction,
             };
         }
 
@@ -82,7 +86,8 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
         });
 
         this.setState({
-            ...state
+            ...state,
+            updateTime: Date.now()
         });
     }
 
@@ -92,7 +97,8 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
      */
     public controlChange = (e: any, stateName: string) => {
         this.setState({
-            [stateName]: e.target.value
+            [stateName]: e.target.value,
+            updateTime: Date.now()
         });
     }
 
@@ -102,7 +108,8 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
      */
     public save = (stateName: string, focusStateName: string) => {
         this.setState({
-            [focusStateName]: false
+            [focusStateName]: false,
+            updateTime: Date.now()
         });
     }
 
@@ -113,7 +120,8 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
     public cancel = (stateName: string, focusStateName: string) => {
         this.setState({
             [stateName]: this.props[stateName],
-            [focusStateName]: false
+            [focusStateName]: false,
+            updateTime: Date.now()
         });
     }
 
@@ -131,17 +139,23 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
      */
     public updateTeacherInfo = () => {
         const { loginName, password } = this.props;
+        const { userName, position, desc } = this.state;
+        const loading = messageFunc();
 
         const params: IPersonUpdateRequestParams = {
             loginName,
-            password
+            password,
+            position,
+            userName,
+            desc
         };
 
         api.updateTeacher(params).then((res: IPersonUpdateResponseResult) => {
-            if (res.status === 200) {
-                res.data.success && message.success('修改成功');
+            if (res.status === 200 && res.data.success) {
+                loading.success(res.data.desc);
+                this.props.eventEmitterFunc();
             } else {
-                message.error('修改失败');
+                loading.error(res.data.desc);
             }
         });
     }

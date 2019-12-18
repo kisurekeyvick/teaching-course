@@ -25,16 +25,16 @@ export const controlArray: IControl[] = [
     },
     {
         name: '职位',
-        className: 'job',
-        stateName: 'job',
+        className: 'job position',
+        stateName: 'position',
         focusStateName: 'jobControlFocus',
         key: '2',
         placeholder: '请输入职位'
     },
     {
         name: '个人介绍',
-        className: 'introduction',
-        stateName: 'introduction',
+        className: 'introduction desc',
+        stateName: 'desc',
         focusStateName: 'introductionControlFocus',
         key: '3',
         placeholder: '请输入个人介绍'

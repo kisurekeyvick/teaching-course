@@ -31,7 +31,7 @@ interface IState {
 
 class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     public config: IConfig;
-    public childref: any;
+    public childref: React.Ref<any>;
 
     constructor(public props: IGlobalLayoutProps) {
         super(props);
@@ -52,14 +52,16 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     public searchBook = (e: string) => {
         this.props.searchBookContent(e);
 
+        console.log('this.childref', this.childref);
+
         if (window.location.pathname !== '/search/result') {
             /** 跳转至搜索结果页 */
             window.location.href = '/search/result';
         }
 
-        globalEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, {
-            searchBook: e
-        });
+        // globalEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, {
+        //     searchBook: e
+        // });
     }
 
     /** 
@@ -184,7 +186,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     </div>
                 </Header>
                 <Content>
-                    <div className='global-body' >
+                    <div className='global-body' ref={this.childref}>
                         { this.props.children }
                     </div>
                 </Content>

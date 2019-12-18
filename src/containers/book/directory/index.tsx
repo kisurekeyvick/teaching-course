@@ -11,7 +11,7 @@ import noDataImg from 'assets/images/noData.png';
 //     ISectionItem, IMaterialListResponseResult } from 'common/api/api-interface';
 // import { cloneDeep } from 'lodash';
 import { IMaterialStatusRequest, IMaterialStatusResponse, ITeachChapterList } from 'common/api/api-interface';
-import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
+import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateChapterMaterial } from 'store/material-chapter/action';
@@ -165,11 +165,26 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         const materialID: string = keysArr[0];
         const sectionIndex: number = +keysArr[1];
         const course: IMenuItem = stateMenus.find((menu: IMenuItem) => menu.value === materialID)!;
-        const section =  (course.children!)[sectionIndex];
-        /** 面包屑 */
-        const breadcrumb: string[] = [course.name, section.name];
+        const courseChildren = course.children!;
+
         /** 展示列表 */
-        let showList: ITeachChapterList[] = section.teachChapterList || [];
+        let showList: ITeachChapterList[] = [];
+        /** 面包屑 */
+        let breadcrumb: string[] = [];
+
+        /** 如果点击的是最外层 */
+        if (keysArr[1] === matchOutermostLayerKey) {
+            breadcrumb = [course.name];
+            showList = courseChildren.reduce((cur: ITeachChapterList[], pre: IMenuItem) => {
+                const teachChapterList: ITeachChapterList[] = pre.teachChapterList!;
+                return cur.concat(teachChapterList);
+            }, []);
+        } else {
+            const section =  courseChildren[sectionIndex];
+            breadcrumb = [course.name, section.name];
+            showList= section.teachChapterList || [];
+        }
+
         /** 查看点赞 收藏 */
         const { idList = [], idCollectionList = [] } = await this.loadMaterialStatus(showList);
         showList = showList.map((item: ITeachChapterList) => {

@@ -8,6 +8,7 @@ import { getUserBaseInfo } from 'common/utils/function';
 import { message } from 'antd';
 import { api } from 'common/api/index';
 import { IQueryPersonResponse } from 'common/api/api-interface';
+import { defaultUserPic } from 'common/service/img-collection';
 import './index.scss';
 
 interface ISettingContainerState {
@@ -89,7 +90,7 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                 const { result } = res.data;
 
                 const state = {
-                    img: result.link || 'https://mirror-gold-cdn.xitu.io/1693d70320728da3b28?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1',
+                    img: result.link || defaultUserPic,
                     userName: result.userName,
                     job: result.position,
                     introduction: result.flag,
@@ -109,13 +110,10 @@ export default class SettingContainer extends React.Component<ISettingContainerP
     }
 
     public render() {
-        const { loginName, password } = this.state.personInfo;
-
-        const personalContainerProps: ISettingPersonalProps = this.state.personInfo;
-
-        const modifyPwdContainer: any = {
-            loginName,
-            password
+        const personalContainerProps: ISettingPersonalProps = {
+            ...this.state.personInfo,
+            eventEmitterFunc: this.loadUserInfo,
+            updateTime: Date.now()
         };
 
         return <div className='setting-container'>
@@ -133,7 +131,7 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                     </div>
                     <div className='setting-container-content'>
                         { this.state.currentTab === 'personal' && <SettingPersonalContainer {...personalContainerProps}/> }
-                        { this.state.currentTab === 'modifyPassword' && <SettingModifyPwdContainer {...modifyPwdContainer}/> }
+                        { this.state.currentTab === 'modifyPassword' && <SettingModifyPwdContainer /> }
                     </div>
                 </div>
     }

@@ -7,67 +7,6 @@ export const mockUpload_api = Mock.mock('/api/upload', 'post', () => {
     return {};
 });
 
-export const mockTeachingMenu_api = Mock.mock('/api/teachingMenu', 'post', () => {
-    return [
-        { 
-            name: '目录',
-            key: '1',
-            value: 'one',
-            children: []
-        },
-        {
-            name: '入学教育',
-            key: '2',
-            value: 'two',
-            children: [],
-        },
-        {
-            name: '识字(一)',
-            key: '3',
-            value: 'three',
-            children: [
-                {
-                    name: '一去二三里',
-                    key: '31',
-                    value: 'three-one',
-                    children: []
-                },
-                {
-                    name: '口耳目',
-                    key: '32',
-                    value: 'three-two',
-                    children: []
-                },
-                {
-                    name: '在家里',
-                    key: '33',
-                    value: 'three-three',
-                    children: []
-                }
-            ]
-        },
-        {
-            name: '课程(一)',
-            key: '4',
-            value: 'four',
-            children: [
-                {
-                    name: '画',
-                    key: '41',
-                    value: 'four-one',
-                    children: []
-                },
-                {
-                    name: '四季',
-                    key: '42',
-                    value: 'four-two',
-                    children: []
-                }
-            ]
-        }
-    ]
-});
-
 export const mockCourseDirectory_api = Mock.mock('/api/courseDirectory', 'post', () => {
     return [
         {
@@ -205,56 +144,6 @@ export const mockCourseDirectory_api = Mock.mock('/api/courseDirectory', 'post',
     ];
 });
 
-export const mockSearchResult_api = Mock.mock('/api/searchResult', 'post', () => {
-    return [
-        {
-            title: '城市轨道交通车辆',
-            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
-            id: 1,
-            createTime: '2017-10-01 18:00',
-            contributors: '林东东',
-            directory: '系统概论>第一课>第一讲',
-            userImg: ''
-        },
-        {
-            title: '城市轨道交通车辆',
-            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
-            id: 2,
-            createTime: '2017-10-01 18:00',
-            contributors: '林东东',
-            directory: '系统概论>第一课>第一讲',
-            userImg: ''
-        },
-        {
-            title: '城市轨道交通车辆',
-            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
-            id: 3,
-            createTime: '2017-10-01 18:00',
-            contributors: '林东东',
-            directory: '系统概论>第一课>第一讲',
-            userImg: ''
-        },
-        {
-            title: '城市轨道交通车辆',
-            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
-            id: 4,
-            createTime: '2017-10-01 18:00',
-            contributors: '林东东',
-            directory: '系统概论>第一课>第一讲',
-            userImg: ''
-        },
-        {
-            title: '城市轨道交通车辆',
-            desc: '段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台,段落示意：蚂蚁金服设计平台',
-            id: 5,
-            createTime: '2017-10-01 18:00',
-            contributors: '林东东',
-            directory: '系统概论>第一课>第一讲',
-            userImg: ''
-        }
-    ]
-});
-
 export const mockSourceManageResult_api = Mock.mock('/api/sourceManageResult', 'post', () => {
     return [
         {
@@ -300,75 +189,6 @@ export const mockSourceManageResult_api = Mock.mock('/api/sourceManageResult', '
             desc: '这是一个简介，这是一个简介，这是一个简介，这是一个简介，这是一个简介，这是一个简介，这是一个简介，'
         },
     ]
-});
-
-export const mockCollectionResult_api = Mock.mock('/api/collection', 'post', () => {
-    return [
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '1',
-            id: 1
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '2',
-            id: 2
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '3',
-            id: 3
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '4',
-            id: 4
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '5',
-            id: 5
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '6',
-            id: 6
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '7',
-            id: 7
-        },
-        {
-            size: '100KB',
-            title: '轨道交通',
-            desc: '课程描述，课程描述，课程描述，课程描述课程描述，课程描述，课程描述',
-            url: '',
-            type: '8',
-            id: 8
-        }
-    ];
 });
 
 export const mockDirectoryResult_api = Mock.mock('/api/directory', 'post', () => {
@@ -441,57 +261,4 @@ export const mockDirectoryResult_api = Mock.mock('/api/directory', 'post', () =>
         },
         'success': true
     }
-});
-
-export const mockSectionResult_api = Mock.mock('/api/section', 'post', () => {
-    return {
-        'desc': '查询成功',
-        'isAdministrators': 0,
-        'chapterResponseDtoList': [
-            {
-              "section": {
-                "name": "第13章",
-                "type": 1,
-                "id": 13,
-                "weight": 13
-              }
-            },
-            {
-              "section": {
-                "name": "第12章",
-                "type": 1,
-                "weight": 4,
-                "id": 12,
-              }
-            },
-            {
-                "section": {
-                  "name": "第10章",
-                  "type": 1,
-                  "weight": 3,
-                  "id": 10,
-                }
-            },
-            {
-                "section": {
-                  "name": "第23章",
-                  "type": 1,
-                  "weight": 1,
-                  "id": 23,
-                }
-            },
-            {
-                "section": {
-                  "name": "第6章",
-                  "type": 1,
-                  "weight": 102,
-                  "id": 6,
-                }
-            }
-        ]          
-    };
-});
-
-export const mockBookListResult_api = Mock.mock('/api/booklist', 'post', () => {
-    return {}
 });

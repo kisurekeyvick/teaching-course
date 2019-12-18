@@ -1,6 +1,6 @@
 export interface ISettingModifyPwdProps {
-    loginName: string;
-    password: string;
+    // loginName: string;
+    // password: string;
     [key: string]: any;
 }
 

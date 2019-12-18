@@ -82,7 +82,7 @@ class SettingModifyPwdContainer extends React.PureComponent<ISettingModifyPwdPro
 
                 api.updatePassword(params).then((res: IPersonUpdateResponseResult) => {
                     if (res.status === 200 && res.data.success) {
-                        loading.success(res.data.desc);
+                        loading.success('密码修改成功！');
                         relogin();
                     } else {
                         loading.error(res.data.desc, 4);
