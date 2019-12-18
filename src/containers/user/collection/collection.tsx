@@ -6,8 +6,9 @@ import { SvgComponent } from 'components/icon/icon';
 import { api } from 'common/api/index';
 import { ICollectionListsRequest, ICollectionListsResponse, ITeachChapterResList } from 'common/api/api-interface';
 import { IPageInfo } from 'components/pagination/index';
-import { messageFunc } from 'common/utils/function';
+import { messageFunc, downloadFile, browseFile } from 'common/utils/function';
 import { sourceFormat, matchFieldFindeTarget, IDictionaryItem } from 'common/dictionary/index';
+import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
 import './collection.scss';
 
 interface IColleactionProps {
@@ -65,7 +66,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
             let state = {};
 
             if (res.status === 200 && res.data.success) {
-                const { hasNextPage, list } = res.data.result.teachChapterList;
+                const { hasNextPage, list, pageNum } = res.data.result.teachChapterList;
                 const dataSource: IDataSource[] = list.map((item: ITeachChapterResList) => {
                     const typeImg: IDictionaryItem = matchFieldFindeTarget(sourceFormat, { value: String(item.fileFormat) })!;
 
@@ -76,14 +77,19 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         url: item.link,
                         type: item.fileType,
                         typeImg: typeImg.src,
-                        id: item.id
+                        fileFormat: item.fileFormat,
+                        id: item.id,
+                        isCollect: true,
+                        chapterId: item.chapterId
                     };
                 });
 
+                const { pageInfo } = this.state;
                 state = {
                     dataSource,
                     hasData: dataSource.length > 0,
-                    canScrollLoad: hasNextPage
+                    canScrollLoad: hasNextPage,
+                    ...hasNextPage && {...pageInfo, pageNum }
                 };
 
                 loading.success('加载完成');
@@ -106,10 +112,47 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
 
     /** 
      * @callback
+     * @desc 加载等多
+     */
+    public loadMore = () => {
+        const { currentPage, pageSize } = this.state.pageInfo;
+        const params: ICollectionListsRequest = {
+            pageInfo: {
+                pageSize: pageSize,
+                pageNum: currentPage + 1
+            }
+        };
+
+        this.loadColleaction(params);
+    };
+
+    /** 
+     * @callback
      * @desc  取消收藏
      */
-    public cancelCollection = (source: IDataSource) => {
-        message.success('已取消收藏');
+    public cancelCollection = (source: IDataSource, index: number) => {
+        handleMaterialOperation({ operation: 'collect', sourceItem: source }).then(({ bool, desc }: IPromiseResolve) => {
+            if (bool) {
+                const { dataSource } = this.state;
+                dataSource.splice(index, 1);
+
+                this.setState({
+                    dataSource: [...dataSource]
+                });
+
+                message.success(desc);
+            } else {
+                message.error(desc);
+            }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 查看item 
+     */
+    public lookItem = (source: IDataSource) => {
+        browseFile({ fileFormat: source.fileFormat, url: source.url });
     }
 
     /** 
@@ -117,7 +160,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
      * @desc 下载收藏
      */
     public downloadCollection = (source: IDataSource) => {
-        message.success('完成下载');
+        downloadFile({ fileName: source.title, fileFormat: source.fileFormat, url: source.url });
     }
 
     /** 
@@ -147,9 +190,9 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         <Row gutter={24}>
                             {
                                 dataSource.map((source: IDataSource, index: number) => {
-                                    return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}}>
-                                                <div className='collection-item' key={`${source.id}-${index}`}>
-                                                    <div className='collection-item-top'>
+                                    return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}} key={`${source.id}-${index}`}>
+                                                <div className='collection-item'>
+                                                    <div className='collection-item-top' onClick={() => this.lookItem(source)}>
                                                         <Row>
                                                             <Col>
                                                                 <label>{source.title}</label>
@@ -159,7 +202,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                             </Col>
                                                         </Row>
                                                     </div>
-                                                    <p className='describle'>{source.desc}</p>
+                                                    <p className='describle' onClick={() => this.lookItem(source)}>{source.desc}</p>
                                                     <div className='collection-item-bottom'>
                                                         <Row>
                                                             <Col span={12}>
@@ -167,7 +210,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                             </Col>
                                                             <Col className='bottom-right' span={12}>
                                                                 <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
-                                                                <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source)} okText='确认' cancelText='取消'>
+                                                                <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
                                                                     <span><SvgComponent className='svg-component' type='icon-love_fill' /></span>
                                                                 </Popconfirm>
                                                             </Col>
@@ -185,7 +228,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     </div>
                 }
                 <div className='colleaction-bottom'>
-                    { canScrollLoad && <p className='can-load-more'>加载更多...</p> }
+                    { canScrollLoad && <p className='can-load-more' onClick={this.loadMore}>加载更多...</p> }
                     { hasData && !canScrollLoad && <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p> }
                 </div>
             </div>

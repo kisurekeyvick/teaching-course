@@ -1,5 +1,6 @@
 import defaultUserPic from 'assets/images/defaultUserPic.jpg';
 import defaultBookPic from 'assets/images/defaultBook.jpg';
+import noData from 'assets/images/noData.png';
 
 /** 文件格式图 */
 import DOC from 'assets/images/file-format/DOC.png';
@@ -16,6 +17,7 @@ import MPFour from 'assets/images/file-format/MP4.png';
 export {
     defaultUserPic,
     defaultBookPic,
+    noData,
     /**文件格式 */
     DOC,
     DOCX,

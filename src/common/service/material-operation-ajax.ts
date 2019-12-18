@@ -2,19 +2,18 @@
  * @desc (取消)收藏 (取消)点赞
  */
 import { dictionary, IDictionaryItem, matchFieldFindeTarget } from 'common/dictionary/index';
-import { IMaterialOptionRequest, IMaterialOptionResponseResult, ITeachChapterList } from 'common/api/api-interface';
+import { IMaterialOptionRequest, IMaterialOptionResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
 
 const materialOperation: IDictionaryItem[] = dictionary.get('material-operation')!
 
-// export type IHandleMaterialOperation = ({ operation, sourceItem }: {
-//     operation: string;
-//     sourceItem: ITeachChapterList;
-// }) => {}
-
 export interface IMaterialOperationparams {
     operation: string;
-    sourceItem: ITeachChapterList;
+    sourceItem: {
+        isCollect?: boolean;
+        isPraise?: boolean;
+        chapterId: string;
+    };
 }
 
 export interface IPromiseResolve {

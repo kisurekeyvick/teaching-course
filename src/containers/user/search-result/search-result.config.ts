@@ -6,8 +6,7 @@ export interface IDataSource {
     contributors: string;
     directory: string;
     userImg: string;
-}
-
-export interface IConfig {
-    searchBookHistory: string;
+    fileFormat: number;
+    url: string;
+    chapterId: string;
 }

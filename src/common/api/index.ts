@@ -27,6 +27,8 @@ export const api = {
     materialStatus: httpRequest(`POST /material/isCollection`),
     /** 收藏列表 */
     collectionList: httpRequest(`POST /material/collectionList`),
+    /** 检索教材 */
+    materialSearch: httpRequest(`POST /material/search`),
     
     /** 查询个人信息 */
     queryPerson: httpRequest(`POST /teacher/queryPerson`),

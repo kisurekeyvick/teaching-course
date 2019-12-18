@@ -1,18 +1,34 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import { Divider, Skeleton, Tag, Row, Col, message } from 'antd';
-import { IDataSource, IConfig } from './search-result.config';
-import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
+import { IDataSource } from './search-result.config';
+import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { api } from 'common/api/index';
+import { IMaterialSearchRequest, IMaterialSearchResponse, IMaterialSearchList } from 'common/api/api-interface';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
+import { messageFunc, debounce, downloadFile, browseFile } from 'common/utils/function';
+import { defaultUserPic } from 'common/service/img-collection';
+import { dictionary, IDictionaryItem } from 'common/dictionary/index';
+import dayjs from 'dayjs';
+import { noData } from 'common/service/img-collection';
+import { SvgComponent } from 'components/icon/icon';
+import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
 import './search-result.scss';
 
 interface ISearchResultProps {
     [key: string]: any;
 }
 
+interface IConfig {
+    searchBookHistory: string;
+    sourceType: IDictionaryItem[];
+    sourceFormat: IDictionaryItem[];
+    searchDebounce: any
+}
+
 interface IState {
-    searchType: string;
+    searchSourceType: string;
+    searchSourceFormat: string;
     dataSource: IDataSource[];
     hasData: boolean;
     isLoading: boolean;
@@ -26,33 +42,38 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
         super(props);
 
         this.state = {
-            searchType: 'all',
+            searchSourceType: '',
+            searchSourceFormat: '',
             dataSource: [],
             hasData: false,
             isLoading: false,
             /** 分页 */
-            pageInfo: {
-                currentPage: 1,
-                pageCount: 0,
-                pageSize: 10,
-                rowCount: 0,
-                totalCount: 0,
-                pageSizeOptions:['10', '20', '30', '40', '50']
-            },
+            pageInfo: {...defaultPageInfo},
         };
+        
+        const sourceType = dictionary.get('source-type')!;
+        sourceType.unshift({ name: '全部', value: '' });
+        const sourceFormat = dictionary.get('source-format')!;
+        sourceFormat.unshift({ name: '全部', value: '' });
 
         this.config = {
-            searchBookHistory: ''
+            searchBookHistory: '',
+            sourceType,
+            sourceFormat,
+            searchDebounce: debounce(1500)
         };
     }
 
     public componentDidMount() {
-        this.loadSearchResult();
         const self = this;
+        const initParams = this.getMaterialSearchRequestParams();
+        this.loadSearchResult(initParams);
+        
         globalEventEmitter.on(EventEmitterList.SEARCHCOURSEEVENT, function(...res: any[]) {
             if (res[0].searchBook !== self.config.searchBookHistory) {
                 self.config.searchBookHistory = res[0].searchBook;
-                self.loadSearchResult();
+                initParams.content = res[0].searchBook;
+                self.loadSearchResult(initParams);
             }
         });
     }
@@ -61,53 +82,145 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
      * @func
      * @desc 加载修改结果
      */
-    public loadSearchResult = (params = {}) => {
-        message.loading('加载数据中', 2);
+    public loadSearchResult = (params: IMaterialSearchRequest) => {
+        const loading = messageFunc();
 
         this.setState({
             isLoading: true
         });
 
-        api.loadSearchResult(params).then((res: any) => {
-            if (res.status === 200) {
-                const dataSource = res.data.map((item: IDataSource) => {
-                    item.userImg = 'https://mirror-gold-cdn.xitu.io/1693d70320728da3b28?imageView2/1/w/100/h/100/q/85/format/webp/interlace/1';
-                    return item;
+        api.materialSearch(params).then((res: IMaterialSearchResponse) => {
+            if (res.status === 200 && res.data.success) {
+                const { teachMaterialDto } = res.data.result;
+                const dataSource: IDataSource[] = teachMaterialDto.list.map((item: IMaterialSearchList) => {
+                    return {
+                        title: item.name,
+                        desc: item.desc,
+                        id: item.id,
+                        createTime: dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss'),
+                        contributors: item.contributors,
+                        directory: `${item.materialName || ''} > ${item.chapterName || ''}`,
+                        userImg: item.teacherLink || defaultUserPic,
+                        url: item.link,
+                        fileFormat: item.fileFormat,
+                        chapterId: item.chapterId
+                    }
                 });
+
+                const { pageInfo } = this.state;
+                const { total, pageNum } = teachMaterialDto;
 
                 this.setState({
                     dataSource,
                     hasData: dataSource.length > 0,
-                    isLoading: false
+                    isLoading: false,
+                    pageInfo: {
+                        ...pageInfo, ...{
+                            pageNum,
+                            totalCount: total
+                        }
+                    }
                 });
 
-                message.info('加载完成');
+                loading.success(res.data.desc);
+            } else {
+                this.setState({
+                    dataSource: [],
+                    hasData: false,
+                    isLoading: false,
+                    pageInfo: {...defaultPageInfo}
+                });
+
+                loading.error(res.data.desc);
             }
         });
     }
 
     /** 
      * @func
-     * @desc 时间的搜索
+     * @desc 获取搜索请求参数
      */
-    public handleSpanClick = (type: string) => {
-        if (this.state.searchType !== type) {
-            this.setState({
-                searchType: type
-            });
+    public getMaterialSearchRequestParams = (): IMaterialSearchRequest => {
+        const { searchSourceType, searchSourceFormat } = this.state;
+        const { searchBookHistory } = this.config;
+        const params: IMaterialSearchRequest = {
+            pageInfo: {
+                pageNum: 1,
+                pageSize: 10
+            },
+            content: searchBookHistory,
+            fileFormat: searchSourceFormat,
+            fileType: searchSourceType
+        };
 
-            this.loadSearchResult();
-        }
+        return params;
     }
 
     /** 
-     * @callback
-     * @desc 点击进入教材详情
+     * @func
+     * @desc 时间的搜索
      */
-    public handResultItemClick = (source: IDataSource) => {
-        const { history } = this.props;
-        const url: string = `/book/id/${source.id}`;
-        history.push(url);
+    public handleSpanClick = (filter: { sourceType?: string | number; sourceFormat?: string | number }) => {
+        if (filter.hasOwnProperty('sourceType')) {
+            this.setState({
+                searchSourceType: String(filter.sourceType)
+            });
+        }
+
+        if (filter.hasOwnProperty('sourceFormat')) {
+            this.setState({
+                searchSourceFormat: String(filter.sourceFormat)
+            });
+        }
+
+        const { searchDebounce } = this.config;
+        searchDebounce(() => {
+            const params = this.getMaterialSearchRequestParams();
+            this.loadSearchResult(params);
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 收藏 点赞
+     */
+    public handleMaterialOperation = (item: IDataSource, typeStr: string) => {
+        const otherParams: { isCollect?: boolean; isPraise?: boolean; } = {};
+
+        if (typeStr === 'collect') {
+            otherParams.isCollect = false;
+        }
+
+        if (typeStr === 'praise') {
+            otherParams.isPraise = false;
+        }
+
+        handleMaterialOperation({ operation: typeStr, sourceItem: {
+            chapterId: item.chapterId,
+            ...otherParams
+        } }).then(({ bool, desc }: IPromiseResolve) => {
+            if (bool) {
+                message.success(desc);
+            } else {
+                message.error(desc);
+            }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 查看详情
+     */
+    public showDetail = (item: IDataSource) => {
+        browseFile({ fileFormat: item.fileFormat, url: item.url });
+    }
+
+    /** 
+     * @func
+     * @desc 下载
+     */
+    public download = (item: IDataSource) => {
+        downloadFile({ fileName: item.title, fileFormat: item.fileFormat, url: item.url });
     }
 
     /** 
@@ -131,8 +244,8 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
      * @desc 构建搜索结果项
      */
     public buildResultItems = (): React.ReactNode => {
-        return this.state.dataSource.map((item: IDataSource) => {
-            return <div key={item.id} className='content-item' onClick={() => this.handResultItemClick(item)}>
+        return this.state.dataSource.map((item: IDataSource, index: number) => {
+            return <div key={`${item.id}-${index}`} className='content-item'>
                         <p className='content-item-title'>{item.title}</p>
                         <Row>
                             <Col xs={24} sm={12}>
@@ -145,12 +258,61 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                             <span className='directory'>{item.directory}</span>
                             <span className='createTime'>{item.createTime}</span>
                         </div>
+                        <div className='searchList-operation'>
+                            <div className={`searchList-operation-item`} onClick={() => this.handleMaterialOperation(item, 'collect')}>
+                                <SvgComponent className='icon-svg' type='icon-collect'/>
+                                <p>收藏</p>
+                            </div>
+                            <div className={`searchList-operation-item`} onClick={() => this.handleMaterialOperation(item, 'praise')}>
+                                <SvgComponent className='icon-svg' type='icon-praise'/>
+                                <p>点赞</p>
+                            </div>
+                            <div className={`searchList-operation-item`} onClick={() => this.handleMaterialOperation(item, 'see')}>
+                                <SvgComponent className='icon-svg' type='icon-see'/>
+                                <p>查看</p>
+                            </div>
+                            <div className={`searchList-operation-item`} onClick={() => this.download(item)}>
+                                <SvgComponent className='icon-svg' type='icon-download'/>
+                                <p>下载</p>
+                            </div>
+                        </div>
                     </div>;
         });
     }
 
+    /** 
+     * @func
+     * @desc 构建筛选条件
+     */
+    public buildfilterNode = (currentSourceType: string, currentSourceFormat: string): React.ReactNode => {
+        const { sourceType, sourceFormat } = this.config;
+
+        return <>
+            <div className='search-conditions-item'>
+                {
+                    sourceType.map((type: IDictionaryItem, index: number) => {
+                        return <React.Fragment key={`type-${index}`}>
+                            { index !== 0 && <Divider type="vertical"/> }
+                            <span  className={`${currentSourceType === type.value ? 'selected' : ''}`} onClick={() => this.handleSpanClick({ sourceType: type.value })}>{type.name}</span>
+                        </React.Fragment>
+                    })
+                }
+            </div>
+            <div className='search-conditions-item'>
+                {
+                    sourceFormat.map((type: IDictionaryItem, index: number) => {
+                        return <React.Fragment key={`format-${index}`}>
+                            { index !== 0 && <Divider type="vertical"/> }
+                            <span className={`${currentSourceFormat === type.value ? 'selected' : ''}`} onClick={() => this.handleSpanClick({ sourceFormat: type.value })}>{type.name}</span>
+                        </React.Fragment>
+                    })
+                }
+            </div>
+        </>
+    }
+
     public render() {
-        const { searchType, dataSource, isLoading } = this.state;
+        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData } = this.state;
         const pageComponentProps: IPageComponnetProps = {
             ...this.state.pageInfo,
             pageChange: this.pageChange
@@ -159,13 +321,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
         return (
             <div className='search-result-container animateCss'>
                 <div className='search-conditions'>
-                    <span className={`${searchType === 'all' ? 'selected' : ''}`} onClick={() => this.handleSpanClick('all')}>全部</span>
-                    <Divider type="vertical"/>
-                    <span className={`${searchType === 'day' ? 'selected' : ''}`} onClick={() => this.handleSpanClick('day')}>一天内</span>
-                    <Divider type="vertical"/>
-                    <span className={`${searchType === 'week' ? 'selected' : ''}`} onClick={() => this.handleSpanClick('week')}>一周内</span>
-                    <Divider type="vertical"/>
-                    <span className={`${searchType === 'month' ? 'selected' : ''}`} onClick={() => this.handleSpanClick('month')}>三月内</span>
+                    { this.buildfilterNode(searchSourceType, searchSourceFormat) }
                 </div>
                 <div className='search-result-content'>
                     {
@@ -184,6 +340,12 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                                 </div>
                             }
                         </>
+                    }
+                    {
+                        !isLoading && !hasData && <div className='no-data'>
+                            <img alt='无数据' src={noData} />
+                            <p>很抱歉！没有帮助您找到想要的结果。</p>
+                        </div>
                     }
                 </div>
             </div>

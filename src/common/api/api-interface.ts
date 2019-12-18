@@ -165,6 +165,7 @@ export interface ITeachChapterResList {
     desc: string;
     downloadCount: number;
     fabulousCount: number;
+    fileFormat: number;
     fileName: string;
     fileType: string;
     id: number;
@@ -184,6 +185,7 @@ export interface ITeachChapterResList {
     [key: string]: any;
 }
 
+/** 收藏列表 返回参数 */
 export interface ICollectionListsResponse extends IAjaxCommonResponse {
     data: {
         desc: string;
@@ -192,6 +194,64 @@ export interface ICollectionListsResponse extends IAjaxCommonResponse {
             teachChapterList: {
                 hasNextPage: boolean;
                 list: ITeachChapterResList[];
+                pageNum: number;
+                pageSize: number;
+                total: number;
+            };
+        };
+        success: boolean;
+    }
+}
+
+/** 教材搜索 请求参数 */
+export interface IMaterialSearchRequest {
+    pageInfo:{
+        pageNum: number;
+        pageSize: number;
+    };
+    content: string;
+    fileFormat: string;
+    fileType: string;
+}
+
+export interface IMaterialSearchList {
+    chapterId: string;
+    collectionCount: number;
+    createTime: string;
+    desc: string;
+    downloadCount: number;
+    fabulousCount: number;
+    fileFormat: number;
+    fileName: string;
+    fileType: string;
+    id: number;
+    link: string;
+    materialId: string;
+    name: string;
+    parentId: string;
+    pic: string;
+    realFileName: string;
+    size: string;
+    title: string;
+    type: string;
+    updateTime: string;
+    uploadTime: string;
+    viewCount: number;
+    weight: number;
+    teacherLink: string;
+    materialName: string;
+    chapterName: string;
+    [key: string]: any;
+}
+
+export interface IMaterialSearchResponse extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: {
+            teachMaterialDto: {
+                hasNextPage: boolean;
+                list: IMaterialSearchList[];
                 pageNum: number;
                 pageSize: number;
                 total: number;

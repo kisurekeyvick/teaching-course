@@ -28,11 +28,11 @@
         border-radius: 5px;
         font-size: 12px;
         padding: 12px;
-        cursor: pointer;
         background-color: #fff;
         margin-bottom: 24px;
+        cursor: pointer;
         @include box-shadow;
-        @include backgroundAnimate(rgba(0,0,0,.03));
+        // @include backgroundAnimate(rgba(0,0,0,.03));
 
         .collection-item-top {
             margin-bottom: 12px;
@@ -40,6 +40,7 @@
 
             label {
                 font-size: 13px;
+                cursor: pointer;
             }
 
             .file-format-logo {
@@ -50,12 +51,11 @@
             }
         }
 
-        p.describle {
+        .describle {
             @include lightColor;
         }
 
         .collection-item-bottom {
-
             .bottom-right {
                 text-align: right;
                 z-index: 100;
@@ -81,17 +81,7 @@
     }
 
     .no-data {
-        img {
-            width: 300px;
-            margin: 0 auto;
-            display: block;
-        }
-
-        p {
-            text-align: center;
-            margin-top: 48px;
-            margin-bottom: 0;
-        }
+        @include nodata;
     }
 
     .colleaction-bottom {
@@ -112,7 +102,8 @@
         }
     
         .can-not-load {
-    
+            margin-top: 100px;
+            margin-bottom: 0;
         }
     }
 }

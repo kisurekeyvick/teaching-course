@@ -6,4 +6,8 @@ export interface IDataSource {
     type: string;
     typeImg: any;
     id: number;
+    isCollect: boolean;
+    chapterId: string;
+    fileFormat: number;
+    [key: string]: any;
 } 
