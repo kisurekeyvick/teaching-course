@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Form, Input, Button, Checkbox, Icon, Row, Col, message } from 'antd';
+import { Form, Input, Button, Checkbox, Icon, Row, Col } from 'antd';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IForm, loginFormItem } from './login-config';
@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux';
 import { LoginParams } from 'containers/user/interface';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { ILogin } from 'common/api/api-interface';
+import { messageFunc } from 'common/utils/function';
 
 const FormItem = Form.Item;
 
@@ -127,22 +128,26 @@ class UserLogin extends React.PureComponent<IProps, IState> {
                     password: value.password
                 };
 
+                const loading = messageFunc('正在登录中...');
+
                 api.login(params).then((res: ILogin) => {
                     if (res.status === 200) {
                         const { data: { success, result, isAdministrators, desc }, headers } = res;
 
                         /** 登录不成功 */
                         if (!success) {
-                            message.error(desc);
                             this.setState({
                                 errorMsg: desc
-                            })
+                            });
+
+                            loading.error(desc);
                         } else {
                             this.props.updateUserInfo({...result, isAdministrators});
                             value.remember ? this.rememberPwd({...result, isAdministrators, remember: true}) : this.forgetPwd();
                             this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
                             this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
                             this.props.history.push('/book');
+                            loading.success(desc);
                         }
                     }
                 });

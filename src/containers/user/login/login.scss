@@ -18,7 +18,7 @@
 
         .login-form-forgot {
             float: right;
-            color: $color;
+            color: $userColor;
         }
         
         .login-form-button {
@@ -56,7 +56,7 @@
             transition: color 0.3s;
         
             &:hover {
-              color: $color;
+              color: $userColor;
             }
         }
 
@@ -67,7 +67,7 @@
 
             a {
                 float: right;
-                color: $color;
+                color: $userColor;
             }
         }
 

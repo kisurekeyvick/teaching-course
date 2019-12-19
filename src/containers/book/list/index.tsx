@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import { filterConfig, IFilterConfigItem, imgList } from './index.config';
-import { Divider, Radio, Icon, Rate, Skeleton, message, Breadcrumb } from 'antd';
-import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
+import { Divider, Radio, Icon, Skeleton, message, Breadcrumb } from 'antd';
+import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { cloneDeep } from 'lodash';
 import { IBookListProps } from '../interface';
 import { SvgComponent } from 'components/icon/icon';
@@ -45,14 +45,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             /** 教材列表 */
             booklist: [],
             /** 分页 */
-            pageInfo: {
-                currentPage: 1,
-                pageCount: 0,
-                pageSize: 10,
-                rowCount: 0,
-                totalCount: 0,
-                pageSizeOptions:['10', '20', '30', '40', '50']
-            },
+            pageInfo: { ...defaultPageInfo },
             breadcrumb: [],
             hasData: false,
             isLoading: false,
@@ -84,7 +77,11 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                 breadcrumb: nextProps.breadcrumb,
                 booklist: result,
                 hasData: result.length > 0,
-                isLoading: nextProps.isLoading === 'true' ? true : false
+                isLoading: nextProps.isLoading === 'true' ? true : false,
+                pageInfo: {
+                    ...defaultPageInfo,
+                    totalCount: result.length
+                }
             }
         }
 
@@ -276,11 +273,11 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                 <div className='booklist-item-top-left'>
                                                     <span>{ item.title }</span>
                                                 </div>
-                                                <div className='booklist-item-top-right'>
+                                                {/* <div className='booklist-item-top-right'>
                                                     <Rate disabled defaultValue={item.rate}/>
                                                     <i className='i-rate'>{item.rate}</i>
                                                     <label>({item.currentCount})</label>
-                                                </div>
+                                                </div> */}
                                             </div>
                                             <div className='booklist-item-bottom'>
                                                 <img alt='缩略图' src={item.pic} />

@@ -213,7 +213,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
     public buidlTree = () => {
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
-                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
+                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-tree-node' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
@@ -222,7 +222,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         return <Tree 
                     showLine
                     loadData={this.handleTreeNodeLoad}
-                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-course'/>}
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-tree'/>}
                     onSelect={this.selectNode}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>

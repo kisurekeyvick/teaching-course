@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
 import { NavLink } from "react-router-dom";
-import { Layout, Input, Icon, Popover, Row, Col, Tooltip, message } from 'antd';
+import { Layout, Input, Icon, Popover, Row, Col, Tooltip, message, Divider } from 'antd';
 import { cloneDeep } from 'lodash';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
@@ -13,7 +13,7 @@ import { SvgComponent } from 'components/icon/icon';
 import { ISignOutResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
 import { getUserBaseInfo, localStorageService } from 'common/utils/function';
-import { defaultUserPic } from 'common/service/img-collection';
+import { defaultUserPic, schoolLogo } from 'common/service/img-collection';
 import './index.scss';
 
 const { Header, Content, Footer } = Layout;
@@ -76,7 +76,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                         this.config.headMenus.map((menu: IHeadMenu) => {
                             const content = this.config.menusContent[menu.value];
 
-                            return <li className='menu-item' key={menu.key}>
+                            return <li className={`menu-item ${menu.value}`} key={menu.key}>
                                 { menu.type === 'icon' && content && <Popover content={content} trigger={menu.trigger}>
                                         <Icon type={menu.icon} onClick={() => this.clickHeadMenuItem(menu)}/>
                                     </Popover> }
@@ -87,7 +87,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                                         <span className='menu-svg-box' onClick={() => this.clickHeadMenuItem(menu)}><SvgComponent className={`svg-component ${menu.icon}`} type={menu.icon!} /></span>
                                     </Tooltip> }
                                 {
-                                    menu.type === 'img' && content && <Popover content={content} trigger={menu.trigger}>
+                                    menu.type === 'img' && content && <Popover placement='bottomRight' content={content} trigger={menu.trigger}>
                                         <img className='user-portrait' src={teacherCache.link || defaultUserPic} alt='user-img'/>
                                     </Popover>
                                 }
@@ -169,16 +169,17 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         const headMenu: React.ReactNode = this.buildHeadMenu();
 
         return <Layout className='global-layout'>
-                <Header style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
+                <Header style={{ position: 'fixed', zIndex: 100, width: '100%' }}>
                     <div className='global-head'>
                         <div className='global-head-left'>
-                            <img alt='logo' src={env.pageLogo}/>
+                            <img alt='logo' src={schoolLogo}/>
+                        </div>
+                        <div className='global-head-right'>
                             <NavLink className='link-item' to='/book' activeClassName='selected'>课程资源</NavLink>
                             <NavLink className='link-item' to='/collection' activeClassName='selected'>收藏</NavLink>
                             <NavLink className='link-item' to='/search/result' activeClassName='selected'>检索</NavLink>
-                        </div>
-                        <div className='global-head-right'>
-                            <Search className='search-control' placeholder='搜索教材资源' onSearch={this.searchBook}/>
+                            <Divider type="vertical" />
+                            {/* <Search className='search-control' placeholder='搜索教材资源' onSearch={this.searchBook}/> */}
                             <ul className='right-menu'>
                                 { headMenu }
                             </ul>
@@ -189,10 +190,10 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     <div className='global-body' ref={this.childref}>
                         { this.props.children }
                     </div>
+                    <Footer style={{ textAlign: 'center' }}>
+                        { env.footerText }
+                    </Footer>
                 </Content>
-                <Footer style={{ textAlign: 'center' }}>
-                    { env.footerText }
-                </Footer>
             </Layout>
                 
     }

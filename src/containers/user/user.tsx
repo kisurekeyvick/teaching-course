@@ -4,6 +4,7 @@ import { Row, Col } from 'antd';
 import { env } from 'environment/index';
 import './user.scss';
 import { getScreenInfo } from 'common/utils/function';
+import { schoolLogo } from 'common/service/img-collection';
 
 interface IProps {
     match: any
@@ -57,7 +58,7 @@ export default class UserContainer extends React.Component<IProps, IState> {
                         <Row>
                             <Col span={24}>
                                 <div className='layout-login-box-head'>
-                                    <img alt='logo' src={env.loginLogo} />
+                                    <img alt='logo' src={schoolLogo} />
                                 </div>
                             </Col>
                             <Col span={24}>

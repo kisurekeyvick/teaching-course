@@ -9,6 +9,12 @@
     height: 100%;
 }
 
+$userColor: #f5222d; // #ff0000; //#FA541C;
+$userSecondColor: #E2E5E7;
+$userBgColor: #fff1f0;
+$userSecondBGColor: #fb6969;
+$userBorderColor: #ffa39e;
+
 $color: #2699FB;
 $borderColor: #47ADFF;
 $secondBgColor: #eee;
@@ -495,5 +501,31 @@ $secondMainColor: #f9f0ff;
 
   50% {
       opacity: 1
+  }
+}
+
+@keyframes slideInDown {
+  0% {
+      -webkit-transform: translate3d(0,-100%,0);
+      transform: translate3d(0,-100%,0);
+      visibility: visible
+  }
+
+  to {
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0)
+  }
+}
+
+@keyframes slideInUp {
+  0% {
+      -webkit-transform: translate3d(0,100%,0);
+      transform: translate3d(0,100%,0);
+      visibility: visible
+  }
+
+  to {
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0)
   }
 }

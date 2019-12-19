@@ -9,5 +9,6 @@ export interface IDataSource {
     isCollect: boolean;
     chapterId: string;
     fileFormat: number;
+    coverLink: any;
     [key: string]: any;
 } 

@@ -24,6 +24,10 @@
             .ant-breadcrumb {
                 display: inline-block;
                 @include smallsize;
+
+                & > span:last-child {
+                    color: $userColor;
+                }
             }
         }
         
@@ -65,7 +69,7 @@
                 cursor: pointer;
 
                 &.selected {
-                    color: $color;
+                    color: $userColor;
                 }
             }
 
@@ -98,9 +102,8 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
-
-            @include backgroundAnimate(rgba(0,0,0,.07));
-
+            height: 180px;
+            
             .booklist-item-top {
                 display: flex;
 
@@ -173,25 +176,47 @@
                 }
             }
 
+            &::before, &::after {
+                content: "";
+                background: $userSecondBGColor;
+                width: 74%;
+                height: 300%;
+                transform: rotate(45deg);
+                position: absolute;
+                top: 25%;
+                right: -100%;
+                z-index: 1;
+                transition: all 0.35s ease;
+                opacity: 0;
+            }
+
+            &::after {
+                width: 90%;
+                height: 135%;
+                right: auto;
+                left: 10%;
+                top: -250%;
+            }
+
             .booklist-operation {
                 position: absolute;
-                background-color: rgba(0,0,0,.7);
-                color: #bbb;
+                color: $userSecondColor;
                 height: 100%;
-                top: -300px;
-                right:0;
-                width: 267px;
+                top: 50%;
+                right:100%;
+                width: 220px;
+                z-index: 50;
 
                 .booklist-operation-item {
                     display: inline-block;
-                    width: 25%;
+                    width: 22%;
                     text-align: center;
-                    padding: 0 12px;
-                    height: 100%;
+                    padding: 0 8px;
+                    margin: 0 2px;
 
                     &:hover, &.selected {
                         color: #fff;
-                        background-color: #000;
+                        border-bottom: 2px solid #ddd;
                     }
 
                     .icon-svg {
@@ -202,10 +227,24 @@
                 }
             }
 
+            &:hover::before {
+                opacity: 1;
+                right: -45%;
+            }
+
+            &:hover::after {
+                opacity: 1;
+                top: -140%;
+            }
+
             &:hover {
+                padding: 11px;
+                border: 1px solid $userColor;
+                border-radius: 5px;
+
                 .booklist-operation {
                     top: 0;
-                    right: 0;
+                    right: 2%;
                     display: block;
                     animation: bounceInRight 1s;
                 }
@@ -230,5 +269,29 @@
 
     .booklist-pagination {
         padding: 24px 0;
+    }
+}
+
+@media screen and (max-width: 940px) {
+    .book-list {
+        .booklist-item {
+            &::before {
+                top: 12% !important;
+            }
+
+            &::after {
+                left: 14% !important;
+            }
+
+            &:hover::before {
+                opacity: 1;
+                right: -50% !important;
+            }
+
+            &:hover::after {
+                opacity: 1;
+                top: -130% !important;
+            }
+        }
     }
 }

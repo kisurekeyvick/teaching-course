@@ -182,6 +182,7 @@ export interface ITeachChapterResList {
     uploadTime: string;
     viewCount: number;
     weight: number;
+    coverLink?: string;
     [key: string]: any;
 }
 
@@ -329,6 +330,7 @@ export interface IQueryPersonResponse extends IAjaxCommonResponse {
             phone: number;
             position: string;
             sex: string;
+            desc: string;
             teacherId: string;
             updateTime: string;
             userName: string;

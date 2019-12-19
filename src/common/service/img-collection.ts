@@ -1,6 +1,10 @@
 import defaultUserPic from 'assets/images/defaultUserPic.jpg';
 import defaultBookPic from 'assets/images/defaultBook.jpg';
 import noData from 'assets/images/noData.png';
+/** 学校logo */
+import schoolLogo from 'assets/images/schoolLogo.png';
+/** 收藏页默认书封面 */
+import defaultCollectionPic from 'assets/images/defaultCollectionPic.jpg';
 
 /** 文件格式图 */
 import DOC from 'assets/images/file-format/DOC.png';
@@ -18,6 +22,10 @@ export {
     defaultUserPic,
     defaultBookPic,
     noData,
+    /** 学校logo */
+    schoolLogo,
+    /** 收藏页默认书封面 */
+    defaultCollectionPic,
     /**文件格式 */
     DOC,
     DOCX,

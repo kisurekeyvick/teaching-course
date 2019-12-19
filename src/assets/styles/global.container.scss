@@ -8,11 +8,11 @@
 }
 
 @mixin login-title {
-    color: $color;
+    color: $userColor;
     font-size: 24px;
     padding-bottom: 8px;
     margin-bottom: 0;
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid $userBorderColor;
     animation: bounceInLeft 1s;
 }
 
@@ -59,20 +59,20 @@
 
     .formItem-div {
         .formItem-label {
-            color: $color;
+            color: $userColor;
             padding-left: 12px;
         }
 
         .input-control {
             &.userName, &.password {
                 input {
-                    border-color: $borderColor;
+                    border-color: $userBorderColor;
                     border-radius: 25px;
-                    color: $color;
+                    color: $userColor;
                     font-size: 14px;
 
                     &::placeholder {
-                        color: $color;
+                        color: $userColor;
                     }
                 }
             }

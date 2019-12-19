@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { Divider, Skeleton, Tag, Row, Col, message } from 'antd';
+import { Divider, Skeleton, Tag, Row, Col, message, Input } from 'antd';
 import { IDataSource } from './search-result.config';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { api } from 'common/api/index';
@@ -35,6 +35,8 @@ interface IState {
     pageInfo: IPageInfo;
 }
 
+const { Search } = Input;
+
 class SearchResultContainer extends React.PureComponent<ISearchResultProps, IState> {
     public config: IConfig;
 
@@ -50,10 +52,11 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             /** 分页 */
             pageInfo: {...defaultPageInfo},
         };
-        
-        const sourceType = dictionary.get('source-type')!;
+
+
+        const sourceType = [...dictionary.get('source-type')!];
         sourceType.unshift({ name: '全部', value: '' });
-        const sourceFormat = dictionary.get('source-format')!;
+        const sourceFormat = [...dictionary.get('source-format')!];
         sourceFormat.unshift({ name: '全部', value: '' });
 
         this.config = {
@@ -158,7 +161,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
 
     /** 
      * @func
-     * @desc 时间的搜索
+     * @desc 类型的搜索
      */
     public handleSpanClick = (filter: { sourceType?: string | number; sourceFormat?: string | number }) => {
         if (filter.hasOwnProperty('sourceType')) {
@@ -178,6 +181,16 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             const params = this.getMaterialSearchRequestParams();
             this.loadSearchResult(params);
         });
+    }
+
+    /** 
+     * @callback
+     * @desc 输入框搜索
+     */
+    public searchBook = (e: string) => {
+        const params = this.getMaterialSearchRequestParams();
+        params.content = e;
+        this.loadSearchResult(params);
     }
 
     /** 
@@ -292,6 +305,11 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                 {
                     sourceType.map((type: IDictionaryItem, index: number) => {
                         return <React.Fragment key={`type-${index}`}>
+                            { index === 0 && <>
+                                                <span>资源类型</span>
+                                                <Divider type="vertical"/>
+                                            </> 
+                            }
                             { index !== 0 && <Divider type="vertical"/> }
                             <span  className={`${currentSourceType === type.value ? 'selected' : ''}`} onClick={() => this.handleSpanClick({ sourceType: type.value })}>{type.name}</span>
                         </React.Fragment>
@@ -302,6 +320,11 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                 {
                     sourceFormat.map((type: IDictionaryItem, index: number) => {
                         return <React.Fragment key={`format-${index}`}>
+                            { index === 0 && <>
+                                                <span>资源格式</span>
+                                                <Divider type="vertical"/>
+                                            </> 
+                            }
                             { index !== 0 && <Divider type="vertical"/> }
                             <span className={`${currentSourceFormat === type.value ? 'selected' : ''}`} onClick={() => this.handleSpanClick({ sourceFormat: type.value })}>{type.name}</span>
                         </React.Fragment>
@@ -320,6 +343,9 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
 
         return (
             <div className='search-result-container animateCss'>
+                <div className='search-control-box'>
+                    <Search className='search-control' placeholder='搜索教材资源' onSearch={this.searchBook}/>
+                </div>
                 <div className='search-conditions'>
                     { this.buildfilterNode(searchSourceType, searchSourceFormat) }
                 </div>
@@ -330,7 +356,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                             <Skeleton active/>
                             <Skeleton active/>
                         </> : <>
-                            <Tag className='source-result-tag' color="blue">共找到{dataSource.length}个结果</Tag>
+                            <Tag className='source-result-tag' color='red'>共找到{dataSource.length}个结果</Tag>
                             <div className='content-items-box'>
                                 { this.buildResultItems() }
                             </div>

@@ -9,6 +9,7 @@ import { IPageInfo } from 'components/pagination/index';
 import { messageFunc, downloadFile, browseFile } from 'common/utils/function';
 import { sourceFormat, matchFieldFindeTarget, IDictionaryItem } from 'common/dictionary/index';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
+import { defaultCollectionPic } from 'common/service/img-collection';
 import './collection.scss';
 
 interface IColleactionProps {
@@ -80,7 +81,8 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         fileFormat: item.fileFormat,
                         id: item.id,
                         isCollect: true,
-                        chapterId: item.chapterId
+                        chapterId: item.chapterId,
+                        coverLink: item.coverLink || defaultCollectionPic
                     };
                 });
 
@@ -192,6 +194,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                 dataSource.map((source: IDataSource, index: number) => {
                                     return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}} key={`${source.id}-${index}`}>
                                                 <div className='collection-item'>
+                                                    <img className='material-cover' alt='书封面' src={defaultCollectionPic}/>
                                                     <div className='collection-item-top' onClick={() => this.lookItem(source)}>
                                                         <Row>
                                                             <Col>
@@ -208,13 +211,16 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                             <Col span={12}>
                                                                 <label>文件大小：{source.size}</label>
                                                             </Col>
-                                                            <Col className='bottom-right' span={12}>
-                                                                <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
-                                                                <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
-                                                                    <span><SvgComponent className='svg-component' type='icon-love_fill' /></span>
-                                                                </Popconfirm>
-                                                            </Col>
                                                         </Row>
+                                                    </div>
+                                                    <div className='collection-item-animate'>
+                                                        <p>{source.title}</p>
+                                                        <div className='collection-item-operation'>
+                                                            <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
+                                                            <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
+                                                                <span className='disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
+                                                            </Popconfirm>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </Col>

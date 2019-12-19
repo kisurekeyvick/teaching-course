@@ -1,72 +1,67 @@
 @import '../../assets/styles/global.scss';
 
+@mixin userLayout {
+    max-width: 992px;
+    min-width: 992px;
+}
+
 .global-layout {
     height: 100%;
-    // position: relative;
-    // background: transparent url('../../assets/images/userBg.png') no-repeat fixed top !important;
-    // background-size: 100% 100% !important;
-
-    // .user-bg {
-    //     position: absolute;
-    //     z-index: -1;
-    //     width: 100%;
-    // }
 
     .ant-layout-header {
-        height: 65px;
+        height: 100px;
         padding: 0;
-        background: #fff;
+        background: $userColor;
         line-height: 0;
-        // background-color: transparent;
     }
 
     .ant-layout-content {
-        margin-top: 65px;
+        margin-top: 100px;
         min-height: initial;
-        background-color: #f0f2f5;
     }
+
+    // .ant-layout-footer, .ant-layout-content {
+    //     background-color: $userBgColor;
+    // }
 
     .global-head {
         display: flex;
-        max-width: 992px;
+        @include userLayout;
         margin: 0 auto;
-        // background-color: #fff;
+        height: 100%;
 
         .global-head-left {
             flex: 0 0 500px;
-            padding: 15px 0;
 
             img {
-                width: 170px;
-                height: 35px;
-            }
-
-            .link-item {
-                padding: 12px;
-                margin: 0 5px;
-                color: rgba(0, 0, 0, 0.65);
-                border-radius: 5px;
-
-                &.selected, &:hover {
-                    color:#fff;
-                    background-color: $color;
-                }
+                height: 55px;
+                margin-top: 22px;
             }
         }
 
         .global-head-right {
             flex: 1;
             text-align: right;
-            padding: 15px 0;
+            padding-top: 26px;
 
-            .search-control {
-                width: 270px;
+            .link-item {
+                padding: 12px;
+                margin: 0 5px;
+                line-height: 100px;
+                color: $userSecondColor;
+
+                &.selected, &:hover {
+                    color:#fff;
+                    border-bottom: 3px solid #fff;
+                }
             }
 
             .right-menu {
                 list-style: none;
                 margin-bottom: 0;
                 float: right;
+                padding-left: 0;
+                line-height: 85px;
 
                 .menu-item {
                     padding: 7px 10px;
@@ -78,20 +73,22 @@
                         font-size: 18px;
                     }
 
-                    &:hover {
-                        background-color: #F3F3F3;
-                    }
-
                     .menu-svg-box {
                         .icon-admin-system {
-                            font-size: 20px;
+                            font-size: 18px;
+                            color: #ddd;
                         }
                     }
 
                     .user-portrait {
-                        width: 30px;
-                        height: 30px;
+                        width: 25px;
+                        height: 25px;
                         border-radius: 50%;
+                        opacity: 0.9;
+                    }
+
+                    &.user {
+                        padding-right: 0;
                     }
                 }
             }
@@ -100,7 +97,7 @@
 
     .global-body {
         height: 100%;
-        max-width: 992px;
+        @include userLayout;
         margin: 0 auto;
 
         .expection {

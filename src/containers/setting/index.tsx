@@ -4,8 +4,7 @@ import { IHeadTab, headTabs } from './index.config';
 import { SettingPersonalContainer, ISettingPersonalProps } from './personal/index';
 import SettingModifyPwdContainer from './modifyPassword/index';
 import { cloneDeep } from 'lodash';
-import { getUserBaseInfo } from 'common/utils/function';
-import { message } from 'antd';
+import { getUserBaseInfo, messageFunc } from 'common/utils/function';
 import { api } from 'common/api/index';
 import { IQueryPersonResponse } from 'common/api/api-interface';
 import { defaultUserPic } from 'common/service/img-collection';
@@ -79,11 +78,10 @@ export default class SettingContainer extends React.Component<ISettingContainerP
      */
     public loadUserInfo = () => {
         const { userInfo } = this.config;
-
         const params:FormData = new FormData();
         params.set('id', userInfo.teacherId);
 
-        message.loading('加载数据中', 2);
+        const loading = messageFunc();
 
         api.queryPerson(params).then((res: IQueryPersonResponse) => {
             if (res.status === 200 && res.data.success) {
@@ -93,7 +91,7 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                     img: result.link || defaultUserPic,
                     userName: result.userName,
                     job: result.position,
-                    introduction: result.flag,
+                    introduction: result.desc,
                     password: result.password,
                     loginName: result.loginName
                 };
@@ -102,9 +100,9 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                     personInfo: {...this.state.personInfo, ...state}
                 });
 
-                message.info('加载完成');
+                loading.success(res.data.desc);
             } else {
-                message.warn(res.data.desc);
+                loading.error(res.data.desc);
             }
         });
     }

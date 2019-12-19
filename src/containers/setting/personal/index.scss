@@ -9,7 +9,7 @@
     cursor: pointer;
 
     &:hover {
-        color: $color;
+        color: $userColor;
     }
 }
 
@@ -61,7 +61,7 @@
 
                     &.hover {
                         span.edit-span {
-                            color: $color;
+                            color: $userColor;
                         }
                     }
 

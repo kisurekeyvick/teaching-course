@@ -1,13 +1,27 @@
 @import '../../../assets/styles/global.scss';
 
 .directory-box {
-    background-color: #fff;
     min-height: 300px;
-    padding: 0 12px 24px;
+    padding: 0 0 24px;
+    background-color: #fff;
 
     .directory-title {
         display: flex;
-        padding: 0 8px;
+        padding: 5px 12px;
+        position: relative;
+        border-radius: 2px 2px 0 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width:0; 
+            height:0;
+            border-width:5px;
+            border-style:solid;
+            border-color:#fff transparent transparent transparent;
+            top:0;
+            left:25px;
+        }
 
         p {
             margin-bottom: 0;
@@ -23,12 +37,12 @@
         }
     }
 
-    // span.ant-tree-switcher {
-    //     background: transparent !important;
-    // }
+    span.ant-tree-switcher {
+        background: transparent !important;
+    }
 
     .directory-menu-box {
-        padding: 0 10px 0 3px;
+        padding: 0 8px;
 
         .no-data-img {
             width: 100px;
@@ -56,9 +70,18 @@
         }
     }
 
+    .ant-tree li .ant-tree-node-content-wrapper {
+        font-size: 12px;
+    }
+
     .svg-icon-chapter {
-        font-size: 15px !important;
+        font-size: 20px !important;
         float: left;
-        margin: 5px;
+        margin: 2px;
+    }
+
+    .ant-tree-node-selected {
+        background-color: $userSecondBGColor !important;
+        color: #fff !important;
     }
 }

@@ -30,9 +30,115 @@
         padding: 12px;
         background-color: #fff;
         margin-bottom: 24px;
+        height: 230px;
         cursor: pointer;
+        position: relative;
         @include box-shadow;
-        // @include backgroundAnimate(rgba(0,0,0,.03));
+
+        img.material-cover {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            top: 0;
+            left: 0;
+            border-radius: 5px;
+        }
+    
+        &::before {
+            content: '';
+            background: #ccc;
+            width: 100%;
+            height: 100%;
+            transform: scale3d(0, 1, 0);
+            transform-origin: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+            transition: all .5s ease .1s;
+            border-radius: 5px;
+        }
+
+        &:hover::before {
+            opacity: 0.6;
+            transform: scale3d(1, 1, 1);
+        }
+
+        .collection-item-animate {
+            width: 100%;
+            display: none;
+            transform: translateX(-50%) translateY(-50%) scale(0);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            z-index: 1;
+            transition: all 0.4s linear 0s;
+
+            p {
+                color: #fff;
+                font-size: 20px;
+                font-weight: 700;
+                text-transform: uppercase;
+                text-shadow: 0 2px 5px #000;
+                margin: 0 0 3px 0;
+                text-align: center;
+                animation: slideInDown 0.5s;
+            }
+
+            .collection-item-operation {
+                text-align: left;
+                padding: 0 24px;
+                position: absolute;
+                bottom: -80px;
+                right: 0px;
+                animation: slideInUp 0.5s;
+
+                span {
+                    background-color: #fff;
+                    height: 35px;
+                    width: 35px;
+                    display: inline-block;
+                    transition: all 0.3s;
+                    line-height: 35px;
+                    margin-right: 8px;
+                    color: $userColor;
+                    text-align: center;
+                    float: left;
+                    border-radius: 50%;
+                }
+
+                .download-btn {
+                    color: $userColor;
+                    font-size: 18px;
+                    margin-top: -4px;
+                }
+
+                span.disCollect-btn {
+                    margin-top: -4px;
+
+                    .svg-component {
+                        font-size: 17px;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            .collection-item-top, .describle, .collection-item-bottom {
+                display: none;
+            }
+
+            .material-cover {
+                opacity: 1;
+            }
+
+            .collection-item-animate {
+                display: block;
+                transform: translateX(-50%) translateY(-50%) scale(1);
+            }
+        }
 
         .collection-item-top {
             margin-bottom: 12px;
