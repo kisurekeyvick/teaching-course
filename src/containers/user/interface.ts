@@ -19,7 +19,7 @@ export interface IForm {
 
 export interface LoginParams {
     password: string;
-    userName: string;
+    loginName: string;
     [key: string]: any;
 }
 

@@ -50,6 +50,16 @@
         .ant-form-item:last-child {
             margin-bottom: 0;
         }
+
+        .error-message {
+            display: block;
+            margin-bottom: 0;
+            color: $errorColor;
+
+            &.error-animate {
+                animation: flipInX 2s;
+            }
+        }
     }
 }
 

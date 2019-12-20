@@ -5,19 +5,17 @@ import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
 import { NavLink } from "react-router-dom";
-import { Layout, Input, Icon, Popover, Row, Col, Tooltip, message, Divider } from 'antd';
+import { Layout, Icon, Popover, Row, Col, Tooltip, message, Divider } from 'antd';
 import { cloneDeep } from 'lodash';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
-import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
 import { SvgComponent } from 'components/icon/icon';
 import { ISignOutResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
 import { getUserBaseInfo, localStorageService } from 'common/utils/function';
-import { defaultUserPic, schoolLogo } from 'common/service/img-collection';
+import { defaultUserPic, schoolLogo, userBannerBgPic } from 'common/service/img-collection';
 import './index.scss';
 
 const { Header, Content, Footer } = Layout;
-const { Search } = Input;
 
 type IGlobalLayoutProps = {
     children: any;
@@ -43,25 +41,6 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         };
 
         this.childref = React.createRef();
-    }
-
-    /** 
-     * @func
-     * @desc 搜索书名
-     */
-    public searchBook = (e: string) => {
-        this.props.searchBookContent(e);
-
-        console.log('this.childref', this.childref);
-
-        if (window.location.pathname !== '/search/result') {
-            /** 跳转至搜索结果页 */
-            window.location.href = '/search/result';
-        }
-
-        // globalEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, {
-        //     searchBook: e
-        // });
     }
 
     /** 
@@ -160,8 +139,15 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
         } else if (tag === 'admin-system') {
+            const { isAdministrators } = this.config.teacherCache;
             localStorageService.set(StorageItemName.PAGETYPE, { type: 'behind' });
-            window.location.href = '/admin/login';
+
+            /** 如果是管理员 则直接跳转到上传界面 */
+            if (isAdministrators) {
+                window.location.href = 'admin/system/upload';
+            } else {
+                window.location.href = '/admin/login';
+            }
         }
     }
 
@@ -171,6 +157,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         return <Layout className='global-layout'>
                 <Header style={{ position: 'fixed', zIndex: 100, width: '100%' }}>
                     <div className='global-head'>
+                        <img className='banner-bg' alt='banner-bg' src={userBannerBgPic}/>
                         <div className='global-head-left'>
                             <img alt='logo' src={schoolLogo}/>
                         </div>
@@ -179,7 +166,6 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                             <NavLink className='link-item' to='/collection' activeClassName='selected'>收藏</NavLink>
                             <NavLink className='link-item' to='/search/result' activeClassName='selected'>检索</NavLink>
                             <Divider type="vertical" />
-                            {/* <Search className='search-control' placeholder='搜索教材资源' onSearch={this.searchBook}/> */}
                             <ul className='right-menu'>
                                 { headMenu }
                             </ul>

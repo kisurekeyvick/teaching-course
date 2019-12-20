@@ -5,6 +5,10 @@ import noData from 'assets/images/noData.png';
 import schoolLogo from 'assets/images/schoolLogo.png';
 /** 收藏页默认书封面 */
 import defaultCollectionPic from 'assets/images/defaultCollectionPic.jpg';
+/** 登录页图片 */
+import loginBgPic from 'assets/images/loginBg.webp';
+/**用户banner背景图 */
+import userBannerBgPic from 'assets/images/user-banner-bg.png';
 
 /** 文件格式图 */
 import DOC from 'assets/images/file-format/DOC.png';
@@ -26,6 +30,10 @@ export {
     schoolLogo,
     /** 收藏页默认书封面 */
     defaultCollectionPic,
+    /** 登录页背景图片 */
+    loginBgPic,
+    /**用户banner背景图 */
+    userBannerBgPic,
     /**文件格式 */
     DOC,
     DOCX,

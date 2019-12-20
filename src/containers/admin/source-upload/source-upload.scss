@@ -1,67 +1,33 @@
 @import '../../../assets/styles/global.container.scss';
 
-@mixin borderBottom {
-    border-bottom: 1px solid #f1f1f1;
-}
-
-@mixin require {
-    &:before {
-        display: inline-block;
-        margin-right: 4px;
-        color: #f5222d;
-        font-size: 14px;
-        font-family: SimSun, sans-serif;
-        line-height: 1;
-        content: '*';
-    }
-}
-
 .upload-container {
     @include commonContainer;
 
-    .title {
-        font-size: 25px;
-        margin-bottom: 0px;
-        padding-bottom: 12px;
-        @include borderBottom;
-    }
+    .nav-head {
+        text-align: center;
+        margin-bottom: 48px;
 
-    .upload-content {
-        @include cleardefaultInputFormStyle;
+        .nav-item {
+            padding: 5px 12px;
+            cursor: pointer;
 
-        .upload-form-item {
-            @include borderBottom;
-            padding: 8px 0;
-            margin-bottom: 0;
+            &:first-child {
+                border-radius: 5px 0 0 5px;
+            }
 
-            &.fileList, &.type, &.location {
-                .ant-form-item-label {
-                    &>label {
-                        @include require;
-                    }   
-                }
+            &:last-child {
+                border-radius: 0 5px 5px 0;
+            }
 
-                .ant-form-explain {
-                    clear: both;
-                    min-height: 22px;
-                    margin-top: -2px;
-                    font-size: 14px;
-                    line-height: 1.5;
-                    color: #f5222d;
-                    transition: color 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
-                }
+            &.complete {
+                background-color: $adminBgColor;
+                color: #fff;
+            }
+
+            &.selected, &:hover {
+                background-color: $adminColor;
+                color: #fff;
             }
         }
-    }
-
-    .btn-group-item {
-        margin-right: 8px;
-    }
-
-    .submit-form-item {
-        text-align: right;
-        text-align: right;
-        margin-bottom: 0;
-        margin-top: 24px;
     }
 }

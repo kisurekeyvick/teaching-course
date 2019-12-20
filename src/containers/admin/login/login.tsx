@@ -7,8 +7,10 @@ import './login.scss';
 import {connect} from 'react-redux';
 import { AdminLoginFormItem, LoginParams, IConfig, IForm } from './login-config';
 import { env } from 'environment/index';
-import { getScreenInfo } from 'common/utils/function';
+import { getScreenInfo, messageFunc } from 'common/utils/function';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
+import { api } from 'common/api/index';
+import { ILogin } from 'common/api/api-interface';
 
 const FormItem = Form.Item;
 
@@ -19,6 +21,7 @@ interface IProps {
 
 interface IState {
     style: any;
+    errorMsg: string;
 }
 
 class AdminLogin extends React.PureComponent<IProps, IState> {
@@ -40,7 +43,8 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
             style: {
                 width: offsetWidth + 'px',
                 height: offsetHeight + 'px'
-            }
+            },
+            errorMsg: ''
         };
     }
 
@@ -73,12 +77,32 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
         this.props.form.validateFields((error: any, value: LoginParams) => {
             if (!error) {
                 const params = {
-                    userName: value.userName,
+                    loginName: value.userName,
                     password: value.password
                 };
 
-                this.rememberAdminPage(params);
-                window.location.href = '/admin/system/upload';
+                const loading = messageFunc('正在登录中...');
+
+                api.login(params).then((res: ILogin) => {
+                    const { success, desc, isAdministrators } = res.data;
+                    if (res.status === 200 && success) {
+                        if (isAdministrators) {
+                            this.rememberAdminPage(params);
+                            window.location.href = '/admin/system/upload';
+                            loading.success(desc);
+                        } else {
+                            loading.warn('您不是管理员，无法登陆后台操作界面。');
+                            this.setState({
+                                errorMsg: '非管理员，无法登陆。'
+                            });
+                        }
+                    } else {
+                        loading.error(desc);
+                        this.setState({
+                            errorMsg: desc
+                        });
+                    }
+                });
             }
         })
     }
@@ -134,6 +158,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
 
     public render() {
         const { getFieldDecorator } = this.props.form;
+        const { errorMsg } = this.state;
 
         return (
             <div className='layout-login-box'>
@@ -161,6 +186,9 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                                             })
                                         }
                                         <FormItem>
+                                            {
+                                                errorMsg && <p className='error-message error-animate'>{errorMsg}</p>
+                                            }
                                             <div>
                                                 <Row gutter={24}>
                                                     <Col span={10}>

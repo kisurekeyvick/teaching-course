@@ -60,7 +60,7 @@ export const loadSectionList = (params: FormData, treeNode: any, sourceMenu: any
                     return {
                         name: item.name,
                         key: `${value}-${index}-${item.id}`,
-                        value: item.id,
+                        value: item.chapterId,
                         id: item.id,
                         isLeaf: true,
                         weight: item.weight,

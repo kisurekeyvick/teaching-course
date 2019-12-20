@@ -98,7 +98,7 @@ export const behindPagesRouter: ILoadableRoute[] = [
     {
         path: '/admin/system/upload',
         component: Loadable({
-            loader: () => import('../containers/admin/source-upload/source-upload'),
+            loader: () => import('../containers/admin/source-upload/source-upload-steps'),
             loading: () => null,
             modules: ['upload']
         }),

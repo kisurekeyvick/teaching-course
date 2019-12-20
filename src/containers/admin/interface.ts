@@ -4,8 +4,9 @@ interface ICommon {
     [key: string]: any;
 }
 
-interface IUploadContainerProps extends ICommon {
-    
+interface IUploadStepFirstProps {
+    successCallBack: Function;
+    [key: string]: any;
 }
 
 interface IAjaxResponse {
@@ -28,7 +29,7 @@ export {
     IConfig, 
     IForm, 
     LoginParams,
-    IUploadContainerProps,
+    IUploadStepFirstProps,
     IAjaxResponse,
     ITreeNodeDrag
 }

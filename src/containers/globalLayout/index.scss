@@ -20,15 +20,19 @@
         min-height: initial;
     }
 
-    // .ant-layout-footer, .ant-layout-content {
-    //     background-color: $userBgColor;
-    // }
-
     .global-head {
         display: flex;
         @include userLayout;
         margin: 0 auto;
         height: 100%;
+        position: relative;
+
+        img.banner-bg {
+            position: absolute;
+            z-index: -1;
+            height: 100%;
+            width: 100%;
+        }
 
         .global-head-left {
             flex: 0 0 500px;

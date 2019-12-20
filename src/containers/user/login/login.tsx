@@ -14,6 +14,7 @@ import { LoginParams } from 'containers/user/interface';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { ILogin } from 'common/api/api-interface';
 import { messageFunc } from 'common/utils/function';
+import { loginBgPic } from 'common/service/img-collection';
 
 const FormItem = Form.Item;
 
@@ -190,7 +191,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
                                 </div>
                 } else {
                     formItem = <div className='formItem-div'>
-                        <label className='formItem-label'>{ form.label }</label>
+                        {/* <label className='formItem-label'>{ form.label }</label> */}
                         { inputItem }
                     </div>;
                 } 
@@ -224,8 +225,11 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
         return(
             <div className='user-login'>
+                <div className='user-login-left'>
+                    <img className='background-image' alt='logo' src={loginBgPic}/>
+                </div>
                 <Form className='user-login-form' onSubmit={this.handleSubmit}>
-                    <p className='login-title'>登录</p>
+                    <p className='login-title'><span>欢迎登录</span><span>用户系统</span></p>
                     {
                         this.config.loginFormItem.map((item: IForm, index: number) => {
                             return <FormItem

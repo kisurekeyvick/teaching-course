@@ -359,3 +359,29 @@ export interface IUpdatePasswordRequestParams {
     againNewPassword: string;
     teacherId?: string;
 }
+
+/** 上传教学材料附件的接口 应该以formData格式传递 */
+export interface IUploadFileRequest {
+    chapterId: string;
+    materialId: string;
+    file: Blob;
+}
+
+/** 添加资源信息 */
+export interface IAddSectionRequest {
+    materialId: string;
+    /** 选中额chapterID */
+    parentId: string;
+    teachChapter: {
+        desc: string;
+        name: string;
+        fileFormat: number;
+        fileType: number;
+        weight: number;
+    };
+    /** 写死为2 */
+    type: 2;
+}
+
+export interface IAddSectionResponseResult extends IAjaxCommonResponse {
+}

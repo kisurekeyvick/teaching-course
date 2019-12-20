@@ -28,7 +28,7 @@ export const loginFormItem: IForm[] = [
         size: 'large',
         config: {
             rule: [
-                { required: true, message: '如忘记密码或无法登录，请联系系统管理员。' }
+                { required: true, message: '忘记密码/无法登录，请联系管理员。' }
             ],
             type: 'password',
             icon: 'lock',

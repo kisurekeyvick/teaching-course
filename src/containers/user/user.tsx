@@ -1,10 +1,8 @@
 import * as React from 'react';
 import UserLogin from './login/login';
 import { Row, Col } from 'antd';
-import { env } from 'environment/index';
 import './user.scss';
 import { getScreenInfo } from 'common/utils/function';
-import { schoolLogo } from 'common/service/img-collection';
 
 interface IProps {
     match: any
@@ -52,15 +50,15 @@ export default class UserContainer extends React.Component<IProps, IState> {
             history: this.props.history
         };
 
-        return <div className='layout-login-box'>
-                    <img className='background-image' style={this.state.style} alt='logo' src={env.loginBackground}/>
+        return <div className='user-system-login-box'>
+                    {/* <img className='background-image' style={this.state.style} alt='logo' src={env.loginBackground}/> */}
                     <div className='login-content-box'>
                         <Row>
-                            <Col span={24}>
+                            {/* <Col span={24}>
                                 <div className='layout-login-box-head'>
                                     <img alt='logo' src={schoolLogo} />
                                 </div>
-                            </Col>
+                            </Col> */}
                             <Col span={24}>
                                 <div className='user-container-box'>
                                     <UserLogin {...loginProps}/>
