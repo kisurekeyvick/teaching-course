@@ -2,6 +2,8 @@ import * as React from 'react';
 import { tabs, ITabItem } from './source-upload.config';
 import { message } from 'antd';
 import UploadStepFirstContainer from './step-first/step-first';
+import UploadStepSecondContainer from './step-second/step-second';
+import { UploadStepThirdContainer, IUploadStepThirdProps } from './step-third/step-third';
 import './source-upload.scss';
 
 interface ISourceUploadStepsProps {
@@ -57,13 +59,40 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
         const { enableTabs } = this.state;
         enableTabs.push('upload');
         const { materialId, chapterId } = params;
-
         this.setState({
             enableTabs,
             currentTab: 'upload',
             courseNode: {
                 materialId,
                 chapterId
+            }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 完成第二部：上传资源
+     */
+    public handleUploadStepSecond = () => {
+        const { enableTabs } = this.state;
+        enableTabs.push('complete');
+
+        this.setState({
+            currentTab: 'complete',
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 继续上传
+     */
+    public uploadAgain = () => {
+        this.setState({
+            enableTabs: ['selectNode'],
+            currentTab: 'selectNode',
+            courseNode: {
+                materialId: '',
+                chapterId: ''
             }
         });
     }
@@ -86,9 +115,18 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
     }
 
     public render() {
-        const { currentTab } = this.state;
+        const { currentTab, courseNode } = this.state;
         const uploadStepFirstProps: any = {
             successCallBack: this.handleUploadStepFirst
+        };
+        const uploadStepSecondProps: any = {
+            successCallBack: this.handleUploadStepSecond,
+            chapterId: courseNode.chapterId,
+            materialId: courseNode.materialId
+        };
+        const uploadStepThirdProps: IUploadStepThirdProps = {
+            history: this.props.history,
+            uploadAgain: this.uploadAgain
         };
 
         return (
@@ -98,7 +136,8 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
                 </div>
                 <div className='content-box'>
                     { currentTab === 'selectNode' && <UploadStepFirstContainer {...uploadStepFirstProps}/> }
-                    { currentTab === 'upload' && <p>开始上传了哦~</p> }
+                    { currentTab === 'upload' && <UploadStepSecondContainer {...uploadStepSecondProps}/> }
+                    { currentTab === 'complete' && <UploadStepThirdContainer {...uploadStepThirdProps}/> }
                 </div>
             </div>
         )

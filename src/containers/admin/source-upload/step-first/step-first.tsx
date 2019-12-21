@@ -86,6 +86,8 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                 location: `${callbackParams.materialName} > ${callbackParams.chapterName}`,
                 uploadLocationError: false
             });
+
+            console.log(callbackParams.materialId, callbackParams.chapterId);
     
             this.config = {
                 ...this.config,
@@ -190,17 +192,6 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
 
         this.props.form.validateFieldsAndScroll((err: any, values: IFormValue) => {
             if (!err && isvalid) {
-                // const params: FormData = new FormData();
-                // params.set('file', this.state.fileList[0].originFileObj);
-                // const a: any = {
-                //     'chapterId': 'CHAPTER201912121106019366537', 
-                //     'materialId': 'MATERL201912121106019186655'
-                // };
-                // params.set('uploadRequestDto', JSON.stringify(a));
-
-                // api.uploadFile(params).then((res: any) => {
-                //     console.log('上传结果', res);
-                // })
                 const loading = messageFunc();
                 const { materialId, parentId } = this.config;
                 const { desc, name, fileFormat, fileType } = values;

@@ -54,13 +54,19 @@ export function calculateScore(maxScore: number, currentScore: number) {
     return (currentScore/maxScore) * 5;
 }
 
+export interface IMessageFuncRes {
+    success: (successDesc?: string, seconds?: number) => void;
+    error:  (errorDesc?: string, seconds?: number) => void;
+    warn:  (wornDesc?: string, seconds?: number) => void;
+}
+
 /**
  * @desc 消息提示
  * @param loadDesc 
  * @param successDesc 
  * @param errorDesc 
  */
-export function messageFunc(loadDesc: string = '加载数据中') {
+export function messageFunc(loadDesc: string = '加载数据中'): IMessageFuncRes {
     const loading = message.loading(loadDesc, 0);
 
     return {

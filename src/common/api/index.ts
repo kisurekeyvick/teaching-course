@@ -35,6 +35,15 @@ export const api = {
     updatePassword: httpRequest(`POST /teacher/updatePassword`),
     /** 更新个人信息 */
     updateTeacher: httpRequest(`POST /teacher/update`),
+    /** 新建资源接口 */
+    addSection: httpRequest(`POST /material/addSection`),
+
+    /** 删除教材/节点/删除文件 */
+    deleteChapterOrSection: httpRequest(`POST /material/deleteChapterOrSection`),
+    /** 新建教材全集 */
+    addChapterAll: httpRequest(`POST /material/addChapterAll`),
+    /** 更新教材全集 */
+    updateChapterAll: httpRequest(`POST /material/updateChapter`),
 
     /** 未解决的接口 */
     /** 上传文件 */
@@ -43,23 +52,11 @@ export const api = {
     updateTeacherFile: httpRequest(`POST /material/updateTeacherFile`),
     /** 修改封面信息 */
     updateCoverFile: httpRequest(`POST /material/updateCoverFile`),
-    /** 新建资源接口 */
-    addSection: httpRequest(`POST /material/addSection`),
-
 
     /** 下载文件 */
     download: httpRequest(`GET /material/download`),
     
     /** mock */
-    loadCourseDirectory: (param?: any) => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/courseDirectory', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
     loadSourceManageResult: (param?: any) => {
         return new Promise((resolve: any, reject: any) => {
             axios.post('/api/sourceManageResult', {}).then(res => {
@@ -68,14 +65,5 @@ export const api = {
                 reject(error);
             });
         });
-    },
-    loadTeachingMaterialDirectory: (param?: any) => {
-        return new Promise((resolve: any, reject: any) => {
-            axios.post('/api/directory', {}).then(res => {
-                resolve(res);
-            }, error => {
-                reject(error);
-            });
-        });
-    },
+    }
 };

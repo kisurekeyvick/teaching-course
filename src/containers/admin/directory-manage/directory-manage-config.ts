@@ -32,7 +32,17 @@ export interface ITableRecord {
     /** 和columns中的dataIndex有关 */
     name: string;
     key: string;
-    isEdit?: boolean;    
+    value: string;
+    isEdit?: boolean;
+    id: number | null;
+    children?: any[];
+    desc: string;
+    pic: string;
+    contributors: string;
+    score: string;
+    size: string;
+    type: string;
+    weight: number;
     [key: string]: any;
 }
 
@@ -43,5 +53,15 @@ export interface ITableRecord {
 export const addCourseFieldTemplate = ({needChildren} = {needChildren: true}) => ({
     name: '请输入内容',
     key: `${Date.now()}`,
+    value: '',
+    weight: 10,
+    loaded: true,
+    id: null,
+    desc: '',
+    pic: '',
+    contributors: '',
+    score: '',
+    size: '',
+    type: '',
     ...needChildren && {children:[]}
 });

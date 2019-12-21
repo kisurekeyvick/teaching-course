@@ -71,6 +71,7 @@ export interface ISectionItem {
     uploadTime: string;
     viewCount: number;
     weight: number;
+    [key: string]: any;
 }
 
 export interface ITeachChapterList {
@@ -262,7 +263,6 @@ export interface IMaterialSearchResponse extends IAjaxCommonResponse {
     }
 }
 
-
 /** 课程资源列表 */
 /** 请求格式 */
 export interface ICourseMaterialListRequest {
@@ -360,13 +360,6 @@ export interface IUpdatePasswordRequestParams {
     teacherId?: string;
 }
 
-/** 上传教学材料附件的接口 应该以formData格式传递 */
-export interface IUploadFileRequest {
-    chapterId: string;
-    materialId: string;
-    file: Blob;
-}
-
 /** 添加资源信息 */
 export interface IAddSectionRequest {
     materialId: string;
@@ -385,3 +378,85 @@ export interface IAddSectionRequest {
 
 export interface IAddSectionResponseResult extends IAjaxCommonResponse {
 }
+
+/** 新建教材 */
+export interface IAddChapterAllRequest {
+    chapterResponseDtoList: IAddChapterAllChapterRequestDtoList[];
+    teachMaterial: {
+        title: string;
+        type: 'Type1'
+    }
+}
+
+export interface IAddChapterAllRequestResult extends IAjaxCommonResponse {}
+
+export interface IUpdateChapterAllChapterResponseList {
+    section: {
+        chapterId: string;
+        materialId: string;
+        name: string;
+        parentId: string;
+        type: 1;
+        weight: number;
+    };
+    teachChapterList?: Array<{
+        chapterId: string;
+        materialId: string;
+        name: string;
+        parentId: string;
+        type: 1;
+        weight: number;
+    }>
+}
+
+/** 更新教材 */
+export interface IUpdateChapterAllRequest {
+    chapterResponseDtoList: IUpdateChapterAllChapterResponseList[];
+    teachMaterial: {
+        materlId: string;
+        desc: string | null;
+        pic: string | null;
+        contributors: string | null;
+        score: string | null;
+        size: string | null;
+        title: string;
+        type: string;
+        weight: number | null;
+    }
+}
+
+export interface IUpdateChapterAllRequestResult extends IAjaxCommonResponse {}
+
+/** 未完成 */
+/** 删除教材、节点、文件 */
+export interface IDeleteChapterOrSectionRequest {
+    id: string;
+    type: 2;
+}
+
+export interface IDeleteChapterOrSectionResponseResult extends IAjaxCommonResponse {}
+
+export interface IAddChapterAllChapterRequestDtoList {
+    section: Array<{
+        name: string;
+        type: 1,
+        weight: number;
+    }>,
+    teachChapterList?: Array<{
+        name: string;
+        type: 2;
+        weight: number;
+    }>
+}
+
+
+
+/** 未完成 */
+/** 上传教学材料附件的接口 应该以formData格式传递 */
+export interface IUploadFileRequest {
+    chapterId: string;
+    materialId: string;
+    file: Blob;
+}
+
+export interface IUploadFileResponseResult extends IAjaxCommonResponse {}

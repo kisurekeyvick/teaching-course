@@ -1,11 +1,18 @@
 import * as React from 'react';
 import { api } from 'common/api/index';
 import { cloneDeep } from 'lodash';
-import { Table, Input, Divider, Icon, Row, Col, Popconfirm, BackTop, Skeleton, Form, notification, Button, message } from 'antd';
+import { Table, Input, Divider, Icon, Row, Col, Popconfirm, BackTop, Skeleton, Form, notification, Button } from 'antd';
 import { columns, IConfig, ITableRecord, addCourseFieldTemplate } from './directory-manage-config';
 import { SvgComponent } from 'components/icon/icon';
 import './directory-manage-table.scss';
 import { EditableContext, EditableCell } from './editableCell';
+import { loadMaterialMenu } from 'common/service/tree-ajax';
+import { messageFunc } from 'common/utils/function';
+import { IMaterialSectionResponseResult, IChapterResponseDtoListItem,
+    ISectionItem, IDeleteChapterOrSectionRequest, IDeleteChapterOrSectionResponseResult,
+    IAddChapterAllRequest, IAddChapterAllChapterRequestDtoList, IAddChapterAllRequestResult,
+    IUpdateChapterAllChapterResponseList, IUpdateChapterAllRequest,
+    ITeachChapterList } from 'common/api/api-interface';
 
 interface IDirectoryManageProps {
     [key: string]: any;
@@ -14,7 +21,19 @@ interface IDirectoryManageProps {
 interface IDataSource {
     name: string;
     key: string;
-    children?: IDataSource[]
+    value: any;
+    weight: number;
+    id: number | null;
+    teachChapterList?: any[];
+    loaded: boolean;
+    desc: string;
+    pic: string;
+    contributors: string;
+    score: string;
+    size: string;
+    type: string;
+    children?: IDataSource[];
+    [key: string]: any;
 }
 
 interface IState {
@@ -160,7 +179,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             let parent: any = dataSource;
             for(let i = 0; i < indexArr.length; i++) {
                 if (i === indexArr.length - 1) {
-                    const pChildren = parent.children;
+                    let pChildren = parent.children;
                     let targetLocationIndex: number = indexArr[i] + addIndex;
                     targetLocationIndex < 0 && (targetLocationIndex = pChildren.length -1);
 
@@ -169,6 +188,11 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
 
                     pChildren.splice(indexArr[i], 1, preSource);
                     pChildren.splice(targetLocationIndex, 1, nextSource);
+
+                    pChildren = pChildren.map((item: IDataSource, index: number) => {
+                        item.weight = 10 + index;
+                        return item;
+                    });
 
                     this.buildDataSourceKey(parent);
                 } else {
@@ -213,38 +237,138 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 return;
             }
 
-            const indexArr: number[] = this.getCurrentItemIndex(record);
+            /** 如果是课程修改 那么将调用接口保存其下的所有章节 */
+            if (record.key.split('-').length === 1) {
+                /** 新增 */
+                !record.id && this.addChapterAll(record, row);
+                /** 修改 */
+                record.id && this.updateChapterAll(record, row);
+            } else {
+                /** 如果是课程的章节修改，则前端表面保存 */
+                const indexArr: number[] = this.getCurrentItemIndex(record);
 
-            if (indexArr.length > 0) {
-                const dataSource = cloneDeep(this.state.dataSource);
-                let parent: any = dataSource;
+                if (indexArr.length > 0) {
+                    const dataSource = cloneDeep(this.state.dataSource);
+                    let parent: any = dataSource;
 
-                for(let i = 0; i < indexArr.length; i++) {
-                    if (i === indexArr.length - 1) {
-                        const index: number = indexArr[i];
+                    for(let i = 0; i < indexArr.length; i++) {
+                        if (i === indexArr.length - 1) {
+                            const index: number = indexArr[i];
 
-                        if (i === 0) {
-                            const item = dataSource[index];
-                            dataSource.splice(index, 1, {
-                                ...item,
-                                ...row
-                            });
-                        } else if (i > 0) {
-                            const item = parent.children[index];
-                            parent.children.splice(index, 1, {
-                                ...item,
-                                ...row
-                            });
+                            if (i === 0) {
+                                const item = dataSource[index];
+                                dataSource.splice(index, 1, {
+                                    ...item,
+                                    ...row
+                                });
+                            } else if (i > 0) {
+                                const item = parent.children[index];
+                                parent.children.splice(index, 1, {
+                                    ...item,
+                                    ...row
+                                });
+                            }
+                        } else {
+                            parent = dataSource[indexArr[i]];
                         }
-                    } else {
-                        parent = dataSource[indexArr[i]];
                     }
-                }
 
-                this.setState({
-                    dataSource,
-                    editingKey: ''
-                });
+                    this.setState({
+                        dataSource,
+                        editingKey: ''
+                    });
+                }
+            }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 新建教材全集
+     */
+    public addChapterAll = (record: ITableRecord, row: any) => {
+        const chapterResponseDtoList: IAddChapterAllChapterRequestDtoList[] = (record.children || []).reduce((pre,cur: IDataSource) => {
+            const item = {
+                name: cur.name,
+                type: 1,
+                weight: 10
+            };
+
+            return pre.concat({ section: item });
+        }, []);
+
+        const params: IAddChapterAllRequest = {
+            chapterResponseDtoList,
+            teachMaterial: {
+                title: row.name,
+                type: 'Type1'
+            }
+        };
+
+        const loading = messageFunc();
+
+        api.addChapterAll(params).then((res: IAddChapterAllRequestResult) => {
+            if (res.status === 200 && res.data.success) {
+                loading.success(res.data.desc);
+                this.loadTeachingMenu();
+            } else {
+                loading.error(res.data.desc);
+            }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 更新教材全集
+     */
+    public updateChapterAll = (record: ITableRecord, row: any) => {
+        const chapterResponseDtoList: IUpdateChapterAllChapterResponseList[] = (record.children || []).reduce((pre,cur: IDataSource) => {
+            const item = {
+                section: {
+                    chapterId: cur.value,
+                    materialId: record.value,
+                    name: cur.name,
+                    parentId: record.value,
+                    type: 1,
+                    weight: cur.weight
+                },
+                ...cur.teachChapterList && { teachChapterList: cur.teachChapterList.map((i: ITeachChapterList) => {
+                    return {
+                        chapterId: i.chapterId,
+                        materialId: i.materialId,
+                        name: i.name,
+                        parentId: i.parentId,
+                        type: i.type,
+                        weight: i.weight
+                    };
+                }) }
+            }; 
+            return pre.concat(item);
+        }, []);
+
+        const loading = messageFunc();
+
+        const params: IUpdateChapterAllRequest = {
+            chapterResponseDtoList,
+            teachMaterial: {
+                materlId: record.value,
+                desc: record.desc,
+                pic: record.pic,
+                contributors: record.contributors,
+                score: record.score,
+                size: record.size,
+                title: row.name,
+                type: record.type,
+                weight: record.weight
+            }
+        };
+
+        api.updateChapterAll(params).then((res: IAddChapterAllRequestResult) => {
+            if (res.status === 200 && res.data.success) {
+                loading.success(res.data.desc);
+                this.loadTeachingMenu();
+            } else {
+                loading.error(res.data.desc);
             }
         });
     }
@@ -271,9 +395,9 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      */
     public getCurrentItemIndex = (record: ITableRecord): number[] => {
         const indexArr: number[] = [];
-        const keys: string[] = record.key.split('');
+        const keys: string[] = record.key.split('-');
         const repeatKeys = (courseList: ITableRecord[], keysIndex: number = 0) => {
-            const matchKeys: string = keys.slice(0, keysIndex + 1).join('');
+            const matchKeys: string = keys.slice(0, keysIndex + 1).join('-');
             const target = courseList.find((item: ITableRecord, index: number) => {
                 if (item.key === matchKeys) {
                     indexArr.push(index);
@@ -300,29 +424,44 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      *        例如： 父级key为'1',那么子级的key为'12',那么代表的是删除父级下的children中的第二个数据
      */
     public deleteCourse = (record: ITableRecord) => {
-        const indexArr: number[] = this.getCurrentItemIndex(record);
+        const loading = messageFunc();
+        const params: IDeleteChapterOrSectionRequest = {
+            id: record.value,
+            type: 2
+        };
 
-        if (indexArr.length > 0) {
-            let dataSource = cloneDeep(this.state.dataSource);
-            let parent: any = dataSource;
-
-            for(let i = 0; i < indexArr.length; i++) {
-                if (i === indexArr.length - 1) {
-                    i === 0 && (dataSource.splice(indexArr[i], 1));
-
-                    if (i > 0) {
-                        parent.children && parent.children.splice(indexArr[i], 1);
-                        this.buildDataSourceKey(parent);
-                    }
-                } else {
-                    parent = dataSource[indexArr[i]];
-                }
+        api.deleteChapterOrSection(params).then((res: IDeleteChapterOrSectionResponseResult) => {
+            if (res.status === 200 && res.data.success) {
+                this.loadTeachingMenu();
+                loading.success(res.data.desc);
+            } else {
+                loading.error(res.data.desc);
             }
+        });
 
-            this.setState({
-                dataSource
-            });
-        }
+        // const indexArr: number[] = this.getCurrentItemIndex(record);
+
+        // if (indexArr.length > 0) {
+        //     let dataSource = cloneDeep(this.state.dataSource);
+        //     let parent: any = dataSource;
+
+        //     for(let i = 0; i < indexArr.length; i++) {
+        //         if (i === indexArr.length - 1) {
+        //             i === 0 && (dataSource.splice(indexArr[i], 1));
+
+        //             if (i > 0) {
+        //                 parent.children && parent.children.splice(indexArr[i], 1);
+        //                 this.buildDataSourceKey(parent);
+        //             }
+        //         } else {
+        //             parent = dataSource[indexArr[i]];
+        //         }
+        //     }
+
+        //     this.setState({
+        //         dataSource
+        //     });
+        // }
     }
 
     /** 
@@ -334,7 +473,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             const parentKey: string = source.key;
             source.children = source.children.map((child: IDataSource, index: number) => ({
                 ...child,
-                key: `${parentKey}${index}`
+                key: `${parentKey}-${index}`
             }));
 
             return source;
@@ -343,24 +482,96 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
         return source;
     }
 
+    /**
+     * @func
+     * @desc 加载课程
+     * @param params 
+     */
     public loadTeachingMenu(params = {}) {
-        message.loading('加载数据中', 2);
+        const loading = messageFunc();
 
         this.setState({
             isLoading: true
         });
 
-        api.loadCourseDirectory(params).then((res: any) => {
-            if (res.status === 200) {
-                this.setState({
-                    dataSource: res.data,
-                    hasData: res.data.length > 0,
-                    isLoading: false
-                });
+        loadMaterialMenu().then((res: IDataSource[]) => {
+            let state = {
+                isLoading: false
+            };
 
-                message.info('加载完成');
-            }
+            /** 这边对key重置一下 */
+            const dataSource: IDataSource[] = res.map((item: IDataSource, index: number) => {
+                item.key = String(index);
+                item.loaded = false;
+                return item;
+            })
+
+            dataSource.length && (state = {...state, ...{
+                dataSource,
+                hasData: dataSource.length > 0
+            }});
+
+            this.setState({
+                ...state,
+                editingKey: ''
+            });
+
+            loading.success();
         });
+    }
+
+    /** 
+     * @callback
+     * @desc 展开加载相关课程的章节
+     */
+    public handleTableItemExpand = (expanded: boolean, record: IDataSource) => {
+        if (expanded && !record.loaded) {
+            const loading = messageFunc();
+            const params: FormData = new FormData();
+            params.set('id', record.value);
+
+            api.sectionList(params).then((res: IMaterialSectionResponseResult) => {
+                if (res.status === 200 && res.data.success) {
+                    const { chapterResponseDtoList }: { chapterResponseDtoList: IChapterResponseDtoListItem[] } = res.data.result;
+                    const value = record.value;
+                    const menus: IDataSource[] = chapterResponseDtoList.map((chapter: IChapterResponseDtoListItem, index: number) => {
+                        const item: ISectionItem = chapter.section;
+                        return {
+                            name: item.name,
+                            key: `${record.key}-${index}`,
+                            value: item.chapterId,
+                            id: item.id,
+                            isLeaf: true,
+                            weight: item.weight,
+                            teachChapterList: chapter.teachChapterList,
+                            desc: item.desc,
+                            pic: item.pic,
+                            contributors: item.co,
+                            score: item.s,
+                            size: item.size,
+                            type: String(item.type),
+                            loaded: true
+                        };
+                    }).sort((x: IDataSource, y: IDataSource) => {
+                        return y.weight - x.weight;
+                    });
+
+                    const { dataSource } = this.state; 
+                    const menusState: IDataSource[] = cloneDeep(dataSource);
+                    const target: IDataSource = menusState.find((item: IDataSource) => item.value === value)!;
+                    target.children! = menus;
+                    target.loaded = true;
+
+                    this.setState({
+                        dataSource: menusState
+                    });
+
+                    loading.success(res.data.desc);
+                } else {
+                    loading.error(res.data.desc);
+                }
+            });
+        }
     }
 
     /** 
@@ -459,6 +670,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                                     dataSource={hasData ? dataSource : undefined }
                                     indentSize={24}
                                     pagination={false}
+                                    loading={isLoading}
+                                    onExpand={this.handleTableItemExpand}
                                 />
                             </EditableContext.Provider>
                     }
