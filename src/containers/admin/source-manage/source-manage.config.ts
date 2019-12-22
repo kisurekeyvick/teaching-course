@@ -21,8 +21,8 @@ export const columns = [
     },
     {
         title: '创建人',
-        dataIndex: 'creater',
-        key: 'creater',
+        dataIndex: 'contributors',
+        key: 'contributors',
         width: '100px',
         ellipsis: true
     },

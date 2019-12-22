@@ -20,12 +20,12 @@
             }
 
             &.complete {
-                background-color: $adminBgColor;
+                background-color: $userSecondBGColor;
                 color: #fff;
             }
 
             &.selected, &:hover {
-                background-color: $adminColor;
+                background-color: $userColor;
                 color: #fff;
             }
         }

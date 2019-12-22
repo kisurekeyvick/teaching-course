@@ -2,6 +2,8 @@ import { IDictionaryItem } from 'common/dictionary/index';
 
 export interface IModifySourceProps {
     callBack: Function;
+    source: object;
+    updateTime: number;
     [key: string]: any;
 }
 

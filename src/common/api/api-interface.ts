@@ -431,7 +431,7 @@ export interface IUpdateChapterAllRequestResult extends IAjaxCommonResponse {}
 /** 删除教材、节点、文件 */
 export interface IDeleteChapterOrSectionRequest {
     id: string;
-    type: 2;
+    type: 10;
 }
 
 export interface IDeleteChapterOrSectionResponseResult extends IAjaxCommonResponse {}

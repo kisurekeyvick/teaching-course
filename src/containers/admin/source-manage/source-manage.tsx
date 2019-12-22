@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { api } from 'common/api/index';
 import { columns, IConfig, ITableRecord } from './source-manage.config';
 import { cloneDeep } from 'lodash';
-import { Table, Skeleton, Row, Col, Button, Icon, Divider, Popconfirm, message, Drawer } from 'antd';
+import { Table, Skeleton, Row, Col, Button, Icon, Divider, Popconfirm, message, Drawer, Breadcrumb } from 'antd';
 import { SvgComponent } from 'components/icon/icon';
-import { PageComponent, IPageComponnetProps, IPageInfo } from 'components/pagination/index';
-import { dictionary, IDictionaryItem, findTarget } from 'common/dictionary/index';
+import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import ModifySourceContainer from './modify-source/modify-source';
+import { CourseTreeContainer, ICourseTreeProps, courseTreeResponse } from 'components/course-tree/course-tree';
 import './source-manage.scss';
 
 interface ISourceManageContainerProps {
@@ -14,11 +13,13 @@ interface ISourceManageContainerProps {
 }
 
 interface IState {
-    dataSource: ITableRecord[];
+    dataSource: any[];
     hasData: boolean;
     pageInfo: IPageInfo;
+    breadcrumb: string[];
     isLoading: boolean;
     showDrawer: boolean;
+    currentEditSource: any;
     [key: string]: any;
 }
 
@@ -26,6 +27,7 @@ interface IState {
 
 class SourceManageContainer extends React.PureComponent<ISourceManageContainerProps, IState> {
     public config: IConfig;
+    public courseTreeRef: React.Ref<CourseTreeContainer>;
     
     constructor(public props: ISourceManageContainerProps) {
         super(props);
@@ -35,56 +37,41 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
             isLoading: false,
             hasData: false,
             showDrawer: false,
+            breadcrumb: [],
             /** 分页 */
-            pageInfo: {
-                currentPage: 1,
-                pageCount: 0,
-                pageSize: 10,
-                rowCount: 0,
-                totalCount: 0,
-                pageSizeOptions:['10', '20', '30', '40', '50']
-            },
+            pageInfo: {...defaultPageInfo},
+            currentEditSource: {}
         };
 
         this.config = {
             columns: this.rebuildTableColumns(cloneDeep(columns))
         };
+
+        this.courseTreeRef = React.createRef();
     }
 
     public componentDidMount() {
-        this.loadSourceData();
+
     }
 
     /** 
      * @func
-     * @desc 加载资源
+     * @desc 处理课程树
      */
-    public loadSourceData = (params = {}) => {
-        message.loading('加载数据中', 2);
+    public handleCourseTreeClick = (response: courseTreeResponse) => {
+        const { pageInfo } = this.state;
+        const state: any = {
+            ...response.showList && { 
+                dataSource: response.showList,
+                hasData: response.showList.length > 0,
+                pageInfo: { ...pageInfo, totalCount: response.showList.length }
+            },
+            ...response.breadcrumb && { breadcrumb: response.breadcrumb },
+            ...response.isLoading && { isLoading: response.isLoading === 'true' ? true : false },
+        };
 
         this.setState({
-            isLoading: true
-        });
-
-        api.loadSourceManageResult(params).then((res: any) => {
-            if (res.status === 200) {
-                const sourceTypeList: IDictionaryItem[] = dictionary.get('source-type') || [];
-
-                const dataSource = (res.data || []).map((item: any) => {
-                    const target = findTarget(sourceTypeList, item.type);
-                    item['typeName'] = target ? target.name : item.type;
-                    item['key'] = item.id;
-                    return item;
-                });
-
-                this.setState({
-                    dataSource,
-                    hasData: dataSource.length > 0,
-                    isLoading: false
-                });
-
-                message.info('加载完成');
-            }
+            ...state
         });
     }
 
@@ -114,7 +101,6 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      */
     public deleteSource = (record: ITableRecord) => {
         message.success('删除成功');
-        this.loadSourceData();
     }
 
     /** 
@@ -122,7 +108,10 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      * @desc    编辑资源
      */
     public editSource = (record: ITableRecord) => {
-        this.toggleDrawer(true);
+        this.setState({
+            showDrawer: true,
+            currentEditSource: record
+        });
     }
 
     /** 
@@ -140,7 +129,6 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      * @desc 处理搜索
      */
     public handleInputSearch = (e: any) => {
-        this.loadSourceData();
     }
 
     /** 
@@ -148,7 +136,12 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      * @desc 重新刷新数据
      */
     public refreshDataSource = () => {
-        this.loadSourceData();
+        (this.courseTreeRef! as any).current!.loadFirstLayerMenu();
+        this.setState({
+            dataSource: [],
+            hasData: false,
+            breadcrumb: []
+        });
     }
 
     /** 
@@ -183,17 +176,22 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      */
     public modifySourceCallBack = ({type}: {type: string}) => {
         this.toggleDrawer(false)
-        type === 'saveComplete' && this.loadSourceData();
+        // type === 'saveComplete' && this.loadSourceData();
     }
 
     public render() {
-        const { hasData, dataSource, isLoading, pageInfo, showDrawer } = this.state;
+        const { hasData, dataSource, isLoading, pageInfo, showDrawer, breadcrumb, currentEditSource } = this.state;
         const pageComponentProps: IPageComponnetProps = {
             ...pageInfo,
             pageChange: this.pageChange
         };
         const modifySourceProps: any = {
-            callBack: this.modifySourceCallBack
+            callBack: this.modifySourceCallBack,
+            source: currentEditSource,
+            updateTime: Date.now()
+        };
+        const courseTreeProps: ICourseTreeProps = {
+            handleClick: this.handleCourseTreeClick
         };
 
         return (
@@ -204,37 +202,53 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                             <Button type='primary' className='btn-addCourse' onClick={this.addSource}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加资源</Button>
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
-                        {/* <Col className='operation-box-col' sm={24} md={12}>
-                            <Search style={{ marginBottom: 8 }} placeholder='搜索资源' onChange={this.handleInputSearch} />
-                        </Col> */}
                     </Row>
                 </div>
                 <div className='table-box'>
-                    {
-                        isLoading ? <>
-                            <Skeleton />
-                            <Skeleton />
-                        </> : <>
-                            <Table
-                                columns={this.config.columns}
-                                dataSource={hasData ? dataSource : undefined }
-                                pagination={false}
-                            />
-                            {
-                                dataSource.length > 0 && <div className='source-result-pagination'>
-                                    <PageComponent {...pageComponentProps}/>
+                    <div className='table-tree'>
+                        <CourseTreeContainer {...courseTreeProps} ref={this.courseTreeRef}/>
+                    </div>
+                    <div className='table-tree-content'>
+                        {
+                            isLoading ? <>
+                                <Skeleton />
+                                <Skeleton />
+                            </> : <>
+                                <div>
+                                    {
+                                        breadcrumb.length > 0 && <div className='breadcrumb-box'>
+                                            <SvgComponent className='svg-breadcrumb' type='icon-breadcrumb'/>
+                                            <Breadcrumb>
+                                                {
+                                                    breadcrumb.map((item: string, index: number) => {
+                                                        return <Breadcrumb.Item key={`breadcrumb-${index}`}>{item}</Breadcrumb.Item>
+                                                    })
+                                                }
+                                            </Breadcrumb>
+                                        </div>
+                                    }
+                                    <Table
+                                        columns={this.config.columns}
+                                        dataSource={hasData ? dataSource : undefined }
+                                        pagination={false}
+                                    />
+                                    {
+                                        dataSource.length > 0 && <div className='source-result-pagination'>
+                                            <PageComponent {...pageComponentProps}/>
+                                        </div>
+                                    }
                                 </div>
-                            }
-                            <Drawer 
-                                title='编辑资源'
-                                width={520}
-                                onClose={() => this.toggleDrawer(false)}
-                                visible={showDrawer}
-                                maskClosable={false}>
-                                { showDrawer && <ModifySourceContainer {...modifySourceProps}/> }
-                            </Drawer>
-                        </>
-                    }
+                                <Drawer 
+                                    title='编辑资源'
+                                    width={520}
+                                    onClose={() => this.toggleDrawer(false)}
+                                    visible={showDrawer}
+                                    maskClosable={false}>
+                                    { showDrawer && <ModifySourceContainer {...modifySourceProps}/> }
+                                </Drawer>
+                            </>
+                        }
+                    </div>
                 </div>
             </div>
         )

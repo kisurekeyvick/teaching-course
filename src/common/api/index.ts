@@ -37,13 +37,13 @@ export const api = {
     updateTeacher: httpRequest(`POST /teacher/update`),
     /** 新建资源接口 */
     addSection: httpRequest(`POST /material/addSection`),
-
-    /** 删除教材/节点/删除文件 */
-    deleteChapterOrSection: httpRequest(`POST /material/deleteChapterOrSection`),
     /** 新建教材全集 */
     addChapterAll: httpRequest(`POST /material/addChapterAll`),
     /** 更新教材全集 */
     updateChapterAll: httpRequest(`POST /material/updateChapter`),
+
+    /** 删除教材/节点/删除文件 */
+    deleteChapterOrSection: httpRequest(`POST /material/deleteChapterOrSection`),
 
     /** 未解决的接口 */
     /** 上传文件 */

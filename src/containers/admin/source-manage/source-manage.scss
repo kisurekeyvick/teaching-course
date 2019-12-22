@@ -1,5 +1,10 @@
 @import '../../../assets/styles/global.container.scss';
 
+@mixin filterLayout {
+    padding: 13px 10px;
+    border-bottom: 1px solid hsla(0,0%,59.2%,.1);
+}
+
 .source-manage-container {
     @include commonContainer;
 
@@ -23,6 +28,35 @@
     }
 
     .table-box {
+        display: flex;
+
+        .table-tree {
+            flex: 0 0 300px;
+        }
+
+        .table-tree-content {
+            flex: 1;
+            padding-left: 24px;
+
+            .breadcrumb-box {
+                @include filterLayout;
+    
+                .svg-breadcrumb {
+                    margin-right: 8px;
+                    font-size: 16px;
+                }
+    
+                .ant-breadcrumb {
+                    display: inline-block;
+                    @include smallsize;
+    
+                    & > span:last-child {
+                        color: $userColor;
+                    }
+                }
+            }
+        }
+
         .table-operation-box {
             p {
                 display: inline-block;

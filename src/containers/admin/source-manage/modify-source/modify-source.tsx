@@ -9,6 +9,8 @@ interface IState {
     fileList: any[];
     uploadControlError: boolean;
     loading: boolean;
+    source: any;
+    updateTime: number;
     [key: string]: any;
 }
 
@@ -24,16 +26,39 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
 
         this.config = {
             rules: rules,
-            sourceType: dictionary.get('source-type')!,
-            sourceFormat: dictionary.get('source-format')!,
+            sourceType: dictionary.get('source-type')!.map((item) => {
+                item.value = +(item.value);
+                return item;
+            }),
+            sourceFormat: dictionary.get('source-format')!.map((item) => {
+                item.value = +(item.value);
+                return item;
+            }),
             fileLength: 1
         };
 
         this.state = {
             fileList: [],
             uploadControlError: false,
-            loading: false
+            loading: false,
+            updateTime: 0,
+            source: {
+                name: '',
+                desc: '',
+                fileType: '',
+                fileFormat: ''
+            }
         };
+    }
+
+    static getDerivedStateFromProps(nextProps: IModifySourceProps, prevState: IState) {
+        if (nextProps.updateTime > prevState.updateTime) {
+            return {
+                source: nextProps.source
+            }
+        }
+
+        return null;
     }
 
     /** 
@@ -41,6 +66,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
      * @desc 取消
      */
     public cancel = () => {
+        console.log(this.props.source);
         this.props.callBack({ type: 'cancel' });
     }
 
@@ -134,8 +160,11 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
     }
 
     public render() {
+        const { source } = this.state;
         const { getFieldDecorator } = this.props.form;
         const { sourceFormat = [], rules, sourceType = [] } = this.config;
+
+        console.log('渲染', source);
 
         return (
             <Form onSubmit={this.handleSubmit} className='souce-manage-modify-form' layout='vertical'>
@@ -148,7 +177,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                     <Col xs={{span: 24}}>
                         <Item label='标题'>
                             {
-                                getFieldDecorator('title', {rules: rules.title})(
+                                getFieldDecorator('title', { initialValue: source.name }, {rules: rules.title})(
                                     <Input placeholder='请输入标题'/>
                                 )
                             }
@@ -157,7 +186,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                     <Col xs={{span: 24}}>
                         <Item label='资源简介'>
                             {
-                                getFieldDecorator('introduction', {rules: rules.introduction})(
+                                getFieldDecorator('introduction', { initialValue: source.desc }, {rules: rules.introduction})(
                                     <TextArea placeholder='请输入资源简介'/>
                                 )
                             }
@@ -197,7 +226,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                     <Col xs={{span: 24}}>
                         <Item label='资源类型'>
                             {
-                                getFieldDecorator('type', {rules: rules.type})(
+                                getFieldDecorator('type', { initialValue: source.fileType }, {rules: rules.type})(
                                     <Radio.Group>
                                         {
                                             sourceType.map((type: IDictionaryItem, i: number) => {
@@ -212,7 +241,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                     <Col xs={{span: 24}}>
                         <Item label='资源格式'>
                             {
-                                getFieldDecorator('format', {rules: rules.format})(
+                                getFieldDecorator('format', { initialValue: source.fileFormat }, {rules: rules.format})(
                                     <Select placeholder='请选择资源格式'>
                                         {
                                             sourceFormat.map((format: IDictionaryItem, i: number) => {
