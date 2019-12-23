@@ -1,44 +1,52 @@
+import { dictionary, IDictionaryItem } from 'common/dictionary/index';
+
 export const columns = [
     {
         title: '资源名称',
         dataIndex: 'name',
         key: 'name',
         ellipsis: true,
-        width: '200px',
+        width: 150,
     },
     {
         title: '资源类型',
         dataIndex: 'typeName',
         key: 'typeName',
-        width: '100px',
+        width: 50,
         ellipsis: true
     },
     {
         title: '资源简介',
         dataIndex: 'desc',
         key: 'desc',
+        width: 350,
         ellipsis: true
     },
     {
         title: '创建人',
         dataIndex: 'contributors',
         key: 'contributors',
-        width: '100px',
+        width: 80,
         ellipsis: true
     },
     {
         title: '操作',
         dataIndex: 'operation',
         render: () => {},
-        width: '180px',
-        ellipsis: true,
+        fixed: 'right',
+        width: 180,
         editable: false
+        // width: '180px',
+        // ellipsis: true,
     }
 ];
 
 export interface IConfig {
     columns: any[];
+    sourceFormat: IDictionaryItem[];
 }
+
+export const sourceFormat: IDictionaryItem[] = dictionary.get('source-format')!;
 
 export interface ITableRecord {
     name: string;

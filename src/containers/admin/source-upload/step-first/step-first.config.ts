@@ -54,6 +54,12 @@ export const formItems: IFormItem[] = [
     {
         label: '资源格式',
         key: '5',
+        rules: [
+            {
+                required: true,
+                message: '请选择资源格式',
+            }
+        ],
         controlName: 'select',
         source: sourceFormat,
         state: 'sourceFormat'
@@ -61,6 +67,12 @@ export const formItems: IFormItem[] = [
     {
         label: '资源类型',
         key: '6',
+        rules: [
+            {
+                required: true,
+                message: '请选择资源类型',
+            }
+        ],
         controlName: 'select',
         source: sourceType,
         state: 'sourceType'
@@ -70,8 +82,8 @@ export const formItems: IFormItem[] = [
 export interface IFormValue {
     desc: string;
     name: string;
-    fileFormat: string;
-    fileType: string;
+    sourceFormat: string;
+    sourceType: string;
 }
 
 export const formItemLayout = {
@@ -84,6 +96,14 @@ export const formItemLayout = {
       sm: { span: 21 },
     },
 };
+
+export interface ITeachChapter {
+    desc: string;
+    name: string;
+    fileFormat: number;
+    fileType: number;
+    weight: number;
+}
 
 export const submitFormItemLayout = {
     wrapperCol: {

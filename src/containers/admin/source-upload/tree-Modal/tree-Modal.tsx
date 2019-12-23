@@ -177,6 +177,7 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
                         visible={true}
                         onOk={() => this.handleModalClick('ok')}
                         onCancel={() => this.handleModalClick('cancel')}
+                        maskClosable={false}
                         okText='确认'
                         cancelText='取消'
                         className='admin-course-tree-modal'>

@@ -1,11 +1,13 @@
 import * as React from 'react';
-import { columns, IConfig, ITableRecord } from './source-manage.config';
+import { columns, IConfig, ITableRecord, sourceFormat } from './source-manage.config';
 import { cloneDeep } from 'lodash';
 import { Table, Skeleton, Row, Col, Button, Icon, Divider, Popconfirm, message, Drawer, Breadcrumb } from 'antd';
 import { SvgComponent } from 'components/icon/icon';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import ModifySourceContainer from './modify-source/modify-source';
 import { CourseTreeContainer, ICourseTreeProps, courseTreeResponse } from 'components/course-tree/course-tree';
+import { ITeachChapterList } from 'common/api/api-interface';
+import { findTarget } from 'common/dictionary/index';
 import './source-manage.scss';
 
 interface ISourceManageContainerProps {
@@ -13,7 +15,8 @@ interface ISourceManageContainerProps {
 }
 
 interface IState {
-    dataSource: any[];
+    totalDataSource: ITeachChapterList[];
+    dataSource: ITeachChapterList[];
     hasData: boolean;
     pageInfo: IPageInfo;
     breadcrumb: string[];
@@ -33,6 +36,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
         super(props);
 
         this.state = {
+            totalDataSource: [],
             dataSource: [],
             isLoading: false,
             hasData: false,
@@ -44,7 +48,8 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
         };
 
         this.config = {
-            columns: this.rebuildTableColumns(cloneDeep(columns))
+            columns: this.rebuildTableColumns(cloneDeep(columns)),
+            sourceFormat
         };
 
         this.courseTreeRef = React.createRef();
@@ -61,8 +66,9 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
     public handleCourseTreeClick = (response: courseTreeResponse) => {
         const { pageInfo } = this.state;
         const state: any = {
-            ...response.showList && { 
-                dataSource: response.showList,
+            ...response.showList && {
+                totalDataSource: response.showList,
+                dataSource: this.rebuildDataSource(response.showList.slice(0, pageInfo.pageSize)),
                 hasData: response.showList.length > 0,
                 pageInfo: { ...pageInfo, totalCount: response.showList.length }
             },
@@ -72,6 +78,20 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
 
         this.setState({
             ...state
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 改造dataSource数据
+     */
+    public rebuildDataSource = (dataSource: ITeachChapterList[]) => {
+        const { sourceFormat } = this.config;
+
+        return dataSource.map((item: ITeachChapterList) => {
+            const target = findTarget(sourceFormat, String(item.fileFormat));
+            item['typeName'] = target ? target.name : '';
+            return item;
         });
     }
 
@@ -149,7 +169,9 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      * @desc 分页发生变化
      */
     public pageChange = (page: number, pageSize?: number) => {
+        const { totalDataSource } = this.state;
         this.setState({
+            dataSource: this.rebuildDataSource(totalDataSource.slice((page - 1)*pageSize!, page*pageSize!)),
             pageInfo: {
                 ...this.state.pageInfo,
                 currentPage: page,
@@ -227,11 +249,14 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                                             </Breadcrumb>
                                         </div>
                                     }
-                                    <Table
-                                        columns={this.config.columns}
-                                        dataSource={hasData ? dataSource : undefined }
-                                        pagination={false}
-                                    />
+                                    <div className='inner-table-box'>
+                                        <Table
+                                            columns={this.config.columns}
+                                            dataSource={hasData ? dataSource : undefined }
+                                            pagination={false}
+                                            scroll={{ x: 1950 }} 
+                                        />
+                                    </div>
                                     {
                                         dataSource.length > 0 && <div className='source-result-pagination'>
                                             <PageComponent {...pageComponentProps}/>

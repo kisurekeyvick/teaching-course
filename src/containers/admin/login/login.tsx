@@ -11,6 +11,7 @@ import { getScreenInfo, messageFunc } from 'common/utils/function';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import { api } from 'common/api/index';
 import { ILogin } from 'common/api/api-interface';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
 
 const FormItem = Form.Item;
 
@@ -73,7 +74,6 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
      */
     public handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         this.props.form.validateFields((error: any, value: LoginParams) => {
             if (!error) {
                 const params = {
@@ -84,11 +84,12 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                 const loading = messageFunc('正在登录中...');
 
                 api.login(params).then((res: ILogin) => {
-                    const { success, desc, isAdministrators } = res.data;
+                    const { data: { success, isAdministrators, desc }, headers } = res;
                     if (res.status === 200 && success) {
                         if (isAdministrators) {
-                            this.rememberAdminPage(params);
-                            window.location.href = '/admin/system/upload';
+                            this.rememberAdminPage({...params, token: headers.token});
+                            this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
+                            this.props.history.push('/admin/system/upload');
                             loading.success(desc);
                         } else {
                             loading.warn('您不是管理员，无法登陆后台操作界面。');
@@ -113,8 +114,6 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
      */
     public rememberAdminPage = (value: LoginParams) => {
         const endTime: any = dayjs().add(30, 'day').toDate();
-        // Todo 写死的token，后面需要后端传递
-        value['token'] = 'YTDFJHDGFHJHDGRDTFYHDTGDHFHDTF';
         this.localStorageService.set(LocalStorageItemName.BEHINDLOGINCACHE, value, endTime);
         this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'behind' });
     }

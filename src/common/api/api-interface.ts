@@ -312,29 +312,31 @@ export interface IQueryPersonParams {
     id: string;
 }
 
+export interface IQueryPersonDataResult {
+    age: number;
+    createTime: string;
+    email: string;
+    flag: string;
+    id: number;
+    isAdministrators: boolean;
+    link: string;
+    loginName: string;
+    password: string;
+    phone: number;
+    position: string;
+    sex: string;
+    desc: string;
+    teacherId: string;
+    updateTime: string;
+    userName: string;
+}
+
 /** 查询个人信息返回参数 */
 export interface IQueryPersonResponse extends IAjaxCommonResponse {
     data: {
         desc: string;
         isAdministrators: number;
-        result: {
-            age: number;
-            createTime: string;
-            email: string;
-            flag: string;
-            id: number;
-            isAdministrators: boolean;
-            link: string;
-            loginName: string;
-            password: string;
-            phone: number;
-            position: string;
-            sex: string;
-            desc: string;
-            teacherId: string;
-            updateTime: string;
-            userName: string;
-        };
+        result: IQueryPersonDataResult;
         success: boolean;
     }
 }
@@ -376,7 +378,39 @@ export interface IAddSectionRequest {
     type: 2;
 }
 
+export interface IAddSectionResponseResultDataResult {
+    id: number;
+    chapterId: string;
+    materialId: string;
+    parentId: string;
+    type: number;
+    fileFormat: string;
+    fileType: string;
+    name: string;
+    desc: string;
+    size: string;
+    realFileName: string;
+    fileName: string;
+    coverLink: string;
+    teacherId: string;
+    link: string;
+    fabulousCount: number;
+    viewCount: number;
+    collectionCount: number;
+    downloadCount: number;
+    weight: number;
+    uploadTime: string;
+    createTime: string;
+    updateTime: string;
+}
+
 export interface IAddSectionResponseResult extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: IAddSectionResponseResultDataResult;
+        success: boolean;
+    },
 }
 
 /** 新建教材 */
@@ -427,11 +461,10 @@ export interface IUpdateChapterAllRequest {
 
 export interface IUpdateChapterAllRequestResult extends IAjaxCommonResponse {}
 
-/** 未完成 */
 /** 删除教材、节点、文件 */
 export interface IDeleteChapterOrSectionRequest {
     id: string;
-    type: 10;
+    type: 15;
 }
 
 export interface IDeleteChapterOrSectionResponseResult extends IAjaxCommonResponse {}
@@ -449,6 +482,8 @@ export interface IAddChapterAllChapterRequestDtoList {
     }>
 }
 
+
+export interface IUpdateTeacherFileResponseResult extends IAjaxCommonResponse {}
 
 
 /** 未完成 */

@@ -37,6 +37,7 @@
         .table-tree-content {
             flex: 1;
             padding-left: 24px;
+            overflow: hidden;
 
             .breadcrumb-box {
                 @include filterLayout;
@@ -54,6 +55,11 @@
                         color: $userColor;
                     }
                 }
+            }
+
+            .inner-table-box {
+                overflow: hidden;
+                width: 100%;
             }
         }
 

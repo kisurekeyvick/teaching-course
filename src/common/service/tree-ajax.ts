@@ -35,7 +35,15 @@ export const loadMaterialMenu = (): Promise<any> => {
                         children: [],
                         id: item.id,
                         isLeaf: false,
-                        weight: item.weight
+                        weight: item.weight,
+                        materlId: item.materlId,
+                        title: item.title,
+                        pic: item.pic,
+                        score: item.score,
+                        desc: item.desc,
+                        contributors: item.contributors,
+                        size: item.size,
+                        type: item.type
                     };
                 }).sort((x: IMenuItem, y: IMenuItem) => {
                     return y.weight - x.weight;

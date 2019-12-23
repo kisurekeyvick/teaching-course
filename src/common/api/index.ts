@@ -41,17 +41,14 @@ export const api = {
     addChapterAll: httpRequest(`POST /material/addChapterAll`),
     /** 更新教材全集 */
     updateChapterAll: httpRequest(`POST /material/updateChapter`),
-
     /** 删除教材/节点/删除文件 */
     deleteChapterOrSection: httpRequest(`POST /material/deleteChapterOrSection`),
-
-    /** 未解决的接口 */
     /** 上传文件 */
     uploadFile: httpRequest(`POST /material/uploadFile`),
-    /** 上传用户头像 */
-    updateTeacherFile: httpRequest(`POST /material/updateTeacherFile`),
     /** 修改封面信息 */
     updateCoverFile: httpRequest(`POST /material/updateCoverFile`),
+    /** 上传用户头像 */
+    updateTeacherFile: httpRequest(`POST /material/updateTeacherFile`),
 
     /** 下载文件 */
     download: httpRequest(`GET /material/download`),

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IUploadStepFirstProps } from '../../interface';
-import { IFormItem, formItems, formItemLayout, submitFormItemLayout, IFormValue } from './step-first.config';
+import { IFormItem, formItems, formItemLayout, submitFormItemLayout, IFormValue, ITeachChapter } from './step-first.config';
 import { Form, Button, Input, message, Select } from 'antd';
 import { cloneDeep } from 'lodash';
 import { api } from 'common/api/index';
@@ -48,24 +48,7 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
             parentId: ''
         }
     }
-
-    /** 
-     * @func
-     * @desc mock上传成功进度条
-     */
-    // public mockUploadRequest = (e: any) => {
-    //     e.onProgress();
-    //     this.setState({
-    //         loading: true
-    //     });
-    //     api.mockUpload().then(() => {
-    //         this.setState({
-    //             loading: false
-    //         });
-    //         e.onSuccess();
-    //     });
-    // }
-
+    
     /** 
      * @callback
      * @desc 显示隐藏tree弹窗
@@ -86,8 +69,6 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                 location: `${callbackParams.materialName} > ${callbackParams.chapterName}`,
                 uploadLocationError: false
             });
-
-            console.log(callbackParams.materialId, callbackParams.chapterId);
     
             this.config = {
                 ...this.config,
@@ -163,6 +144,8 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                 </Form>
     }
 
+    
+
     /** 
      * @func
      * @desc 验证特殊控件是否有效
@@ -194,25 +177,24 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
             if (!err && isvalid) {
                 const loading = messageFunc();
                 const { materialId, parentId } = this.config;
-                const { desc, name, fileFormat, fileType } = values;
-
+                const { desc, name, sourceFormat, sourceType } = values;
+                const teachChapter: ITeachChapter = {
+                    desc,
+                    name,
+                    fileFormat: +(sourceFormat),
+                    fileType: +(sourceType),
+                    weight: 10
+                };
                 const params: IAddSectionRequest = {
                     materialId,
                     parentId,
-                    teachChapter: {
-                        desc,
-                        name,
-                        fileFormat: +(fileFormat),
-                        fileType: +(fileType),
-                        weight: 10
-                    },
+                    teachChapter,
                     type: 2
                 };
 
                 api.addSection(params).then((res: IAddSectionResponseResult) => {
                     if (res.status === 200 && res.data.success) {
-                        const { materialId, parentId } = this.config;
-                        this.props.successCallBack({ materialId, chapterId: parentId });
+                        this.props.successCallBack({ ...res.data.result });
                         loading.success(res.data.desc);
                     } else {
                         loading.error(res.data.desc);

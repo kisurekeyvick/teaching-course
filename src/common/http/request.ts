@@ -1,7 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { message  } from 'antd';
 import { env } from 'environment/index';
-import { getToken } from 'common/utils/function';
+import { getToken, localStorageService } from 'common/utils/function';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
 
 const service = axios.create({
     timeout: 120000,
@@ -30,7 +31,7 @@ service.interceptors.request.use(
     }, 
     error => {
         message.error(error, 5);
-        // throw new Error(error);
+        return null;
     }
 );
 
@@ -40,7 +41,7 @@ service.interceptors.response.use(
     },
     error => {
         message.error(error, 5);
-    //   throw new Error(error)
+        return null;
     },
 )
 
@@ -87,7 +88,10 @@ export function request(config: AxiosRequestConfig) {
 }
 
 function relogin(desc: string) {
+    const pageType = localStorageService.get(StorageItemName.PAGETYPE);
+    const result: string = pageType ? pageType.value['type'] : 'front';
+
     message.error(`${desc}, 5秒钟后将跳转至登录页。`, 5, () => {
-        window.location.href = '/user/login';
+        window.location.href = result === 'behind' ? '/admin/login' : '/user/login';
     });
 }

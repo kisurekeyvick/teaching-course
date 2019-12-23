@@ -17,6 +17,7 @@ import './index.scss';
 interface IState {
     format: string;
     filterConfig: any;
+    sourceBooklist: ITeachChapterList[];
     booklist: ITeachChapterList[];
     pageInfo: IPageInfo;
     breadcrumb: string[];
@@ -43,6 +44,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             /** 搜索条件 */
             filterConfig: cloneDeep(filterConfig),
             /** 教材列表 */
+            sourceBooklist: [],
             booklist: [],
             /** 分页 */
             pageInfo: { ...defaultPageInfo },
@@ -67,7 +69,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             const result: ITeachChapterList[] = nextProps.showList.map((item: any) => {
                 item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
                 item.title = item.name;
-                item.pic = item.pic || defaultBookPic;
+                item.coverLink = item.coverLink || defaultBookPic;
                 return {    
                     ...item
                 }
@@ -75,7 +77,8 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
             return {
                 breadcrumb: nextProps.breadcrumb,
-                booklist: result,
+                sourceBooklist: result,
+                booklist: result.slice(0, 10),
                 hasData: result.length > 0,
                 isLoading: nextProps.isLoading === 'true' ? true : false,
                 pageInfo: {
@@ -140,14 +143,17 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
      * @desc 分页发生变化
      */
     public pageChange = (page: number, pageSize?: number) => {
+        const { sourceBooklist } = this.state;
         this.setState({
+            booklist: sourceBooklist.slice((page - 1)*pageSize!, page*pageSize!),
             pageInfo: {
                 ...this.state.pageInfo,
                 currentPage: page,
                 ...pageSize && {
                     pageSize
                 }
-            }
+            },
+            updateTime: Date.now()
         });
     }
 
@@ -280,7 +286,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                 </div> */}
                                             </div>
                                             <div className='booklist-item-bottom'>
-                                                <img alt='缩略图' src={item.pic} />
+                                                <img alt='缩略图' src={item.coverLink} />
                                                 <div className='booklist-item-bottom-right'>
                                                     <span className='desc'>{item.desc || '暂无简介'}</span>
                                                     <div className='booklist-item-bottom-right-detail'>

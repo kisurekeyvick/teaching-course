@@ -3,13 +3,12 @@ import { IFormItem, formItems } from './step-second.config';
 import { Form, Upload, Icon } from 'antd';
 import { api } from 'common/api/index';
 import { messageFunc, IMessageFuncRes } from 'common/utils/function';
-import { IUploadFileResponseResult } from 'common/api/api-interface';
+import { IUploadFileResponseResult, IAddSectionResponseResultDataResult } from 'common/api/api-interface';
 import './step-second.scss';
 
 interface IUploadStepSecondProps {
     successCallBack: Function;
-    chapterId: string;
-    materialId: string;
+    courseNode: IAddSectionResponseResultDataResult | null;
     [key: string]: any;
 }
 
@@ -67,21 +66,22 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
      * @desc2 TODO: 当前的接口存储不了，需要有一个特殊的ID，它用于标志是哪个具体资源的
      */
     public handleUploadRequest = (e: any, state: string) => {
+        const { courseNode } = this.props;
         const loading = messageFunc('开始上传中...');
-        const { chapterId, materialId } = this.props;
+        /** parentId是章节的id */
         const params: FormData = new FormData();
-        const json: { chapterId: string; materialId: string; } = {
-            chapterId, //: 'CHAPTER201912171501295206408',
-            materialId, //: 'MATERL201912171449005609390',
-            // parentId: 'CHAPTER201912171449528583268'
-        };
-        params.set('uploadRequestDto', JSON.stringify(json));
-        const file: File = e.file;
-        params.set('file', file);
-
+        const json = {...courseNode};
+        params.set('teachChapter', JSON.stringify(json));
+        
         if (state === 'overLinkFile') {
+            const file: File = e.file;
+            params.set('coverFile', file);
+
             this.updateCoverFile(params, loading);
         } else if (state === 'materialFile') {
+            const file: File = e.file;
+            params.set('file', file);
+
             this.uploadFile(params, loading);
         }
     }
@@ -106,7 +106,7 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
      * @desc 上传教材封面
      */
     public updateCoverFile = (params: FormData, loading: IMessageFuncRes) => {
-        api.uploadFile(params).then((res: IUploadFileResponseResult) => {
+        api.updateCoverFile(params).then((res: IUploadFileResponseResult) => {
             if (res.status === 200 && res.data.success) {
                 loading.success(res.data.desc);
             } else {

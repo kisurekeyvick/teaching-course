@@ -4,6 +4,8 @@ import { message } from 'antd';
 import UploadStepFirstContainer from './step-first/step-first';
 import UploadStepSecondContainer from './step-second/step-second';
 import { UploadStepThirdContainer, IUploadStepThirdProps } from './step-third/step-third';
+import { ITeachChapter } from './step-first/step-first.config';
+import { IAddSectionResponseResultDataResult } from 'common/api/api-interface';
 import './source-upload.scss';
 
 interface ISourceUploadStepsProps {
@@ -13,10 +15,7 @@ interface ISourceUploadStepsProps {
 interface IState {
     enableTabs: String[];
     currentTab: 'selectNode' | 'upload' | 'complete';
-    courseNode: {
-        materialId: string; 
-        chapterId: string;
-    };
+    courseNode: IAddSectionResponseResultDataResult | null;
     [key: string]: any;
 }
 
@@ -25,13 +24,34 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
         super(props);
 
         this.state = {
-            enableTabs: ['selectNode'],
+            enableTabs: ['selectNode', 'upload'],
             currentTab: 'selectNode',
-            courseNode: {
-                materialId: '',
-                chapterId: ''
-            }
+            courseNode: null
         };
+    }
+
+    /** 
+     * @func
+     * @desc 初始化courseNode
+     */
+    public initCourseNode = (): {
+        materialId: string; 
+        parentId: string;
+        chapterId: string;
+        teachChapter: ITeachChapter;
+    } => {
+        return {
+            materialId: '',
+            parentId: '',
+            chapterId: '',
+            teachChapter: {
+                desc: '',
+                name: '',
+                fileFormat: 0,
+                fileType: 0,
+                weight: 0
+            }
+        }
     }
 
     /** 
@@ -55,17 +75,14 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
      * @func
      * @desc 完成第一步：填写资源信息
      */
-    public handleUploadStepFirst = (params: { materialId: string, chapterId: string }) => {
+    public handleUploadStepFirst = (result:IAddSectionResponseResultDataResult) => {
         const { enableTabs } = this.state;
+        console.log(result);
         enableTabs.push('upload');
-        const { materialId, chapterId } = params;
         this.setState({
             enableTabs,
             currentTab: 'upload',
-            courseNode: {
-                materialId,
-                chapterId
-            }
+            courseNode: result
         });
     }
 
@@ -90,10 +107,7 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
         this.setState({
             enableTabs: ['selectNode'],
             currentTab: 'selectNode',
-            courseNode: {
-                materialId: '',
-                chapterId: ''
-            }
+            courseNode: null
         });
     }
 
@@ -121,8 +135,7 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
         };
         const uploadStepSecondProps: any = {
             successCallBack: this.handleUploadStepSecond,
-            chapterId: courseNode.chapterId,
-            materialId: courseNode.materialId
+            courseNode
         };
         const uploadStepThirdProps: IUploadStepThirdProps = {
             history: this.props.history,

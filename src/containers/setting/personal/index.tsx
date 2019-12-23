@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Button, Upload, Icon, Input } from 'antd';
 import { IControl, controlArray } from './index.config';
 import { api } from 'common/api/index';
-import { IPersonUpdateRequestParams, IPersonUpdateResponseResult } from 'common/api/api-interface';
+import { IPersonUpdateRequestParams, IPersonUpdateResponseResult, IQueryPersonDataResult, IUpdateTeacherFileResponseResult } from 'common/api/api-interface';
 import { getUserBaseInfo, messageFunc } from 'common/utils/function';
 import './index.scss';
 
@@ -20,6 +20,7 @@ interface IState {
     introductionControlFocus: boolean;
     isLoading: boolean;
     updateTime: number;
+    uploadFilePersonParams: IQueryPersonDataResult | null;
     [key: string]: any;
 }
 
@@ -32,6 +33,7 @@ export interface ISettingPersonalProps {
     loginName: string;
     updateTime: number;
     eventEmitterFunc: Function
+    uploadFilePersonParams: IQueryPersonDataResult | null;
     [key: string]: any;
 }
 
@@ -50,6 +52,7 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
             desc: '',
             introductionControlFocus: false,
             isLoading: false,
+            uploadFilePersonParams: null,
             updateTime: 0
         };
 
@@ -60,12 +63,13 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
 
     static getDerivedStateFromProps(props: ISettingPersonalProps, state: IState) {
         if (props.loginName && props.updateTime >  state.updateTime) {
-            const { img, introduction, userName, job } = props;
+            const { img, introduction, userName, job, uploadFilePersonParams } = props;
             return {
                 img,
                 userName,
                 position: job,
                 desc: introduction,
+                uploadFilePersonParams
             };
         }
 
@@ -160,6 +164,31 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
         });
     }
 
+    /** 
+     * @callback
+     * @desc 处理上传
+     */
+    public handleUploadRequest = (e: any) => {
+        const { uploadFilePersonParams } = this.state;
+        const loading = messageFunc('开始上传中...');
+        const params: FormData = new FormData(); 
+        params.set('teacherDto', JSON.stringify({...uploadFilePersonParams}));
+
+        const file: File = e.file;
+        params.set('file', file);
+
+        api.updateTeacherFile(params).then((res: IUpdateTeacherFileResponseResult) => {
+            if (res.status === 200 && res.data.success) {
+                loading.success(res.data.desc);
+                e.onSuccess();
+                this.props.eventEmitterFunc();
+            } else {
+                loading.error(res.data.desc);
+                e.onError();
+            }
+        });
+    }
+
     public render() {
         return <div className='setting-personal-box animateCss'>
                     <p className='title'>个人资料</p>
@@ -170,7 +199,7 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
                                 <img alt='头像' src={this.state.img} />
                                 <div className='desc-and-upload'>
                                     <p>支持 jpg、png 格式大小 5M 以内的图片</p>
-                                    <Upload>
+                                    <Upload customRequest={this.handleUploadRequest}>
                                         <Button type="primary" >
                                             <Icon type="upload" />点击上传
                                         </Button>

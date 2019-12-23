@@ -94,7 +94,36 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     public saveAllCourse = (key: string) => {
         notification.close(key);
 
-        this.loadTeachingMenu();
+        const dataSource: IUpdateChapterAllRequest[] = this.state.dataSource.map((item) => {
+            return {
+                chapterResponseDtoList: [],
+                teachMaterial: {
+                    contributors: item.contributors,
+                    desc: item.desc,
+                    materlId: item.materlId,
+                    pic: item.pic,
+                    score: item.score,
+                    size: item.size,
+                    title: item.title,
+                    type: item.type,
+                    weight: item.weight
+                }
+            };
+        });
+
+        const requestArr: Array<Promise<any>> = dataSource.map((params: IUpdateChapterAllRequest) => {
+            return api.updateChapterAll(params);
+        });
+
+        const loading = messageFunc();
+
+        Promise.all(requestArr).then((res: IAddChapterAllRequestResult[]) => {
+            if (res.every((resItem: IAddChapterAllRequestResult) => resItem.status === 200 && resItem.data.success)) {
+                loading.success('课程权重保存完成');
+            } else {
+                loading.error('存在课程权重保存失败');
+            }
+        });
     }
 
     /** 
@@ -437,7 +466,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             const loading = messageFunc();
             const params: IDeleteChapterOrSectionRequest = {
                 id: record.value,
-                type: 10
+                type: 15
             };
     
             api.deleteChapterOrSection(params).then((res: IDeleteChapterOrSectionResponseResult) => {
@@ -663,7 +692,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Button type='primary' className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
-                            <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存</Button>
+                            <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存课程权重</Button>
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
                         {/* <Col className='operation-box-col' sm={24} md={12}>

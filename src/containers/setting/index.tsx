@@ -4,10 +4,11 @@ import { IHeadTab, headTabs } from './index.config';
 import { SettingPersonalContainer, ISettingPersonalProps } from './personal/index';
 import SettingModifyPwdContainer from './modifyPassword/index';
 import { cloneDeep } from 'lodash';
-import { getUserBaseInfo, messageFunc } from 'common/utils/function';
+import { getUserBaseInfo, messageFunc, localStorageService } from 'common/utils/function';
 import { api } from 'common/api/index';
-import { IQueryPersonResponse } from 'common/api/api-interface';
+import { IQueryPersonResponse, IQueryPersonDataResult } from 'common/api/api-interface';
 import { defaultUserPic } from 'common/service/img-collection';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import './index.scss';
 
 interface ISettingContainerState {
@@ -21,7 +22,8 @@ interface ISettingContainerState {
         password: string;
         loginName: string;
         [key: string]: any;
-    }
+    },
+    uploadFilePersonParams: IQueryPersonDataResult | null
 }
 
 interface IConfig {
@@ -48,7 +50,8 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                 introduction: '',
                 password: '',
                 loginName: ''
-            }
+            },
+            uploadFilePersonParams: null
         };
     }
 
@@ -86,7 +89,6 @@ export default class SettingContainer extends React.Component<ISettingContainerP
         api.queryPerson(params).then((res: IQueryPersonResponse) => {
             if (res.status === 200 && res.data.success) {
                 const { result } = res.data;
-
                 const state = {
                     img: result.link || defaultUserPic,
                     userName: result.userName,
@@ -97,8 +99,11 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                 };
 
                 this.setState({
-                    personInfo: {...this.state.personInfo, ...state}
+                    personInfo: {...this.state.personInfo, ...state},
+                    uploadFilePersonParams: result
                 });
+
+                this.updateLocalStorageUserInfo(result);
 
                 loading.success(res.data.desc);
             } else {
@@ -107,9 +112,22 @@ export default class SettingContainer extends React.Component<ISettingContainerP
         });
     }
 
+    /** 
+     * @func
+     * @desc 更新缓存中的用户信息
+     */
+    public updateLocalStorageUserInfo = (params: IQueryPersonDataResult) => {
+        let currentUserInfo = localStorageService.get(StorageItemName.LOGINCACHE);
+        let value = currentUserInfo && currentUserInfo.value || {};
+        value = {...value, ...params};
+        localStorageService.set(StorageItemName.LOGINCACHE, value);
+    }
+
     public render() {
+        const { uploadFilePersonParams } = this.state;
         const personalContainerProps: ISettingPersonalProps = {
             ...this.state.personInfo,
+            uploadFilePersonParams,
             eventEmitterFunc: this.loadUserInfo,
             updateTime: Date.now()
         };
