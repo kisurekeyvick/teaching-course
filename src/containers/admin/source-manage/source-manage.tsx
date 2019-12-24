@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { columns, IConfig, ITableRecord, sourceFormat } from './source-manage.config';
 import { cloneDeep } from 'lodash';
-import { Table, Skeleton, Row, Col, Button, Icon, Divider, Popconfirm, message, Drawer, Breadcrumb } from 'antd';
+import { Table, Skeleton, Row, Col, Button, Icon, Divider, Popconfirm, Drawer, Breadcrumb } from 'antd';
 import { SvgComponent } from 'components/icon/icon';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import ModifySourceContainer from './modify-source/modify-source';
 import { CourseTreeContainer, ICourseTreeProps, courseTreeResponse } from 'components/course-tree/course-tree';
-import { ITeachChapterList } from 'common/api/api-interface';
+import { ITeachChapterList, IDeleteChapterOrSectionRequest, IDeleteChapterOrSectionResponseResult } from 'common/api/api-interface';
 import { findTarget } from 'common/dictionary/index';
+import { messageFunc } from 'common/utils/function';
 import './source-manage.scss';
+import { api } from 'common/api';
 
 interface ISourceManageContainerProps {
     [key: string]: any;
@@ -120,14 +122,32 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      * @desc    删除资源
      */
     public deleteSource = (record: ITableRecord) => {
-        message.success('删除成功');
+        const loading = messageFunc('正在删除中...');
+
+        const params: IDeleteChapterOrSectionRequest = {
+            id: record.chapterId,
+            type: 2
+        };
+
+        api.deleteChapterOrSection(params).then((res: IDeleteChapterOrSectionResponseResult) => {
+            if (res.status === 200 && res.data.success) {
+                this.setState({
+                    dataSource: []
+                }, () => {
+                    (this.courseTreeRef! as any).current!.loadFirstLayerMenu();
+                })
+                loading.success(res.data.desc);
+            } else {
+                loading.error(res.data.desc);
+            }
+        });
     }
 
     /** 
      * @callback
      * @desc    编辑资源
      */
-    public editSource = (record: ITableRecord) => {
+    public editSource = (record: ITeachChapterList) => {
         this.setState({
             showDrawer: true,
             currentEditSource: record
@@ -197,8 +217,15 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
      * @desc 编辑组件的回调函数
      */
     public modifySourceCallBack = ({type}: {type: string}) => {
-        this.toggleDrawer(false)
-        // type === 'saveComplete' && this.loadSourceData();
+        this.toggleDrawer(false);
+
+        (this.courseTreeRef! as any).current!.loadFirstLayerMenu();
+        this.setState({
+            dataSource: [],
+            hasData: false,
+            breadcrumb: [],
+            pageInfo: {...defaultPageInfo}
+        });
     }
 
     public render() {

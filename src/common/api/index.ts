@@ -52,6 +52,9 @@ export const api = {
 
     /** 下载文件 */
     download: httpRequest(`GET /material/download`),
+
+    /** 更新章节资源信息 */
+    updateResources: httpRequest(`POST /material/updateResources`),
     
     /** mock */
     loadSourceManageResult: (param?: any) => {

@@ -67,7 +67,7 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
         /** parentId是章节的id */
         const params: FormData = new FormData();
         const json = {...courseNode};
-          params.set('teachChapter', JSON.stringify(json));
+        params.set('teachChapter', JSON.stringify(json));
         
         if (state === 'overLinkFile') {
             this.setState({

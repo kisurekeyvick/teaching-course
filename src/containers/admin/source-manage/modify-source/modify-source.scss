@@ -3,9 +3,9 @@
 .souce-manage-modify-form {
     .course-cover {
         .ant-form-item-label {
-            &>label {
-                @include require;
-            }   
+            // &>label {
+            //     @include require;
+            // }   
         }
     }
 

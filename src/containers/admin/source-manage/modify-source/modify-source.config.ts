@@ -1,20 +1,18 @@
 import { IDictionaryItem } from 'common/dictionary/index';
+import { ITeachChapterList } from 'common/api/api-interface';
 
 export interface IModifySourceProps {
     callBack: Function;
-    source: object;
+    source: ITeachChapterList;
     updateTime: number;
     [key: string]: any;
 }
 
 export interface IFormParams {
-    title: string;
-    introduction: string;
-    type: string;
-    format: string;
     name: string;
-    chapter: string;
-    section: string;
+    desc: string;
+    fileType: string;
+    fileFormat: string;
 }
 
 export interface IRules {
@@ -42,4 +40,5 @@ export interface IConfig {
     sourceType: IDictionaryItem[];
     sourceFormat: IDictionaryItem[];
     fileLength: number;
+    uploadPicFormat: string[];
 }

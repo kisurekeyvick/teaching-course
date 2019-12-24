@@ -464,7 +464,8 @@ export interface IUpdateChapterAllRequestResult extends IAjaxCommonResponse {}
 /** 删除教材、节点、文件 */
 export interface IDeleteChapterOrSectionRequest {
     id: string;
-    type: 15;
+    /** type 1  删除章，  type 2 删除文件 ， type 15 删除课程 */
+    type: 15 | 2 | 1;
 }
 
 export interface IDeleteChapterOrSectionResponseResult extends IAjaxCommonResponse {}
@@ -486,7 +487,6 @@ export interface IAddChapterAllChapterRequestDtoList {
 export interface IUpdateTeacherFileResponseResult extends IAjaxCommonResponse {}
 
 
-/** 未完成 */
 /** 上传教学材料附件的接口 应该以formData格式传递 */
 export interface IUploadFileRequest {
     chapterId: string;
@@ -495,3 +495,9 @@ export interface IUploadFileRequest {
 }
 
 export interface IUploadFileResponseResult extends IAjaxCommonResponse {}
+
+export interface IUpdateResourcesRequest extends ITeachChapterResList {
+
+}
+
+export interface IUpdateResourcesResponseResult extends IAjaxCommonResponse {}
