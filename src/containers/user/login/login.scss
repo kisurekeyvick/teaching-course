@@ -56,6 +56,11 @@
         .login-form-button {
             @include login-form-button;
             margin-top: 0;
+
+            &.isLoading {
+                color: #fff;
+                background-color: $userBorderColor;
+            }
         }
 
         .ant-form-explain {

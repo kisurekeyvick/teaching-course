@@ -43,6 +43,14 @@ export const dictionary: Map<string, any[]> = new Map([
     ['material-confirm', [
         { name:'确认(点赞 收藏)', value: '1' },
         { name:'取消(点赞 收藏)', value: '2' },
+    ]],
+    /** 允许上传的图片格式 */
+    ['upload-pic-format', [
+        { name: 'jpg', value: 'jpg' },
+        { name: 'png', value: 'png' },
+        { name: 'svg', value: 'svg' },
+        { name: 'jpeg', value: 'jpeg' },
+        { name: 'webp', value: 'webp' }
     ]]
 ]);
 

@@ -55,6 +55,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
 
 
         const sourceType = [...dictionary.get('source-type')!];
+        console.log('sourceType', sourceType);
         sourceType.unshift({ name: '全部', value: '' });
         const sourceFormat = [...dictionary.get('source-format')!];
         sourceFormat.unshift({ name: '全部', value: '' });
@@ -100,7 +101,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                         title: item.name,
                         desc: item.desc,
                         id: item.id,
-                        createTime: dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss'),
+                        createTime: item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : '',
                         contributors: item.contributors,
                         directory: `${item.materialName || ''} > ${item.chapterName || ''}`,
                         userImg: item.teacherLink || defaultUserPic,

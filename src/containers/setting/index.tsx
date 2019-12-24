@@ -9,6 +9,7 @@ import { api } from 'common/api/index';
 import { IQueryPersonResponse, IQueryPersonDataResult } from 'common/api/api-interface';
 import { defaultUserPic } from 'common/service/img-collection';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
+import { globalEventEmitter, EventEmitterList } from 'common/utils/eventEmitter/list';
 import './index.scss';
 
 interface ISettingContainerState {
@@ -104,6 +105,7 @@ export default class SettingContainer extends React.Component<ISettingContainerP
                 });
 
                 this.updateLocalStorageUserInfo(result);
+                this.eventEmitterUpdateUserInfo();
 
                 loading.success(res.data.desc);
             } else {
@@ -118,9 +120,17 @@ export default class SettingContainer extends React.Component<ISettingContainerP
      */
     public updateLocalStorageUserInfo = (params: IQueryPersonDataResult) => {
         let currentUserInfo = localStorageService.get(StorageItemName.LOGINCACHE);
-        let value = currentUserInfo && currentUserInfo.value || {};
+        let value = currentUserInfo ? currentUserInfo.value : {};
         value = {...value, ...params};
         localStorageService.set(StorageItemName.LOGINCACHE, value);
+    }
+
+    /** 
+     * @func
+     * @desc 推送用户信息
+     */
+    public eventEmitterUpdateUserInfo = () => {
+        globalEventEmitter.emit(EventEmitterList.USERINFOUPDATE);
     }
 
     public render() {

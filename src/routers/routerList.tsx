@@ -48,7 +48,7 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
-        path: '/search/result',
+        path: '/search',
         component: Loadable({
             loader: () => import('../containers/user/search-result/search-result'),
             loading: () => null,

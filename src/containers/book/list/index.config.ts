@@ -23,7 +23,7 @@ interface IFilterConfig {
 }
 
 /** 资源类型 */
-let sourceType: IFilterConfigItem[] = (dictionary.get('source-type')!);
+let sourceType: IFilterConfigItem[] = [...(dictionary.get('source-type')!)];
 sourceType.unshift({ name: '全部', value: '0' });
 sourceType = sourceType.map((item: IFilterConfigItem) => {
     return {
@@ -33,17 +33,20 @@ sourceType = sourceType.map((item: IFilterConfigItem) => {
     };
 });
 
+let sourceFormat: IFilterConfigItem[] = [...(dictionary.get('source-format')!)];
+sourceFormat.unshift({ name: '全部', value: '0' });
+sourceFormat = sourceFormat.map((item: IFilterConfigItem) => {
+    return {
+        ...item,
+        label: item.name,
+        value: String(item.value),
+        selected: false
+    };
+});
+
 export const filterConfig: IFilterConfig = {
     type: [...sourceType],
-    format: [
-        { label: '全部', value: 'all' },
-        { label: '文档', value: 'document' },
-        { label: '图片', value: 'pic' },
-        { label: '音频', value: 'audeo' },
-        { label: '视频', value: 'video' },
-        { label: '动画', value: 'cartoon' },
-        { label: '其他', value: 'other' },
-    ],
+    format: [...sourceFormat],
     sort: [
         { name: '默认', value: 'default', selected: false, order: 'down' },
         { name: '时间', value: 'time', selected: false },

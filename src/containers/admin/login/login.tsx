@@ -23,6 +23,7 @@ interface IProps {
 interface IState {
     style: any;
     errorMsg: string;
+    isLoading: boolean;
 }
 
 class AdminLogin extends React.PureComponent<IProps, IState> {
@@ -45,7 +46,8 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                 width: offsetWidth + 'px',
                 height: offsetHeight + 'px'
             },
-            errorMsg: ''
+            errorMsg: '',
+            isLoading: false
         };
     }
 
@@ -83,29 +85,47 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
 
                 const loading = messageFunc('正在登录中...');
 
+                this.setState({
+                    isLoading: true
+                });
+
                 api.login(params).then((res: ILogin) => {
                     const { data: { success, isAdministrators, desc }, headers } = res;
                     if (res.status === 200 && success) {
                         if (isAdministrators) {
-                            this.rememberAdminPage({...params, token: headers.token});
-                            this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
-                            this.props.history.push('/admin/system/upload');
-                            loading.success(desc);
+                            this.saveToLocalStorage({ params, headers }).then(() => {
+                                this.props.history.push('/admin/system/upload');
+                                loading.success(desc);
+                            });
                         } else {
                             loading.warn('您不是管理员，无法登陆后台操作界面。');
                             this.setState({
-                                errorMsg: '非管理员，无法登陆。'
+                                errorMsg: '非管理员，无法登陆。',
+                                isLoading: false
                             });
                         }
                     } else {
                         loading.error(desc);
                         this.setState({
-                            errorMsg: desc
+                            errorMsg: desc,
+                            isLoading: false
                         });
                     }
                 });
             }
         })
+    }
+
+    /** 
+     * @func
+     * @desc 存储信息到本地
+     */
+    public saveToLocalStorage = ({ params, headers }: any): Promise<string> => {
+        return new Promise((resovle) => {
+            this.rememberAdminPage({...params, token: headers.token});
+            this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
+            resovle('');
+        });
     }
 
     /** 
@@ -157,7 +177,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
 
     public render() {
         const { getFieldDecorator } = this.props.form;
-        const { errorMsg } = this.state;
+        const { errorMsg, isLoading } = this.state;
 
         return (
             <div className='layout-login-box'>
@@ -191,7 +211,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                                             <div>
                                                 <Row gutter={24}>
                                                     <Col span={10}>
-                                                        <Button size='large' type="primary" htmlType="submit" className="login-form-button">登录</Button>
+                                                        <Button size='large' disabled={isLoading} type="primary" htmlType="submit" className={`login-form-button ${isLoading ? 'isLoading' : ''}`} >登录</Button>
                                                     </Col>
                                                     <Col span={14}>
                                                         <Button size='large' onClick={this.handBackToUserPageClick} className="login-form-button">返回用户登录页</Button>

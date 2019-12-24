@@ -7,9 +7,6 @@ import { IMenuItem } from './index.config';
 import { SvgComponent } from 'components/icon/icon';
 // import { api } from 'common/api/index';
 import noDataImg from 'assets/images/noData.png';
-// import { ITeachDirectoryMaterialList, IMaterialSectionResponseResult, IChapterResponseDtoListItem,
-//     ISectionItem, IMaterialListResponseResult } from 'common/api/api-interface';
-// import { cloneDeep } from 'lodash';
 import { IMaterialStatusRequest, IMaterialStatusResponse, ITeachChapterList } from 'common/api/api-interface';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
@@ -62,7 +59,10 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
             };
             
             res.length && (state = {...state, ...{
-                menus: res,
+                menus: res.map((item) => {
+                    item.loaded = false;
+                    return item;
+                }),
                 hasData: res.length > 0
             }});
 
@@ -91,17 +91,25 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         return new Promise((resolve) => {
             if (treeNode.props.children) {
                 resolve();
+                this.props.updateChapterMaterial({
+                    isLoading: 'false',
+                    updateTime: Date.now()
+                });
                 return;
             }
 
             const loading = messageFunc(); 
 
             const params: FormData = new FormData();
-            params.set('id', treeNode.props.dataRef.value);
+            const materialID: string = treeNode.props.dataRef.value;
+            params.set('id', materialID);
 
             loadSectionList(params, treeNode, this.state.menus).then(({ menusState, showList }) => {
                 menusState.length && this.setState({
-                    menus: menusState
+                    menus: menusState.map((item: IMenuItem) => {
+                        item.value === materialID && (item.loaded = true);
+                        return item;
+                    })
                 });
 
                 this.pushChapterMaterial(`${treeNode.props.dataRef.value}-0`, {
@@ -124,7 +132,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
 
     /** 
      * @func
-     * @desc 
+     * @desc 查看点赞 收藏
      */
     public loadMaterialStatus = async (showList: ITeachChapterList[]) => {
         const params: IMaterialStatusRequest = {
@@ -146,7 +154,9 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @desc 选择节点 
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
-        this.pushChapterMaterial(selectedKeys[0], {}, this.state.menus);
+        if (selectedKeys.length > 0) {
+            this.pushChapterMaterial(selectedKeys[0], {}, this.state.menus, () => {}, e.node);
+        }
     }
 
     /**
@@ -155,7 +165,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @param selectedKeys 该参数的结构为：materialId-章节的index-章节的id
      * @param otherParmas 
      */
-    public pushChapterMaterial = async (selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[], func?: Function) => {
+    public pushChapterMaterial = async (selectedKeys: string, otherParmas: any = {}, stateMenus: IMenuItem[], func?: Function, treeNode?: any) => {
         this.props.updateChapterMaterial({
             isLoading: 'true',
             updateTime: Date.now()
@@ -175,10 +185,17 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         /** 如果点击的是最外层 */
         if (keysArr[1] === matchOutermostLayerKey) {
             breadcrumb = [course.name];
-            showList = courseChildren.reduce((cur: ITeachChapterList[], pre: IMenuItem) => {
-                const teachChapterList: ITeachChapterList[] = pre.teachChapterList!;
-                return cur.concat(teachChapterList);
-            }, []);
+
+            /** 判断该课程是否被加载过 */
+            if (!course.loaded) {
+                return this.handleTreeNodeLoad(treeNode);
+            } else {
+                /** 如果是一件被加载过了 */
+                showList = courseChildren.reduce((cur: ITeachChapterList[], pre: IMenuItem) => {
+                    const teachChapterList: ITeachChapterList[] = pre.teachChapterList!;
+                    return cur.concat(teachChapterList);
+                }, []);
+            }
         } else {
             const section =  courseChildren[sectionIndex];
             breadcrumb = [course.name, section.name];

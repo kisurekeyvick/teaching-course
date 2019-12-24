@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { Button, Upload, Icon, Input } from 'antd';
+import { Button, Upload, Icon, Input, message } from 'antd';
 import { IControl, controlArray } from './index.config';
 import { api } from 'common/api/index';
 import { IPersonUpdateRequestParams, IPersonUpdateResponseResult, IQueryPersonDataResult, IUpdateTeacherFileResponseResult } from 'common/api/api-interface';
 import { getUserBaseInfo, messageFunc } from 'common/utils/function';
+import { dictionary, IDictionaryItem } from 'common/dictionary/index';
 import './index.scss';
 
 interface IConfig {
-    userInfo: any
+    userInfo: any;
+    uploadPicFormat: string[];
 }
 
 interface IState {
@@ -57,7 +59,10 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
         };
 
         this.config = {
-            userInfo: getUserBaseInfo()
+            userInfo: getUserBaseInfo(),
+            uploadPicFormat: [...dictionary.get('upload-pic-format')!].map((item: IDictionaryItem) => {
+                return String(item.value);
+            })
         }
     }
 
@@ -166,6 +171,24 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
 
     /** 
      * @callback
+     * @desc 上传之前处理
+     */
+    public beforeUpload = (file: any): boolean => {
+        const { uploadPicFormat } = this.config;
+        const fileType = file.type.replace('image/', '');
+
+        if(uploadPicFormat.includes(fileType)) {
+            return true;
+        } else {
+            const msg: string = uploadPicFormat.join('、').replace(/、$/, '');
+            message.warn(`头像格式只支持： ${msg}`)
+        }
+
+        return false;
+    }
+
+    /** 
+     * @callback
      * @desc 处理上传
      */
     public handleUploadRequest = (e: any) => {
@@ -199,7 +222,9 @@ export class SettingPersonalContainer extends React.PureComponent<ISettingPerson
                                 <img alt='头像' src={this.state.img} />
                                 <div className='desc-and-upload'>
                                     <p>支持 jpg、png 格式大小 5M 以内的图片</p>
-                                    <Upload customRequest={this.handleUploadRequest}>
+                                    <Upload 
+                                        customRequest={this.handleUploadRequest}
+                                        beforeUpload={this.beforeUpload}>
                                         <Button type="primary" >
                                             <Icon type="upload" />点击上传
                                         </Button>

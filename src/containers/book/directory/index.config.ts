@@ -6,5 +6,6 @@ export interface IMenuItem {
     isLeaf: boolean;
     id: number;
     teachChapterList?: any[];
-    children?: IMenuItem[]
+    children?: IMenuItem[],
+    loaded: boolean;
 }

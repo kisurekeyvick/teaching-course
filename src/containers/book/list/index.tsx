@@ -28,7 +28,6 @@ interface IState {
 
 interface IConifg {
     maxScore: number;
-    // teacherCache: any;
     materialOperation: IDictionaryItem[]
 }
 
@@ -56,12 +55,8 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
         this.config = {
             maxScore: 10,
-            // teacherCache: getUserBaseInfo(),
             materialOperation: dictionary.get('material-operation')!
         };
-    }
-
-    componentDidMount() {
     }
 
     static getDerivedStateFromProps(nextProps: IBookListProps, prevState: IState) {
@@ -184,14 +179,6 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                 message.error(desc);
             }
         });
-    }
-
-    /** 
-     * @func
-     * @desc 查看详情
-     */
-    public showDetail = (item: any) => {
-
     }
 
     /** 

@@ -13,6 +13,7 @@ import { ISignOutResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
 import { getUserBaseInfo, localStorageService } from 'common/utils/function';
 import { defaultUserPic, schoolLogo, userBannerBgPic } from 'common/service/img-collection';
+import { globalEventEmitter, EventEmitterList } from 'common/utils/eventEmitter/list';
 import './index.scss';
 
 const { Header, Content, Footer } = Layout;
@@ -25,6 +26,7 @@ type IGlobalLayoutProps = {
 
 interface IState {
     [key: string]: any;
+    teacherCache: any;
 }
 
 class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
@@ -36,11 +38,26 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
 
         this.config = {
             headMenus:  cloneDeep(headMenus),
-            menusContent: this.menusContentList(menusContentConfig),
+            menusContent: this.menusContentList(menusContentConfig)
+        };
+
+        this.state = {
             teacherCache: getUserBaseInfo(),
         };
 
         this.childref = React.createRef();
+    }
+
+    public componentDidMount() {
+        globalEventEmitter.on(EventEmitterList.USERINFOUPDATE, () => {
+            let currentUserInfo = localStorageService.get(StorageItemName.LOGINCACHE);
+
+            if (currentUserInfo && currentUserInfo.value) {
+                this.setState({
+                    teacherCache: currentUserInfo.value
+                });
+            }
+        });
     }
 
     /** 
@@ -48,7 +65,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
      * @desc 构建头部菜单
      */
     public buildHeadMenu = (): React.ReactNode  => {
-        const { teacherCache } = this.config;
+        const { teacherCache } = this.state;
 
         return <React.Fragment>
                     {
@@ -120,7 +137,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
             const loading = message.loading('正在退出中......', 0);
 
             const params: FormData = new FormData();
-            params.set('teacherId', this.config.teacherCache.teacherId);
+            params.set('teacherId', this.state.teacherCache.teacherId);
 
             api.signOut(params).then((res: ISignOutResponseResult) => {
                 loading();
@@ -139,7 +156,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         } else if (tag === 'personalSetting') {
             window.location.href = '/setting';
         } else if (tag === 'admin-system') {
-            const { isAdministrators } = this.config.teacherCache;
+            const { isAdministrators } = this.state.teacherCache;
             localStorageService.set(StorageItemName.PAGETYPE, { type: 'behind' });
 
             /** 如果是管理员 则直接跳转到上传界面 */
@@ -164,7 +181,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                         <div className='global-head-right'>
                             <NavLink className='link-item' to='/book' activeClassName='selected'>课程资源</NavLink>
                             <NavLink className='link-item' to='/collection' activeClassName='selected'>收藏</NavLink>
-                            <NavLink className='link-item' to='/search/result' activeClassName='selected'>检索</NavLink>
+                            <NavLink className='link-item' to='/search' activeClassName='selected'>检索</NavLink>
                             <Divider type="vertical" />
                             <ul className='right-menu'>
                                 { headMenu }

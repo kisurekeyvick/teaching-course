@@ -77,7 +77,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         desc: item.desc,
                         url: item.link,
                         type: item.fileType,
-                        typeImg: typeImg.src,
+                        typeImg: typeImg ? typeImg.src : '',
                         fileFormat: item.fileFormat,
                         id: item.id,
                         isCollect: true,
@@ -194,14 +194,14 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                 dataSource.map((source: IDataSource, index: number) => {
                                     return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}} key={`${source.id}-${index}`}>
                                                 <div className='collection-item'>
-                                                    <img className='material-cover' alt='书封面' src={defaultCollectionPic}/>
+                                                    <img className='material-cover' alt='书封面' src={source.coverLink}/>
                                                     <div className='collection-item-top' onClick={() => this.lookItem(source)}>
                                                         <Row>
                                                             <Col>
                                                                 <label>{source.title}</label>
                                                             </Col>
                                                             <Col>
-                                                                <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/>
+                                                                { source.typeImg && <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/> }
                                                             </Col>
                                                         </Row>
                                                     </div>

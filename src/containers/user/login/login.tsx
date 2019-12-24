@@ -26,6 +26,7 @@ interface IProps {
 interface IState {
     verificationImage: string;
     errorMsg: string;
+    isLoading: boolean;
 }
 
 class UserLogin extends React.PureComponent<IProps, IState> {
@@ -39,7 +40,8 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
         this.state = {
             errorMsg: '',
-            verificationImage: ''
+            verificationImage: '',
+            isLoading: false
         };
 
         this.config = {
@@ -131,6 +133,11 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
                 const loading = messageFunc('正在登录中...');
 
+
+                this.setState({
+                    isLoading: true
+                });
+
                 api.login(params).then((res: ILogin) => {
                     if (res.status === 200) {
                         const { data: { success, result, isAdministrators, desc }, headers } = res;
@@ -138,21 +145,34 @@ class UserLogin extends React.PureComponent<IProps, IState> {
                         /** 登录不成功 */
                         if (!success) {
                             this.setState({
-                                errorMsg: desc
+                                errorMsg: desc,
+                                isLoading: false
                             });
 
                             loading.error(desc);
                         } else {
-                            this.props.updateUserInfo({...result, isAdministrators});
-                            value.remember ? this.rememberPwd({...result, isAdministrators, remember: true}) : this.forgetPwd();
-                            this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
-                            this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
-                            this.props.history.push('/book');
-                            loading.success(desc);
+                            this.saveToLocalStorage({ value, success, result, isAdministrators, desc, headers }).then(() => {
+                                this.props.updateUserInfo({...result, isAdministrators});
+                                this.props.history.push('/book');
+                                loading.success(desc);
+                            });
                         }
                     }
                 });
             }
+        });
+    }
+
+    /** 
+     * @func
+     * @desc 存储信息到本地
+     */
+    public saveToLocalStorage = ({ value, success, result, isAdministrators, desc, headers }: any):Promise<string> => {
+        return new Promise((resolve) => {
+            value.remember ? this.rememberPwd({...result, isAdministrators, remember: true}) : this.forgetPwd();
+            this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
+            this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
+            resolve('');
         });
     }
 
@@ -163,7 +183,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
      */
     public createForm = (form: IForm, getFieldDecorator:any) => {
         let formItem: any;
-        const { errorMsg } = this.state;
+        const { errorMsg, isLoading } = this.state;
         
         switch(form.type) {
             case 'input':
@@ -205,7 +225,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
                                     })( <Checkbox className='checkbox-remember'>记住密码</Checkbox> )
                                 }
                                 { errorMsg && <p className='error-message error-animate'>{ errorMsg }</p> }
-                                <Button size='large' type="primary" htmlType="submit" className="login-form-button">登录</Button>
+                                <Button size='large' type="primary" htmlType="submit" disabled={isLoading} className={`login-form-button ${isLoading ? 'isLoading' : ''}`}>登录</Button>
                             </div>;
                 break;
             default:

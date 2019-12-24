@@ -39,7 +39,7 @@ export interface IConfig {
     menusContent: {
         [key: string]: React.ReactNode
     };
-    teacherCache: any;
+    // teacherCache: any;
     [key: string]: any;
 };
 
