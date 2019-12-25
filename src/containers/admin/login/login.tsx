@@ -94,7 +94,8 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                     if (res.status === 200 && success) {
                         if (isAdministrators) {
                             this.saveToLocalStorage({ params, headers }).then(() => {
-                                this.props.history.push('/admin/system/upload');
+                                // this.props.history.push('/admin/system/upload');
+                                window.location.href = '/admin/system/upload';
                                 loading.success(desc);
                             });
                         } else {

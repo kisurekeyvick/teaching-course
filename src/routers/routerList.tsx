@@ -30,7 +30,7 @@ export const pagesRouter: ILoadableRoute[] = [
     {
         path: '/setting',
         component: Loadable({
-            loader: () => import('../containers/setting/index'),
+            loader: () => import('../containers/user/setting/index'),
             loading: () => null,
             modules: ['setting']
         }),
@@ -70,7 +70,7 @@ export const pagesRouter: ILoadableRoute[] = [
     {
         path: '',
         component: Loadable({
-            loader: () => import('../containers/exception/index'),
+            loader: () => import('../containers/user/exception/index'),
             loading: () => null,
             modules: ['exception']
         }),

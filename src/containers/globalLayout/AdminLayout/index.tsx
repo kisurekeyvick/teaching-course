@@ -9,15 +9,14 @@ import { Link } from "react-router-dom";
 import './index.scss';
 import { cloneDeep } from 'lodash';
 import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
-import { LocalStorageItemName } from 'common/service/localStorageCacheList';
-import LocalStorageService from 'common/utils/cache/local-storage';
+import { localStorageService } from 'common/utils/function';
+import { StorageItemName } from 'common/utils/cache/storageCacheList';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
 
 class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> {
     public config: IConfig;
-    public localStorageService: LocalStorageService;
 
     constructor(public props: IAdminLayoutProps) {
         super(props);
@@ -26,8 +25,6 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
             menuList: cloneDeep(menu),
             userMenuList: cloneDeep(userMenuList)
         };
-
-        this.localStorageService = new LocalStorageService();
 
         this.state = {
             collapsed: false,
@@ -170,8 +167,8 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
             window.location.href = '/admin/login';
         } else if (menu.value === 'skip-to-user-system') {
             /** 跳转至前台登录页 */
-            this.localStorageService.set(LocalStorageItemName.PAGETYPE, { type: 'front' });
-            window.location.href = '/user/login';
+            localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
+            window.location.href = '/book';
         }
     }
 
