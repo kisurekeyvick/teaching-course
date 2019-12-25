@@ -6,10 +6,11 @@ import { SvgComponent } from 'components/icon/icon';
 import { api } from 'common/api/index';
 import { ICollectionListsRequest, ICollectionListsResponse, ITeachChapterResList } from 'common/api/api-interface';
 import { IPageInfo } from 'components/pagination/index';
-import { messageFunc, downloadFile, browseFile } from 'common/utils/function';
+import { messageFunc, downloadFile } from 'common/utils/function';
 import { sourceFormat, matchFieldFindeTarget, IDictionaryItem } from 'common/dictionary/index';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
 import { defaultCollectionPic } from 'common/service/img-collection';
+import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
 import './collection.scss';
 
 interface IColleactionProps {
@@ -22,6 +23,8 @@ interface IState {
     hasData: boolean;
     canScrollLoad: boolean;
     pageInfo: IPageInfo;
+    modalVisible: boolean;
+    currentViewSource: IDataSource | null;
     [key: string]: any;
 }
 
@@ -41,7 +44,9 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                 rowCount: 0,
                 totalCount: 0,
                 pageSizeOptions:['10', '20', '30', '40', '50']
-            }
+            },
+            modalVisible: false,
+            currentViewSource: null
         };
     }
 
@@ -154,7 +159,11 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
      * @desc 查看item 
      */
     public lookItem = (source: IDataSource) => {
-        browseFile({ fileFormat: source.fileFormat, url: source.url });
+        this.setState({
+            currentViewSource: source,
+            modalVisible: true
+        });
+        handleMaterialOperation({ operation: 'see', sourceItem: source });
     }
 
     /** 
@@ -163,6 +172,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
      */
     public downloadCollection = (source: IDataSource) => {
         downloadFile({ fileName: source.title, fileFormat: source.fileFormat, url: source.url });
+        handleMaterialOperation({ operation: 'download', sourceItem: source })
     }
 
     /** 
@@ -181,9 +191,31 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
         </Row>
     }
 
+    public handleModalOk = () => {
+        this.setState({
+            modalVisible: false
+        });
+    }
+
+    public handleModalCancel = () => {
+        this.setState({
+            modalVisible: false
+        });
+    }
+
     public render() {
-        const { hasData, dataSource = [], isLoading, canScrollLoad } = this.state;
+        const { hasData, dataSource = [], isLoading, canScrollLoad, currentViewSource, modalVisible } = this.state;
         const skeleton: React.ReactNode = this.buildSkeleton();
+        const browseFileModalProps: IBrowseFileModalProps = {
+            handleOkCallBack: this.handleModalOk,
+            handleCancelCallBack: this.handleModalCancel,
+            modalVisible,
+            source: currentViewSource,
+            title: '',
+            ...currentViewSource && {
+                title: currentViewSource.title,
+            }
+        };
 
         return (
             <div className='colleaction-container animateCss'>
@@ -216,6 +248,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                     <div className='collection-item-animate'>
                                                         <p>{source.title}</p>
                                                         <div className='collection-item-operation'>
+                                                            <span className='see-btn' onClick={() => this.lookItem(source)}><SvgComponent className='icon-svg' type='icon-see'/></span>
                                                             <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
                                                             <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
                                                                 <span className='disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
@@ -233,6 +266,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         <p>您暂时没有搜藏记录，赶快搜索课程资源，选择您喜欢的课程并收藏吧！</p>
                     </div>
                 }
+                { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                 <div className='colleaction-bottom'>
                     { canScrollLoad && <p className='can-load-more' onClick={this.loadMore}>加载更多...</p> }
                     { hasData && !canScrollLoad && <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p> }

@@ -85,13 +85,15 @@
                 margin: 0 0 3px 0;
                 text-align: center;
                 animation: slideInDown 0.5s;
+                overflow: hidden;
+                height: 60px;
             }
 
             .collection-item-operation {
                 text-align: left;
                 padding: 0 24px;
                 position: absolute;
-                bottom: -80px;
+                bottom: -60px;
                 right: 0px;
                 animation: slideInUp 0.5s;
 
@@ -109,6 +111,12 @@
                     border-radius: 50%;
                 }
 
+                span.see-btn {
+                    font-size: 17px;
+                    line-height: 30px;
+                    margin-top: -4px;
+                }
+
                 .download-btn {
                     color: $userColor;
                     font-size: 18px;
@@ -121,6 +129,11 @@
                     .svg-component {
                         font-size: 17px;
                     }
+                }
+
+                span:hover {
+                    background-color: $userColor;
+                    color: #fff;
                 }
             }
         }

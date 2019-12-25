@@ -6,13 +6,14 @@ import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from '
 import { api } from 'common/api/index';
 import { IMaterialSearchRequest, IMaterialSearchResponse, IMaterialSearchList } from 'common/api/api-interface';
 import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
-import { messageFunc, debounce, downloadFile, browseFile } from 'common/utils/function';
+import { messageFunc, debounce, downloadFile } from 'common/utils/function';
 import { defaultUserPic } from 'common/service/img-collection';
 import { dictionary, IDictionaryItem } from 'common/dictionary/index';
 import dayjs from 'dayjs';
 import { noData } from 'common/service/img-collection';
 import { SvgComponent } from 'components/icon/icon';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
+import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
 import './search-result.scss';
 
 interface ISearchResultProps {
@@ -23,7 +24,7 @@ interface IConfig {
     searchBookHistory: string;
     sourceType: IDictionaryItem[];
     sourceFormat: IDictionaryItem[];
-    searchDebounce: any
+    searchDebounce: any;
 }
 
 interface IState {
@@ -33,6 +34,8 @@ interface IState {
     hasData: boolean;
     isLoading: boolean;
     pageInfo: IPageInfo;
+    modalVisible: boolean;
+    currentViewSource: IDataSource | null;
 }
 
 const { Search } = Input;
@@ -51,11 +54,12 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             isLoading: false,
             /** 分页 */
             pageInfo: {...defaultPageInfo},
+            modalVisible: false,
+            currentViewSource: null
         };
 
 
         const sourceType = [...dictionary.get('source-type')!];
-        console.log('sourceType', sourceType);
         sourceType.unshift({ name: '全部', value: '' });
         const sourceFormat = [...dictionary.get('source-format')!];
         sourceFormat.unshift({ name: '全部', value: '' });
@@ -121,6 +125,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     pageInfo: {
                         ...pageInfo, ...{
                             pageNum,
+                            pageSize: params.pageInfo.pageSize,
                             totalCount: total
                         }
                     }
@@ -196,17 +201,20 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
 
     /** 
      * @func
-     * @desc 收藏 点赞
+     * @desc 收藏 点赞 查看 下载
      */
-    public handleMaterialOperation = (item: IDataSource, typeStr: string) => {
+    public handleMaterialOperation = (item: IDataSource, typeStr: 'collect' | 'praise' | 'see' | 'download') => {
         const otherParams: { isCollect?: boolean; isPraise?: boolean; } = {};
-
+        let canMessage: boolean = false;
+        
         if (typeStr === 'collect') {
             otherParams.isCollect = false;
+            canMessage = true;
         }
 
         if (typeStr === 'praise') {
             otherParams.isPraise = false;
+            canMessage = true;
         }
 
         handleMaterialOperation({ operation: typeStr, sourceItem: {
@@ -214,11 +222,21 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             ...otherParams
         } }).then(({ bool, desc }: IPromiseResolve) => {
             if (bool) {
-                message.success(desc);
+                canMessage && message.success(desc);
             } else {
-                message.error(desc);
+                canMessage && message.error(desc);
             }
         });
+
+        /** 阅读 */
+        if (typeStr === 'see') {
+            this.showDetail(item);
+        }
+
+        /** 下载文件 */
+        if (typeStr === 'download') {
+            this.dowmloadFile(item);
+        }
     }
 
     /** 
@@ -226,14 +244,17 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
      * @desc 查看详情
      */
     public showDetail = (item: IDataSource) => {
-        browseFile({ fileFormat: item.fileFormat, url: item.url });
+        this.setState({
+            modalVisible: true,
+            currentViewSource: item
+        });
     }
 
     /** 
      * @func
-     * @desc 下载
+     * @desc 下载文件
      */
-    public download = (item: IDataSource) => {
+    public dowmloadFile = (item: IDataSource) => {
         downloadFile({ fileName: item.title, fileFormat: item.fileFormat, url: item.url });
     }
 
@@ -242,15 +263,15 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
      * @desc 分页发生变化
      */
     public pageChange = (page: number, pageSize?: number) => {
-        this.setState({
+        const params: IMaterialSearchRequest = {
+            ...this.getMaterialSearchRequestParams(),
             pageInfo: {
-                ...this.state.pageInfo,
-                currentPage: page,
-                ...pageSize && {
-                    pageSize
-                }
+                pageNum: page,
+                pageSize: pageSize || 10
             }
-        });
+        }; 
+
+        this.loadSearchResult(params);
     }
 
     /** 
@@ -285,7 +306,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                                 <SvgComponent className='icon-svg' type='icon-see'/>
                                 <p>查看</p>
                             </div>
-                            <div className={`searchList-operation-item`} onClick={() => this.download(item)}>
+                            <div className={`searchList-operation-item`} onClick={() => this.handleMaterialOperation(item, 'download')}>
                                 <SvgComponent className='icon-svg' type='icon-download'/>
                                 <p>下载</p>
                             </div>
@@ -335,12 +356,34 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
         </>
     }
 
+    public handleModalOk = () => {
+        this.setState({
+            modalVisible: false
+        });
+    }
+
+    public handleModalCancel = () => {
+        this.setState({
+            modalVisible: false
+        });
+    }
+
     public render() {
-        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData } = this.state;
+        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData, modalVisible, currentViewSource } = this.state;
         const pageComponentProps: IPageComponnetProps = {
             ...this.state.pageInfo,
             pageChange: this.pageChange
         };
+        const browseFileModalProps: IBrowseFileModalProps = {
+            handleOkCallBack: this.handleModalOk,
+            handleCancelCallBack: this.handleModalCancel,
+            modalVisible,
+            source: currentViewSource,
+            title: '',
+            ...currentViewSource && {
+                title: currentViewSource.title
+            }
+        }; 
 
         return (
             <div className='search-result-container animateCss'>
@@ -368,6 +411,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                             }
                         </>
                     }
+                    { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                     {
                         !isLoading && !hasData && <div className='no-data'>
                             <img alt='无数据' src={noData} />

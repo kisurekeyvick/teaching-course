@@ -20,7 +20,7 @@ export const pagesRouter: ILoadableRoute[] = [
     {
         path: '/book',
         component: Loadable({
-            loader: () => import('../containers/book/index'),
+            loader: () => import('../containers/user/book/index'),
             loading: () => null,
             modules: ['book']
         }),
@@ -40,7 +40,7 @@ export const pagesRouter: ILoadableRoute[] = [
     {
         path: '/book/id/:id',
         component: Loadable({
-            loader: () => import('../containers/book/list/detail/index'),
+            loader: () => import('../containers/user/book/list/detail/index'),
             loading: () => null,
             modules: ['bookDetail']
         }),

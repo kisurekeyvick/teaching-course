@@ -7,8 +7,11 @@ import schoolLogo from 'assets/images/schoolLogo.png';
 import defaultCollectionPic from 'assets/images/defaultCollectionPic.jpg';
 /** 登录页图片 */
 import loginBgPic from 'assets/images/loginBg.webp';
+import loginLogo from 'assets/images/logo.jpg';
 /**用户banner背景图 */
 import userBannerBgPic from 'assets/images/user-banner-bg.png';
+/** 后台logo */
+import simpleLogo from 'assets/images/simpleLogo.jpg';
 
 /** 文件格式图 */
 import DOC from 'assets/images/file-format/DOC.png';
@@ -32,8 +35,11 @@ export {
     defaultCollectionPic,
     /** 登录页背景图片 */
     loginBgPic,
+    loginLogo,
     /**用户banner背景图 */
     userBannerBgPic,
+    /** 后台logo */
+    simpleLogo,
     /**文件格式 */
     DOC,
     DOCX,

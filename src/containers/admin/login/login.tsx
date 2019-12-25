@@ -6,12 +6,12 @@ import LocalStorageService from 'common/utils/cache/local-storage';
 import './login.scss';
 import {connect} from 'react-redux';
 import { AdminLoginFormItem, LoginParams, IConfig, IForm } from './login-config';
-import { env } from 'environment/index';
 import { getScreenInfo, messageFunc } from 'common/utils/function';
 import { LocalStorageItemName } from 'common/service/localStorageCacheList';
 import { api } from 'common/api/index';
 import { ILogin } from 'common/api/api-interface';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
+import { loginBgPic, loginLogo } from 'common/service/img-collection';
 
 const FormItem = Form.Item;
 
@@ -182,12 +182,12 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
 
         return (
             <div className='layout-login-box'>
-                <img className='background-image' style={this.state.style} alt='logo' src={env.loginBackground}/>
+                <img className='background-image' style={this.state.style} alt='logo' src={loginBgPic}/>
                 <div className='login-content-box'>
                     <Row>
                         <Col span={24}>
                             <div className='layout-login-box-head'>
-                                <img alt='logo' src={env.loginLogo} />
+                                <img alt='logo' src={loginLogo} />
                             </div>
                         </Col>
                         <Col span={24}>

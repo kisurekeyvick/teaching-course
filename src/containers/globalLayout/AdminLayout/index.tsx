@@ -11,6 +11,7 @@ import { cloneDeep } from 'lodash';
 import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
 import { localStorageService } from 'common/utils/function';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
+import { simpleLogo, loginLogo } from 'common/service/img-collection';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
@@ -184,7 +185,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                             }}
                             className={`slide-coantainer ${this.state.collapsed ? 'collapsed' : ''}`} trigger={null} collapsible collapsed={this.state.collapsed}>
                         <div className='slide-logo-box'>
-                            <img className='slide-logo' alt='slide-logo' src={this.state.collapsed ? env.simpleLogo : env.siderLogo} />
+                            <img className='slide-logo' alt='slide-logo' src={this.state.collapsed ? simpleLogo : loginLogo} />
                         </div>
                         <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
                             { menuList }

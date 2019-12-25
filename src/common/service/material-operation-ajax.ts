@@ -8,7 +8,7 @@ import { api } from 'common/api/index';
 const materialOperation: IDictionaryItem[] = dictionary.get('material-operation')!
 
 export interface IMaterialOperationparams {
-    operation: string;
+    operation: 'collect' | 'praise' | 'see' | 'download';
     sourceItem: {
         isCollect?: boolean;
         isPraise?: boolean;

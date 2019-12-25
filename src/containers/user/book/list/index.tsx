@@ -12,6 +12,7 @@ import { dictionary, IDictionaryItem } from 'common/dictionary/index';
 import { downloadFile } from 'common/utils/function';
 import { ITeachChapterList } from 'common/api/api-interface';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
+import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
 import './index.scss';
 
 interface IState {
@@ -23,7 +24,9 @@ interface IState {
     breadcrumb: string[];
     hasData: boolean;
     isLoading: boolean;
-    updateTime: number
+    modalVisible: boolean;
+    currentViewSource: ITeachChapterList | null;
+    updateTime: number;
 }
 
 interface IConifg {
@@ -50,6 +53,8 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             breadcrumb: [],
             hasData: false,
             isLoading: false,
+            modalVisible: false,
+            currentViewSource: null,
             updateTime: 0
         };
 
@@ -154,11 +159,13 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
     /** 
      * @func
-     * @desc 收藏 点赞
+     * @desc 收藏 点赞 阅读 下载
      */
-    public handleMaterialOperation = (item: ITeachChapterList, typeStr: string) => {
+    public handleMaterialOperation = (item: ITeachChapterList, typeStr: 'collect' | 'praise' | 'see' | 'download') => {
+        const canMessage: boolean = typeStr === 'collect' || typeStr === 'praise';
+
         handleMaterialOperation({ operation: typeStr, sourceItem: item }).then(({ bool, desc }: IPromiseResolve) => {
-            if (bool) {
+            if (bool && canMessage) {
                 let { booklist } = this.state;
                 booklist = booklist.map((book: ITeachChapterList) => {
                     if (item.chapterId === book.chapterId) {
@@ -176,16 +183,38 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
                 message.success(desc);
             } else {
-                message.error(desc);
+                canMessage && message.error(desc);
             }
+        });
+
+        /** 下载 */
+        if (typeStr === 'download') {
+           this.dowmloadFile(item);
+        }
+
+        /** 阅读 */
+        if (typeStr === 'see') {
+            this.showDetail(item);
+        }
+    }
+
+    /** 
+     * @func
+     * @desc 查看详情
+     */
+    public showDetail = (item: ITeachChapterList) => {
+        this.setState({
+            modalVisible: true,
+            currentViewSource: item,
+            updateTime: Date.now()
         });
     }
 
     /** 
      * @func
-     * @desc 下载
+     * @desc 下载文件
      */
-    public download = (item: ITeachChapterList) => {
+    public dowmloadFile = (item: ITeachChapterList) => {
         downloadFile({ fileName: item.name, fileFormat: item.fileFormat, url: item.link });
     }
 
@@ -220,13 +249,38 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                 </div>
     }
 
+    public handleModalOk = () => {
+        this.setState({
+            modalVisible: false,
+            updateTime: Date.now()
+        });
+    }
+
+    public handleModalCancel = () => {
+        this.setState({
+            modalVisible: false,
+            updateTime: Date.now()
+        });
+    }
+
     public render() {
         const pageComponentProps: IPageComponnetProps = {
             ...this.state.pageInfo,
             pageChange: this.pageChange
         };
 
-        const { format, booklist, hasData, isLoading, breadcrumb } = this.state;
+        const { format, booklist, hasData, isLoading, breadcrumb, modalVisible, currentViewSource } = this.state;
+
+        const browseFileModalProps: IBrowseFileModalProps = {
+            handleOkCallBack: this.handleModalOk,
+            handleCancelCallBack: this.handleModalCancel,
+            modalVisible,
+            source: currentViewSource,
+            title: '',
+            ...currentViewSource && {
+                title: currentViewSource.title
+            }
+        }; 
 
         return <div className='book-list'>
                     <div className='filter-box'>
@@ -266,11 +320,6 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                 <div className='booklist-item-top-left'>
                                                     <span>{ item.title }</span>
                                                 </div>
-                                                {/* <div className='booklist-item-top-right'>
-                                                    <Rate disabled defaultValue={item.rate}/>
-                                                    <i className='i-rate'>{item.rate}</i>
-                                                    <label>({item.currentCount})</label>
-                                                </div> */}
                                             </div>
                                             <div className='booklist-item-bottom'>
                                                 <img alt='缩略图' src={item.coverLink} />
@@ -301,7 +350,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                     <SvgComponent className='icon-svg' type='icon-see'/>
                                                     <p>查看</p>
                                                 </div>
-                                                <div className={`booklist-operation-item`} onClick={() => this.download(item)}>
+                                                <div className={`booklist-operation-item`} onClick={() => this.handleMaterialOperation(item, 'download')}>
                                                     <SvgComponent className='icon-svg' type='icon-download'/>
                                                     <p>下载</p>
                                                 </div>
@@ -314,6 +363,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                             </div>
                         }
                     </div>
+                    { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                     {
                         booklist.length > 0 && <div className='booklist-pagination'>
                             <PageComponent {...pageComponentProps}/>

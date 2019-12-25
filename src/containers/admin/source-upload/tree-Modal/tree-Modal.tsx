@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Modal, Tree, Skeleton } from 'antd';
-import { IMenuItem } from 'containers/book/directory/index.config';
+import { IMenuItem } from 'containers/user/book/directory/index.config';
 import { SvgComponent } from 'components/icon/icon';
 import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
 import { messageFunc } from 'common/utils/function';
