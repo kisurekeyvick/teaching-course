@@ -1,0 +1,96 @@
+@import '../../../assets/styles/global.container.scss';
+
+@mixin filterLayout {
+    padding: 13px 10px;
+    border-bottom: 1px solid hsla(0,0%,59.2%,.1);
+}
+
+.source-manage-container {
+    @include commonContainer;
+
+    .operation-box {
+        .operation-box-col {
+            margin-bottom: 20px;
+
+            .btn-addCourse {
+                .add-course-svg {
+                    margin-top: 4px;
+                    float: left;
+                }
+            }
+
+            &:first-child {
+                button {
+                    margin-right: 8px;
+                }
+            }
+        }
+    }
+
+    .table-box {
+        display: flex;
+
+        .table-tree {
+            flex: 0 0 300px;
+        }
+
+        .table-tree-content {
+            flex: 1;
+            padding-left: 24px;
+            overflow: hidden;
+
+            .breadcrumb-box {
+                @include filterLayout;
+    
+                .svg-breadcrumb {
+                    margin-right: 8px;
+                    font-size: 16px;
+                }
+    
+                .ant-breadcrumb {
+                    display: inline-block;
+                    @include smallsize;
+    
+                    & > span:last-child {
+                        color: $userColor;
+                    }
+                }
+            }
+
+            .inner-table-box {
+                overflow: hidden;
+                width: 100%;
+            }
+        }
+
+        .table-operation-box {
+            p {
+                display: inline-block;
+                cursor: pointer;
+                margin: 0 12px;
+
+                &:hover {
+                    color: $color;
+                }
+            }
+
+            .operation-box-icon {
+                margin-right: 5px;
+            }
+
+            & > span {
+                cursor: pointer;
+                margin: 0 12px 0 0;
+
+                &:hover {
+                    color: $color;
+                }
+            }
+
+        }
+
+        .source-result-pagination {
+            margin-top: 24px;
+        }
+    }
+}

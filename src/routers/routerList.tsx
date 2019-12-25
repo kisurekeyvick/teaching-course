@@ -1,6 +1,7 @@
 import Loadable from 'react-loadable';
 import { ILoadableRoute } from './interface';
 
+/** 前台用户登录 */
 export const userRouter: ILoadableRoute[] = [
     {
         path: '/user/:status',
@@ -14,11 +15,12 @@ export const userRouter: ILoadableRoute[] = [
     }
 ];
 
+/** 前台用户路由 */
 export const pagesRouter: ILoadableRoute[] = [
     {
         path: '/book',
         component: Loadable({
-            loader: () => import('../containers/book/index'),
+            loader: () => import('../containers/user/book/index'),
             loading: () => null,
             modules: ['book']
         }),
@@ -28,7 +30,7 @@ export const pagesRouter: ILoadableRoute[] = [
     {
         path: '/setting',
         component: Loadable({
-            loader: () => import('../containers/setting/index'),
+            loader: () => import('../containers/user/setting/index'),
             loading: () => null,
             modules: ['setting']
         }),
@@ -36,19 +38,9 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
-        path: '/upload',
-        component: Loadable({
-            loader: () => import('../containers/upload/index'),
-            loading: () => null,
-            modules: ['upload']
-        }),
-        key: 4,
-        exact: true
-    },
-    {
         path: '/book/id/:id',
         component: Loadable({
-            loader: () => import('../containers/book/list/detail/index'),
+            loader: () => import('../containers/user/book/list/detail/index'),
             loading: () => null,
             modules: ['bookDetail']
         }),
@@ -56,9 +48,97 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/search',
+        component: Loadable({
+            loader: () => import('../containers/user/search-result/search-result'),
+            loading: () => null,
+            modules: ['searchResult']
+        }),
+        key: 5,
+        exact: true
+    },
+    {
+        path: '/collection',
+        component: Loadable({
+            loader: () => import('../containers/user/collection/collection'),
+            loading: () => null,
+            modules: ['collection']
+        }),
+        key: 5,
+        exact: true
+    },
+    {
         path: '',
         component: Loadable({
-            loader: () => import('../containers/exception/index'),
+            loader: () => import('../containers/user/exception/index'),
+            loading: () => null,
+            modules: ['exception']
+        }),
+        key: 300,
+        exact: true
+    }
+];
+
+/** 后台用户登录 */
+export const behindUserRouter: ILoadableRoute[] = [
+    {
+        path: '/admin/:status',
+        component: Loadable({
+            loader: () => import('../containers/admin/login/login'),
+            loading: () => null,
+            modules: ['admin']
+        }),
+        key: 1,
+        exact: true
+    }
+];
+
+/** 后台用户路由 */
+export const behindPagesRouter: ILoadableRoute[] = [
+    {
+        path: '/admin/system/upload',
+        component: Loadable({
+            loader: () => import('../containers/admin/source-upload/source-upload-steps'),
+            loading: () => null,
+            modules: ['upload']
+        }),
+        key: 2,
+        exact: true
+    },
+    {
+        path: '/admin/system/directoryManage',
+        component: Loadable({
+            loader: () => import('../containers/admin/directory-manage/directory-manage-table'),
+            loading: () => null,
+            modules: ['directoryManage']
+        }),
+        key: 3,
+        exact: true
+    },
+    {
+        path: '/admin/system/sourceManage',
+        component: Loadable({
+            loader: () => import('../containers/admin/source-manage/source-manage'),
+            loading: () => null,
+            modules: ['sourceManage']
+        }),
+        key: 4,
+        exact: true
+    },
+    {
+        path: '/admin/system/state',
+        component: Loadable({
+            loader: () => import('../containers/admin/system-status/system-status'),
+            loading: () => null,
+            modules: ['systemStatus']
+        }),
+        key: 6,
+        exact: true
+    },
+    {
+        path: '',
+        component: Loadable({
+            loader: () => import('../containers/admin/exception/index'),
             loading: () => null,
             modules: ['exception']
         }),

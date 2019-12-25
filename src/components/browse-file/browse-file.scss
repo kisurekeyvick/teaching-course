@@ -1,0 +1,25 @@
+#previewframe {
+    border: 0;
+}
+
+.browse-file-modal {
+    &.common-box {
+        .ant-modal-content {
+            height: 100%;
+        }
+    }
+
+    .ant-modal-body {
+        padding: 5px;
+        height: 100%;
+        background-color: #fff;
+
+        .common-box {
+            height: 100%;
+        }
+    }
+
+    .ant-modal-footer {
+        background-color: #fff;
+    }
+}

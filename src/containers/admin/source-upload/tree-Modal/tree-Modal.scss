@@ -1,0 +1,28 @@
+.admin-course-tree-modal {
+    .svg-icon-course {
+        font-size: 15px !important;
+        transform: rotate(90deg) !important;
+        float: left;
+        margin: 5px;
+    }
+
+    .ant-tree-switcher_open {
+        .svg-icon-course {
+            transform: rotate(0deg) !important;
+        }
+    }
+
+    .ant-tree li .ant-tree-node-content-wrapper {
+        font-size: 12px;
+    }
+
+    .svg-icon-chapter {
+        font-size: 20px !important;
+        float: left;
+        margin: 2px;
+    }
+
+    .ant-modal-body {
+        padding: 12px 24px;
+    }
+}

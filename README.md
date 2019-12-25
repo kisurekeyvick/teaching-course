@@ -15,7 +15,8 @@
     │   ├── containers                  容器性组件目录
     │   ├── assets                      资源目录，这里的资源会被wabpack构建
     │   │   ├── style                   公共样式文件目录
-    │   │   └── image                   图片存放目录
+    │   │   ├── image                   图片存放目录
+    │   │   └── svg                     存放svg图标
     │   ├── store                       应用级数据（state）
     │   │   └── index.js
     │   └── common                      公共文件
@@ -67,3 +68,57 @@ const lessModuleRegex = /\.module\.less$/;
     sideEffects: true,
 },
 ```
+## 配置图标SVG
+- 组件的位置：'components/icon'
+- 方式一：[使用antd内置的方式](https://ant.design/components/icon-cn/)
+```
+(1) 将阿里巴巴矢量图(https://www.iconfont.cn/)，产生的代码复制
+(2) 填入(environment/index.tsx)中的svgUrl
+```
+- 方式二：本地存储svg，然后读取
+```
+(1) 需要加载webpack添加loader：svg-sprite-loader
+(2) 在webpack.config.js中添加如下代码：
+```
+``` js
+    {
+        test: /\.svg$/,
+        loader: require.resolve('svg-sprite-loader'),
+        include: path.resolve(__dirname, 'src/assets/icons/svg'),
+        options: {
+            // symbolId和use使用的名称对应      <use xlinkHref={"#" + iconClass} />
+            symbolId: '[name]'
+        }
+    },{
+        test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+        loader: require.resolve('url-loader'),
+        options: {
+        limit: imageInlineSizeLimit,
+        name: 'static/media/[name].[hash:8].[ext]',
+        },
+        // [kisure rmark] url-loader 中要将 svg 文件夹排除, 不让 url-loader 处理该文件夹
+        exclude: path.resolve(__dirname, 'src/assets/icons/svg')
+    }
+```
+```
+(3) 在assets文件中 assets/icons/index.ts 中需要将相关的svg导入进去
+(4) 在react项目的入口文件中引用 assets/icons/index.ts，此处引入在app.tsx中
+```
+```js
+    import React from 'react';
+    import Page from 'routers/index';
+    import './App.scss';
+    import './theme.less';
+    import 'assets/icons/index';
+
+    const App: React.FC = () => {
+    return (
+        <div className="App">
+        <Page />
+        </div>
+    );
+    }
+
+    export default App;
+```
+- 有一个坑点需要注意，在[阿里巴巴矢量图](https://www.iconfont.cn/)中添加图标后，需要按照你想引入的svg名字修改一下图标的名字，因为名字写错了，页面会显示不出来

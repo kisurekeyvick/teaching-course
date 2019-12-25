@@ -24,6 +24,15 @@ export interface IPageComponnetProps {
     size?: string;
 }
 
+export const defaultPageInfo: IPageInfo = {
+    currentPage: 1,
+    pageCount: 0,
+    pageSize: 10,
+    rowCount: 0,
+    totalCount: 0,
+    pageSizeOptions:['10', '20', '30', '40', '50']
+};
+
 export class PageComponent extends React.PureComponent<IPageComponnetProps, any> {
     static defaultProps = {
         defaultCurrent: 1,

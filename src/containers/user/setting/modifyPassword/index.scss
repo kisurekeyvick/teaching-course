@@ -1,0 +1,49 @@
+@import '../index.scss';
+@import '../../../../assets/styles/global.scss';
+
+@mixin borderBottom {
+    border-bottom: 1px solid #f1f1f1;
+}
+
+.setting-modifyPwd-box {
+    @include childLayout;
+    
+    &.animateCss {
+        animation: slideInUp 0.5s;
+    }
+
+    p.title {
+        @include borderBottom;
+        font-size: 25px;
+        margin-bottom: 0px;
+        padding-bottom: 12px;
+    }
+
+    .modify-pwd-form-item {
+        @include borderBottom;
+        padding: 8px 0;
+        margin-bottom: 0;
+
+        .ant-form-item-label {
+            text-align: left;
+        }
+
+        .ant-form-item-control {
+            input {
+                border: none;
+
+                &:focus {
+                    border: none !important;
+                    box-shadow:0 0 0 transparent;
+                }
+            }
+        }
+    }
+
+    .submit-control {
+        text-align: right;
+        text-align: right;
+        margin-bottom: 0;
+        margin-top: 24px;
+    }
+}

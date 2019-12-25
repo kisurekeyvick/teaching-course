@@ -1,0 +1,87 @@
+@import '../../../../assets/styles/global.scss';
+
+.directory-box {
+    min-height: 300px;
+    padding: 0 0 24px;
+    background-color: #fff;
+
+    .directory-title {
+        display: flex;
+        padding: 5px 12px;
+        position: relative;
+        border-radius: 2px 2px 0 0;
+
+        &::before {
+            content: '';
+            position: absolute;
+            width:0; 
+            height:0;
+            border-width:5px;
+            border-style:solid;
+            border-color:#fff transparent transparent transparent;
+            top:0;
+            left:25px;
+        }
+
+        p {
+            margin-bottom: 0;
+            line-height: 35px;
+            flex: 1;
+        }
+
+        .book-svg {
+            flex: 0 0 32px;
+            text-align: left;
+            font-size: 20px;
+            line-height: 35px;
+        }
+    }
+
+    span.ant-tree-switcher {
+        background: transparent !important;
+    }
+
+    .directory-menu-box {
+        padding: 0 8px;
+
+        .no-data-img {
+            width: 100px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .no-data-desc {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 12px;
+        }
+    }
+
+    .svg-icon-course {
+        font-size: 15px !important;
+        transform: rotate(90deg) !important;
+        float: left;
+        margin: 5px;
+    }
+
+    .ant-tree-switcher_open {
+        .svg-icon-course {
+            transform: rotate(0deg) !important;
+        }
+    }
+
+    .ant-tree li .ant-tree-node-content-wrapper {
+        font-size: 12px;
+    }
+
+    .svg-icon-chapter {
+        font-size: 20px !important;
+        float: left;
+        margin: 2px;
+    }
+
+    .ant-tree-node-selected {
+        background-color: $userSecondBGColor !important;
+        color: #fff !important;
+    }
+}

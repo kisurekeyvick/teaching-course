@@ -1,27 +1,66 @@
-@import '../../../assets/styles/global.scss';
+@import '../../../assets/styles/global.container.scss';
 
 .user-login {
+    display: flex;
+    background-color: #fff;
+    box-shadow: 5px 5px 5px #ddd;
+    height: 460px;
+
+    .user-login-left {
+        flex: 0 0 450px;
+
+        img {
+            height: 460px;
+            width: 520px;
+            opacity: 0.8;
+        }
+    }
+
+    .user-login-form {
+        flex: 1;
+    }
+
+
     .ant-tabs-bar {
         border-bottom: 0px;
     }
 
     .user-login-form {
-        width: 400px;
-        margin: 0 auto;
-        background-color: #fff;
+       @include login-form;
+       padding: 18px 50px 18px 50px;
+
+        p.login-title {
+            color: #000;
+            font-size: 18px;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 80px 0 65px 0;
+            font-family: 'STHeit';
+
+            span:last-child {
+                color: $userSecondBGColor;
+                margin-left: 8px;
+            }
+        }
 
         .checkbox-remember {
-            float: left;
+            font-size: 12px;
         }
 
         .login-form-forgot {
             float: right;
-            color: $color;
+            color: $userColor;
         }
         
         .login-form-button {
-            width: 100%;
-            margin-top: 24px;
+            @include login-form-button;
+            margin-top: 0;
+
+            &.isLoading {
+                color: #fff;
+                background-color: $userBorderColor;
+            }
         }
 
         .ant-form-explain {
@@ -29,12 +68,51 @@
         }
 
         .formItem-item {
-            margin: 0 2px 24px;
+            margin: 0 0px 12px;
+
+            &:last-child {
+                margin-bottom: 0;
+                margin-top: -12px;
+            }
 
             img.verificationImage {
                 border: 1px solid #ddd;
                 border-radius: 5px;
             }
+
+            .formItem-div {
+                .formItem-label {
+                    color: $userColor;
+                    padding-left: 12px;
+                }
+
+                .input-control {
+                    &.userName, &.password {
+                        input {
+                            font-size: 12px;
+                            border-radius: 2px;
+                            font-size: 12px;
+                            border: none;
+                            box-shadow: 5px 5px 15px #dedede;
+                            background-color: #fef7f6;
+                        }
+                    }
+                }
+            }
+
+            .error-message {
+                display: block;
+                margin-bottom: 0;
+                color: $errorColor;
+
+                &.error-animate {
+                    animation: flipInX 2s;
+                }
+            }
+        }
+
+        .has-error {
+            @include login-error;
         }
 
         .other-login-icon {
@@ -46,7 +124,7 @@
             transition: color 0.3s;
         
             &:hover {
-              color: $color;
+              color: $userColor;
             }
         }
 
@@ -57,7 +135,7 @@
 
             a {
                 float: right;
-                color: $color;
+                color: $userColor;
             }
         }
 

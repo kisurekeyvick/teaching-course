@@ -1,0 +1,171 @@
+@import '../../../assets/styles//global.container.scss';
+@import '../../../assets/styles/global.scss';
+
+.search-result-container {
+    height: 100%;
+    margin-top: 32px;
+    background-color: #fff;
+    position: relative;
+
+    &.animateCss {
+        animation: slideInUp 0.5s;
+    }
+
+    .search-control-box {
+        background-color: #f0f2f5;
+        display: block;
+        padding-bottom: 32px;
+
+        .search-control {
+            width: 50%;
+            margin: 0 auto;
+            display: block;
+        }
+    }
+
+    .search-conditions {
+        span {
+            cursor: pointer;
+
+            &:hover, &.selected {
+                color: $userColor;
+            }
+        }
+
+        .search-conditions-item {
+            padding: 12px;
+            display: block;
+            border-bottom: 1px solid $borderBottomColor;
+            width: 100%;
+            height: 46px;
+        }
+    }
+
+    .search-result-content {
+        padding: 0 24px 24px;
+
+        .source-result-tag {
+            margin: 12px;
+        }
+
+        .content-items-box {
+            cursor: pointer;
+            margin-bottom: 24px;
+
+            .content-item {
+                @include backgroundAnimate(rgba(0,0,0,.03));
+                @include smallsize;
+                padding: 12px;
+                position: relative;
+                overflow: hidden;
+                min-height: 180px;
+
+                &:not(:last-child) {
+                    border-bottom: 1px solid $borderBottomColor;
+                }
+
+                p.content-item-title {
+                    font-size: 14px;
+                }
+
+                .content-item-other-info {
+                    display: flex;
+
+                    img {
+                        flex: 0 0 25px;
+                        width: 25px;
+                        margin-right: 12px;
+                        border-radius: 50%;
+                    }
+                    
+                    span {
+                        margin-right: 16px;
+                        margin-top: 3px;
+                    }
+
+                    .contributor, .directory {
+                        color: $userColor;
+                    }
+                }
+
+                &::before, &::after {
+                    content: "";
+                    background: $userSecondBGColor;
+                    width: 74%;
+                    height: 300%;
+                    transform: rotate(45deg);
+                    position: absolute;
+                    top: 25%;
+                    right: -100%;
+                    z-index: 1;
+                    transition: all 0.35s ease;
+                    opacity: 0;
+                }
+    
+                &::after {
+                    width: 90%;
+                    height: 135%;
+                    right: auto;
+                    left: 10%;
+                    top: -250%;
+                }
+
+                .searchList-operation {
+                    position: absolute;
+                    color: $userSecondColor;
+                    height: 100%;
+                    top: 50%;
+                    right:100%;
+                    width: 220px;
+                    z-index: 50;
+            
+                    .searchList-operation-item {
+                        display: inline-block;
+                        width: 22%;
+                        text-align: center;
+                        padding: 0 8px;
+                        margin: 0 2px;
+
+                        &:hover, &.selected {
+                            color: #fff;
+                            border-bottom: 2px solid #ddd;
+                        }
+            
+                        .icon-svg {
+                            margin-top: 60px;
+                            margin-bottom: 5px;
+                            font-size: 17px;
+                        }
+                    }
+                }
+
+                &:hover::before {
+                    opacity: 1;
+                    right: -83%;
+                }
+    
+                &:hover::after {
+                    opacity: 1;
+                    top: -170%;
+                }
+
+                &:hover {
+                    padding: 11px;
+                    border: 1px solid $userColor;
+                    border-radius: 5px;
+
+                    .searchList-operation {
+                        top: 0;
+                        right: 2%;
+                        display: block;
+                        animation: bounceInRight 1s;
+                    }
+                }
+            }
+        }
+
+        .no-data {
+            @include nodata;
+        }
+    }
+}

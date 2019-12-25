@@ -1,0 +1,43 @@
+@import '../../../assets/styles/global.scss';
+
+@mixin slidelayout {
+    flex: 0 0 200px;
+    margin: 20px 20px 0 20px;
+}
+
+.book-container {
+    height: 100%;
+
+    .book-body {
+        display: flex;
+        height: 100%;
+
+        .lefeAnimate, .rightAnimate {
+            animation: slideInUp 1.5s;
+        }
+
+        .centerAnimate {
+            animation: slideInUp 0.5s;
+        }
+    
+        .book-left {
+            @include slidelayout;
+            margin-left: 0px;
+        }
+    
+        .book-center {
+            flex: 1;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+    
+        .book-right {
+            @include slidelayout;
+            margin-right: 0px;
+
+            .book-right-recommend {
+                margin-bottom: 20px;
+            }
+        }
+    }
+}

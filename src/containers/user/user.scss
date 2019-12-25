@@ -1,36 +1,57 @@
-.layout-login-box {
-    background-size: 100% !important;
-    position: fixed;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    background-image: url(https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg);
-    background-repeat: no-repeat;
-    background-position: center 110px;
-    background-size: 100%;
-    z-index: 9999;
+@import '../../assets/styles/global.container.scss';
 
-    .layout-login-box-head {
-        text-align: center;
-        margin-bottom: 24px;
-
-        img {
-            width: 200px;
-            margin: 0 auto;
-        }    
-    }
-
-    .user-container-box{
-        height: 446px;
-
-        .user-login .ant-tabs-bar {
-            text-align: center;
-        }
+.user-system-login-box {
+    .user-container-box {
+        width: 850px;
+        display: block;
+        margin: 0 auto;
+        margin-top:5%;
     }
 }
+
+// .layout-login-box {
+// //    @include layout-login-box;
+
+//     img.background-image {
+//         position: absolute;
+//         left: 0;
+//         top:0;
+//         width: 100%;
+//         opacity: 0.6;
+//     }
+
+
+//     .layout-login-box-head {
+//         // @include layout-login-box-head;
+//         img {
+//             background-color: $userColor;
+//             border-radius: 5px;
+//         }
+//     }
+
+//     .user-container-box{
+//     //    @include content-container-box;
+
+//         .user-login .ant-tabs-bar {
+//             text-align: center;
+//         }
+//     }
+// }
+
+// @media (min-width: 769px) {
+//     .layout-login-box {
+//         .login-content-box {
+//             // @include login-content-box;
+//         }
+//     }
+// }
+
+// @media (max-width: 768px) {
+//     .layout-login-box {
+//         .login-content-box {
+//             // @include login-content-box-midScreen;
+//             // background-color: pink;
+//         }
+//     }
+// }
 

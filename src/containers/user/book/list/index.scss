@@ -1,0 +1,297 @@
+@import '../../../../assets/styles/global.scss';
+
+@mixin filterLayout {
+    padding: 13px 10px;
+    border-bottom: 1px solid hsla(0,0%,59.2%,.1);
+}
+
+@mixin smallsize {
+    font-size: 12px;
+}
+
+.book-list {
+    .filter-box {
+        @include smallsize;
+
+        .breadcrumb-box {
+            @include filterLayout;
+
+            .svg-breadcrumb {
+                margin-right: 8px;
+                font-size: 16px;
+            }
+
+            .ant-breadcrumb {
+                display: inline-block;
+                @include smallsize;
+
+                & > span:last-child {
+                    color: $userColor;
+                }
+            }
+        }
+        
+        .filter-box-type {
+            @include filterLayout;
+        }
+        
+        .filter-box-format {
+            @include filterLayout;
+            
+            label {
+                margin-right: 12px;
+            }
+
+            .ant-radio-group {
+                label.ant-radio-wrapper {
+                    margin-right: 0;
+
+                    span {
+                        @include smallsize;
+                    }
+                }
+            }
+        }
+
+        .filter-box-sort {
+            @include filterLayout;
+            border-bottom: none;
+
+            label {
+                margin-right: 12px;
+            }
+        }
+
+        .filter-item-content {
+            display: inline-block;
+
+            span {
+                cursor: pointer;
+
+                &.selected {
+                    color: $userColor;
+                }
+            }
+
+            span.ant-radio-inner {
+                width: 13px;
+                height: 13px;
+                top: -1px;
+            }
+
+            .ant-radio-inner:after {
+                top: 3px;
+                left: 3px;
+                width: 5px;
+                height: 5px;
+            }
+        }
+    }
+
+    .booklist-container {
+        .booklist-item:not(:last-child) {
+            @include bottomBorder;
+        }
+
+        .booklist-container-skeleton {
+            padding: 12px;
+        }
+
+        .booklist-item {
+            padding: 12px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            height: 180px;
+            
+            .booklist-item-top {
+                display: flex;
+
+                .booklist-item-top-left {
+                    flex: 1;
+                    line-height: 30px;
+
+                    span {
+                        color: #333;
+                    }
+
+                    .lover-svg {
+                        margin-left: 5px;
+                        color: $iconRed;
+                        font-size: 18px;
+                        margin-top: -2px;
+                    }
+                }
+
+                .booklist-item-top-right {
+                    flex: 0 0 210px;
+                    margin-top: -5px;
+                    
+                    & > i.i-rate {
+                        font-size: 18px;
+                        margin-left: 12px;
+                    }
+
+                    .booklist-item-top-right-qrcode {
+                        font-size: 16px;
+                        margin-left: 12px;
+                        cursor: pointer;
+                        position: relative;
+                    }
+
+                    i.anticon.anticon-star {
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .booklist-item-bottom {
+                display: flex;
+                margin-top: 12px;
+
+                img {
+                    width: 100px;
+                    height: 100px;
+                    padding-right: 20px;
+                    flex: 0 0 120px;
+                }
+
+                .booklist-item-bottom-right {
+                    flex: 1;
+
+                    & > span.desc {
+                        @include smallsize;
+                        display: block;
+                    }
+                    
+                    div.booklist-item-bottom-right-detail {
+                        margin-top: 12px;
+                        @include smallsize;
+                    }
+
+                    p.contributor {
+                        margin: 12px 0 0 0;
+                        @include smallsize;
+                    }
+                }
+            }
+
+            &::before, &::after {
+                content: "";
+                background: $userSecondBGColor;
+                width: 74%;
+                height: 300%;
+                transform: rotate(45deg);
+                position: absolute;
+                top: 25%;
+                right: -100%;
+                z-index: 1;
+                transition: all 0.35s ease;
+                opacity: 0;
+            }
+
+            &::after {
+                width: 90%;
+                height: 135%;
+                right: auto;
+                left: 10%;
+                top: -250%;
+            }
+
+            .booklist-operation {
+                position: absolute;
+                color: $userSecondColor;
+                height: 100%;
+                top: 50%;
+                right:100%;
+                width: 220px;
+                z-index: 50;
+
+                .booklist-operation-item {
+                    display: inline-block;
+                    width: 22%;
+                    text-align: center;
+                    padding: 0 8px;
+                    margin: 0 2px;
+
+                    &:hover, &.selected {
+                        color: #fff;
+                        border-bottom: 2px solid #ddd;
+                    }
+
+                    .icon-svg {
+                        margin-top: 60px;
+                        margin-bottom: 5px;
+                        font-size: 17px;
+                    }
+                }
+            }
+
+            &:hover::before {
+                opacity: 1;
+                right: -45%;
+            }
+
+            &:hover::after {
+                opacity: 1;
+                top: -140%;
+            }
+
+            &:hover {
+                padding: 11px;
+                border: 1px solid $userColor;
+                border-radius: 5px;
+
+                .booklist-operation {
+                    top: 0;
+                    right: 2%;
+                    display: block;
+                    animation: bounceInRight 1s;
+                }
+            }
+        }
+
+        .noData {
+            img {
+                width: 200px;
+                margin: 0 auto;
+                display: block;
+            }
+
+            p {
+                text-align: center;
+                @include smallsize;
+                margin-top: 24px;
+                color: #bbb;
+            }
+        }
+    }
+
+    .booklist-pagination {
+        padding: 24px 0;
+    }
+}
+
+@media screen and (max-width: 940px) {
+    .book-list {
+        .booklist-item {
+            &::before {
+                top: 12% !important;
+            }
+
+            &::after {
+                left: 14% !important;
+            }
+
+            &:hover::before {
+                opacity: 1;
+                right: -50% !important;
+            }
+
+            &:hover::after {
+                opacity: 1;
+                top: -130% !important;
+            }
+        }
+    }
+}
