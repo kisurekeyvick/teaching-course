@@ -48,6 +48,8 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
         handleCancelCallBack();
     }
 
+    const src: string = `${env.browseFileUrl}${encodeURIComponent(source.url)}`;
+
     return (
         <div className='browse-file-modal-box'>
             <Modal
@@ -69,7 +71,7 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
                     <div className={fileFormat === '10' ? 'video-box' : 'common-box'}>
                         <iframe title='view-iframe' name='previewframe' id='previewframe' width='100%'
                             height='100%'
-                            src={`${env.browseFileUrl}${encodeURIComponent(source.url)}`}/>
+                            src={src}/>
                     </div>
             </Modal>
         </div>

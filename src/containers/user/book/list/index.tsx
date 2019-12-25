@@ -205,7 +205,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
     public showDetail = (item: ITeachChapterList) => {
         this.setState({
             modalVisible: true,
-            currentViewSource: item,
+            currentViewSource: {...item, url: item.link},
             updateTime: Date.now()
         });
     }
