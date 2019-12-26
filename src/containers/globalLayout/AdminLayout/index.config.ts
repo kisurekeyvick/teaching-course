@@ -13,6 +13,7 @@ export interface IAdminLayoutState {
 export interface IConfig {
     menuList: IMenuItem[];
     userMenuList: IHeadMenu[];
+    teacherCache: any;
 }
 
 export interface IHeadMenu {

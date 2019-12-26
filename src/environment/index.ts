@@ -11,7 +11,7 @@ export const baseUrlList = {
 
 export const env = {
     name: '教学课程资源平台',
-    footerText: 'Microspicy-Technology ©2019 Author Microspicy Technology',
+    footerText: 'Copyright@Xiamen Infomation School ALL Rights 版权所有@厦门信息学校 闽ICP备 05020335 号',
     /** 
      * 接口请求
      * 例如：baseURL: 'https://some-domain.com/api/'
@@ -20,7 +20,7 @@ export const env = {
     /** 
      * @desc 配置svg的url，配合组件(components/icon/icon.tsx)使用
      */
-    svgUrl: '//at.alicdn.com/t/font_1531539_snraabfwcr.js',
+    svgUrl: '//at.alicdn.com/t/font_1531539_e14d3lv5vfq.js',
     browseFileUrl: 'http://cc.microspicy.com/pdfjs/web/viewer.html?file=',
     officeFileUrl: 'https://view.officeapps.live.com/op/view.aspx?src=',
     videoFileUrl: 'https://file.keking.cn/onlinePreview?url='    

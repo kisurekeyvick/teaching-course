@@ -4,8 +4,8 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
-import { NavLink } from "react-router-dom";
-import { Layout, Icon, Popover, Row, Col, Tooltip, message, Divider } from 'antd';
+import { NavLink, Link } from "react-router-dom";
+import { Layout, Icon, Popover, Row, Col, Tooltip, message, Divider, BackTop, Input } from 'antd';
 import { cloneDeep } from 'lodash';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { SvgComponent } from 'components/icon/icon';
@@ -28,6 +28,8 @@ interface IState {
     [key: string]: any;
     teacherCache: any;
 }
+
+const { Search } = Input;
 
 class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     public config: IConfig;
@@ -168,6 +170,14 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         }
     }
 
+    /** 
+     * @callback
+     * @desc 搜索资源
+     */
+    public handleSearch = (value: string) => {
+        
+    }
+
     public render() {
         const headMenu: React.ReactNode = this.buildHeadMenu();
 
@@ -176,12 +186,14 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     <div className='global-head'>
                         <img className='banner-bg' alt='banner-bg' src={userBannerBgPic}/>
                         <div className='global-head-left'>
-                            <img alt='logo' src={schoolLogo}/>
+                            <Link className='logo-link-home' to='/book'/>
+                            <img alt='logo' src={schoolLogo} />
                         </div>
                         <div className='global-head-right'>
                             <NavLink className='link-item' to='/book' activeClassName='selected'>课程资源</NavLink>
                             <NavLink className='link-item' to='/collection' activeClassName='selected'>收藏</NavLink>
                             <NavLink className='link-item' to='/search' activeClassName='selected'>检索</NavLink>
+                            <Search className='global-search-material' placeholder='搜索课程资源' onSearch={this.handleSearch}/>
                             <Divider type="vertical" />
                             <ul className='right-menu'>
                                 { headMenu }
@@ -197,6 +209,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                         { env.footerText }
                     </Footer>
                 </Content>
+                <BackTop />
             </Layout>
                 
     }

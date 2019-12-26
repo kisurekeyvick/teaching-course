@@ -5,6 +5,7 @@ import { SvgComponent } from 'components/icon/icon';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import { messageFunc } from 'common/utils/function';
 import { ITeachChapterList } from 'common/api/api-interface';
+import './course-tree.scss';
 
 export interface ICourseTreeProps {
     handleClick: Function;
@@ -71,7 +72,10 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
             };
             
             res.length && (state = {...state, ...{
-                menus: res,
+                menus: res.map((item) => {
+                    item.loaded = false;
+                    return item;
+                }),
                 hasData: res.length > 0
             }});
 
@@ -97,11 +101,15 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
             const loading = messageFunc(); 
             this.props.handleClick({ isLoading: 'true' });
             const params: FormData = new FormData();
-            params.set('id', treeNode.props.dataRef.value);
+            const materialID: string = treeNode.props.dataRef.value;
+            params.set('id', materialID);
 
             loadSectionList(params, treeNode, this.state.menus).then(({ menusState, showList }) => {
                 menusState.length && this.setState({
-                    menus: menusState
+                    menus: menusState.map((item: IMenuItem) => {
+                        item.value === materialID && (item.loaded = true);
+                        return item;
+                    })
                 });
                 loading.success();
                 this.pushChapterMaterial(`${treeNode.props.dataRef.value}-0`, menusState);
@@ -120,7 +128,7 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
      * @param selectedKeys 该参数的结构为：materialId-章节的index-章节的id
      * @param otherParmas 
      */
-    public pushChapterMaterial = (selectedKeys: string, stateMenus: IMenuItem[]) => {
+    public pushChapterMaterial = (selectedKeys: string, stateMenus: IMenuItem[], e?: any) => {
         const keysArr: string[] = selectedKeys.split('-');
         const materialID: string = keysArr[0];
         const sectionIndex: number = +keysArr[1];
@@ -135,10 +143,18 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
         /** 如果点击的是最外层 */
         if (keysArr[1] === matchOutermostLayerKey) {
             breadcrumb = [course.name];
-            showList = courseChildren.reduce((cur: ITeachChapterList[], pre: IMenuItem) => {
-                const teachChapterList: ITeachChapterList[] = pre.teachChapterList!;
-                return cur.concat(teachChapterList);
-            }, []);
+
+            /** 判断该课程是否被加载过 */
+            if (!course.loaded) {
+                const treeNode = e.node;
+                return this.handleTreeNodeLoad(treeNode);
+            } else {
+                /** 如果是已经被加载过了 */
+                showList = courseChildren.reduce((cur: ITeachChapterList[], pre: IMenuItem) => {
+                    const teachChapterList: ITeachChapterList[] = pre.teachChapterList!;
+                    return cur.concat(teachChapterList);
+                }, []);
+            }
         } else {
             const section =  courseChildren[sectionIndex];
             breadcrumb = [course.name, section.name];
@@ -163,7 +179,9 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
      * @desc 选择节点 
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
-        this.pushChapterMaterial(selectedKeys[0], this.state.menus);
+        if (selectedKeys.length > 0) {
+            this.pushChapterMaterial(selectedKeys[0], this.state.menus, e);
+        }
     }
 
     /** 
@@ -173,7 +191,7 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
     public buidlTree = () => {
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
-                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-tree-node' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
+                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
@@ -183,7 +201,7 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
                     showLine
                     loadData={this.handleTreeNodeLoad}
                     onSelect={this.selectNode}
-                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-tree'/>}>
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-subway'/>}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>
     }
@@ -191,7 +209,7 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
     public render() {
         const { isLoading } = this.state;
 
-        return <div>
+        return <div className='course-tree-container-box'>
                     <div className='tree-menu'>
                         {
                             isLoading ? <>

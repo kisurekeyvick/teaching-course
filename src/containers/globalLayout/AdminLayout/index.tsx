@@ -2,16 +2,16 @@ import * as React from 'react';
 import { env } from 'environment/index';
 import {connect} from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { Layout, Menu, Icon, Breadcrumb, Popover, Row } from 'antd';
+import { Layout, Menu, Icon, Breadcrumb, Popover, Row, BackTop } from 'antd';
 import { menu, IMenuItem } from 'common/admin-menu/menu';
 import { SvgComponent } from 'components/icon/icon';
 import { Link } from "react-router-dom";
 import './index.scss';
 import { cloneDeep } from 'lodash';
 import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
-import { localStorageService } from 'common/utils/function';
+import { localStorageService, getUserBaseInfo } from 'common/utils/function';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
-import { simpleLogo, loginLogo } from 'common/service/img-collection';
+import { simpleLogo, loginLogo, defaultUserPic } from 'common/service/img-collection';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
@@ -24,7 +24,8 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
 
         this.config = {
             menuList: cloneDeep(menu),
-            userMenuList: cloneDeep(userMenuList)
+            userMenuList: cloneDeep(userMenuList),
+            teacherCache: getUserBaseInfo()
         };
 
         this.state = {
@@ -139,6 +140,8 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
      * @desc 构建用户下拉菜单
      */
     public buildUserPopMenu = (): React.ReactNode => {
+        const { teacherCache } = this.config;
+
         const content: React.ReactNode = <div className='admin-system-user-menulist'>
             {
                 this.config.userMenuList.map((item: IHeadMenu) => {
@@ -155,7 +158,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
         </div>
 
         return <Popover  content={content} placement='bottomRight' trigger={'click'}>
-                    <Icon type='user'/>
+                    <img alt='用户头像' className='user-portrait' src={teacherCache.link || defaultUserPic} />
                 </Popover>
     }
 
@@ -212,6 +215,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                             </Footer>
                         </Content>
                     </Layout>
+                    <BackTop/>
                 </Layout>
     }
 }

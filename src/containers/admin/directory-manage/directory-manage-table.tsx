@@ -138,13 +138,15 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 const editable = this.isEditing(record);
 
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
+                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
+                                { record.children ? '删除课程' : '删除章节' }
+                            </Popconfirm>
                             <Divider type='vertical' />
                             <p><Icon className='operation-box-icon' type='eye' />查看资源</p>
                             <Divider type='vertical' />
                             {
                                 record.children && <>
-                                    <p onClick={() => this.addCourseSecondaryDirectory(record)}><Icon className='operation-box-icon' type='plus' />新增二级目录页</p>
+                                    <p onClick={() => this.addCourseSecondaryDirectory(record)}><Icon className='operation-box-icon' type='plus' />新增章节</p>
                                     <Divider type='vertical' />
                                 </>
                             }
@@ -153,7 +155,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                                     <EditableContext.Consumer>
                                         {
                                             form => (
-                                                <p onClick={() => this.modifyCourseComplete(form, record)}><Icon className='operation-box-icon' type='save' />修改完成</p>
+                                                <p onClick={() => this.modifyCourseComplete(form, record)}><Icon className='operation-box-icon' type='save' />保存修改</p>
                                             )
                                         }
                                     </EditableContext.Consumer>

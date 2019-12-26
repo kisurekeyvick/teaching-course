@@ -11,7 +11,7 @@ export const tabs: ITabItem[] = [
         value: 'selectNode'
     },
     {
-        name: '上传附件',
+        name: '上传文件',
         key: '2',
         value: 'upload'
     },

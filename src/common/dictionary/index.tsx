@@ -14,10 +14,14 @@ import {
 export const dictionary: Map<string, any[]> = new Map([
     /** 资源类型 */
     ['source-type', [
-        { name: '练习题', value: '1' },
-        { name: '电子教材', value: '2' },
-        { name: '课程设计', value: '3' },
-        { name: '电子教程', value: '4' }
+        { name: '课程标准', value: '1' },
+        { name: '教学计划', value: '2' },
+        { name: '参考教材资料', value: '3' },
+        { name: '本地化章节', value: '4' },
+        { name: '实训指导书', value: '5' },
+        { name: '教学课件', value: '6' },
+        { name: '电子教案', value: '7' },
+        { name: '习题资源库', value: '8' }
     ]],
     /** 资源格式 */
     ['source-format', [
@@ -30,7 +34,8 @@ export const dictionary: Map<string, any[]> = new Map([
         { name: '.tif', value: '7' },
         { name: '.pdf', value:'8' },
         { name: '.swf', value: '9' },
-        { name: '.mp4', value: '10'}
+        { name: '.mp4', value: '10'},
+        { name: 'other', value: '11'}
     ]],
     /** 教材操作 */
     ['material-operation', [

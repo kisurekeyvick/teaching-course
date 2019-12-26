@@ -209,7 +209,7 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
         }
 
         return <Form>
-                    <Form.Item className='upload-step-second-form-item' label={'教材封面上传'} key={'1'}>
+                    <Form.Item className='upload-step-second-form-item' label={'资源封面上传'} key={'1'}>
                         <Upload
                             listType="picture-card"
                             fileList={overLinkFile}
@@ -226,7 +226,7 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
                         }
                     </Form.Item>
 
-                    <Form.Item className='upload-step-second-form-item' label={'教材上传'} key={'2'}>
+                    <Form.Item className='upload-step-second-form-item' label={'文件上传'} key={'2'}>
                         <Upload
                             listType="picture-card"
                             fileList={materialFile}

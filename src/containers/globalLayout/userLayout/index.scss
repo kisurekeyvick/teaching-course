@@ -17,7 +17,6 @@
 
     .ant-layout-content {
         margin-top: 100px;
-        min-height: initial;
     }
 
     .global-head {
@@ -35,11 +34,21 @@
         }
 
         .global-head-left {
-            flex: 0 0 500px;
+            flex: 0 0 250px;
+            position: relative;
 
             img {
                 height: 55px;
                 margin-top: 22px;
+            }
+
+            .logo-link-home {
+                position: absolute;
+                opacity: 0;
+                width: 221px;
+                height: 55px;
+                top:22px;
+                left: 0;
             }
         }
 
@@ -47,6 +56,31 @@
             flex: 1;
             text-align: right;
             padding-top: 26px;
+
+            .global-search-material {
+                width: 260px;
+                margin: 0 17px;
+                position: relative;
+
+                & > input {
+                    width: 200px;
+                }
+
+                & > span {
+                    position: absolute;
+                    top:17px;
+                    left: 175px;
+                    transition: all 0.3s;
+                }
+                
+                & > input:focus {
+                    width: 250px;
+                }
+
+                & > input:focus + span {
+                    left: 225px;
+                }
+            }
 
             .link-item {
                 padding: 12px;
@@ -100,7 +134,7 @@
     }
 
     .global-body {
-        height: 100%;
+        // height: 100%;
         @include userLayout;
         margin: 0 auto;
 

@@ -26,7 +26,7 @@ interface IState {
 // const sourceFormat: IDictionaryItem[] = [...dictionary.get('source-format')!];
 
 export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props => {
-    const { title, handleOkCallBack, handleCancelCallBack, footer, source, modalVisible } = props;
+    const { title, handleOkCallBack, footer, source, modalVisible } = props;
 
     const fileFormat: string = String(source.fileFormat);
 
@@ -44,10 +44,6 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
         handleOkCallBack();
     }
 
-    function handleCancel() {
-        handleCancelCallBack();
-    }
-
     const src: string = `${env.browseFileUrl}${encodeURIComponent(source.url)}`;
 
     return (
@@ -56,16 +52,13 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
                 className={`browse-file-modal ${fileFormat === '10' ? 'video-box' : 'common-box'}`}
                 title={title}
                 onOk={handleOk}
-                onCancel={handleCancel}
+                onCancel={handleOk}
                 {...otherConfig}
                 visible={modalVisible}
                 maskClosable={false}
                 footer={[
                     <Button key='cancel' onClick={handleOk}>
-                        { footer ? footer.left : '取消' }
-                    </Button>,
-                    <Button key='sure' type='primary' onClick={handleCancel}>
-                        { footer ? footer.right : '确认' }
+                        { footer ? footer.left : '关闭' }
                     </Button>
                 ]}>
                     <div className={fileFormat === '10' ? 'video-box' : 'common-box'}>

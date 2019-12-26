@@ -66,7 +66,7 @@ export interface IMessageFuncRes {
  * @param successDesc 
  * @param errorDesc 
  */
-export function messageFunc(loadDesc: string = '加载数据中'): IMessageFuncRes {
+export function messageFunc(loadDesc: string = '加载数据中...'): IMessageFuncRes {
     const loading = message.loading(loadDesc, 0);
 
     return {

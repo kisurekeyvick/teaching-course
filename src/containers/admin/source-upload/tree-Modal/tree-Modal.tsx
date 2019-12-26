@@ -153,7 +153,7 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
     public buidlTree = () => {
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
-                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-tree-node' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
+                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
@@ -163,7 +163,7 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
                     showLine
                     loadData={this.handleTreeNodeLoad}
                     onSelect={this.selectNode}
-                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-tree'/>}>
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-subway'/>}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>
     }
