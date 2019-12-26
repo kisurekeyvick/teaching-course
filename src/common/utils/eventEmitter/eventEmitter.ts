@@ -7,8 +7,10 @@ class EventEmitter {
     public on = (event: string, cb: any) => {
         const listener = this.listener;
 
-        if (listener[event] && listener[event].length >= this.maxListener) {
-            throw new Error(`监听器最大数量是${this.maxListener}，您已超出限制`);
+        console.log('listener[event]', listener[event]);
+
+        if (listener[event] && listener[event].length > this.maxListener) {
+            return;
         }
 
         if (listener[event] instanceof Array) {

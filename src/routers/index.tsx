@@ -4,6 +4,7 @@ import UserContainer from 'containers/user/user';
 import BehindUserContainer from 'containers/admin/login/login';
 import UserLayout from 'containers/globalLayout/userLayout/index';
 import AdminLayout from 'containers/globalLayout/adminLayout/index';
+import HiddenRouter from 'containers/user/hidden-route/index';
 import { pagesRouter, ILoadableRoute, behindPagesRouter } from './routerList';
 import { localStorageService } from 'common/utils/function';
 import { cloneDeep } from 'lodash';
@@ -78,6 +79,7 @@ class RouteClass extends React.Component<IProps, any> {
                     {/** 前台路由 */
                         pageType === 'front' && 
                         <Router>
+                            <Route exact={false} path='/' component={HiddenRouter}/>
                             <Switch>
                                 <Route exact={true} path='/user/:status' component={UserContainer}/>
                                 { frontPageNeedLogin ? <Redirect from='/' to='/user/login'/> : <UserLayout>

@@ -11,16 +11,17 @@ import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { SvgComponent } from 'components/icon/icon';
 import { ISignOutResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
-import { getUserBaseInfo, localStorageService } from 'common/utils/function';
+import { getUserBaseInfo, localStorageService, debounce } from 'common/utils/function';
 import { defaultUserPic, schoolLogo, userBannerBgPic } from 'common/service/img-collection';
-import { globalEventEmitter, EventEmitterList } from 'common/utils/eventEmitter/list';
+import { globalEventEmitter, EventEmitterList, bookSearchEventEmitter } from 'common/utils/eventEmitter/list';
 import './index.scss';
 
 const { Header, Content, Footer } = Layout;
 
 type IGlobalLayoutProps = {
     children: any;
-    searchBookContent: Function;
+    updateSearchBook: Function;
+    history: any;
     [key: string]: any;
 }
 
@@ -40,7 +41,8 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
 
         this.config = {
             headMenus:  cloneDeep(headMenus),
-            menusContent: this.menusContentList(menusContentConfig)
+            menusContent: this.menusContentList(menusContentConfig),
+            searchDebounce: debounce(2000)
         };
 
         this.state = {
@@ -175,7 +177,15 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
      * @desc 搜索资源
      */
     public handleSearch = (value: string) => {
-        
+        const { history } = this.props;
+
+        if (history.hasOwnProperty('push')) {
+            history.push(`/search`);
+
+           this.config.searchDebounce(() => {
+                bookSearchEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, value);
+           });
+        }
     }
 
     public render() {
@@ -186,7 +196,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     <div className='global-head'>
                         <img className='banner-bg' alt='banner-bg' src={userBannerBgPic}/>
                         <div className='global-head-left'>
-                            <Link className='logo-link-home' to='/book'/>
+                            <Link className='logo-link-home' to='/book' ref={this.childref}/>
                             <img alt='logo' src={schoolLogo} />
                         </div>
                         <div className='global-head-right'>
@@ -202,7 +212,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     </div>
                 </Header>
                 <Content>
-                    <div className='global-body' ref={this.childref}>
+                    <div className='global-body'>
                         { this.props.children }
                     </div>
                     <Footer style={{ textAlign: 'center' }}>
@@ -215,13 +225,16 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     }
 }
 
-function mapStateToProps() {
-    return {};
+function mapStateToProps(state: any) {
+    const { history } = state.globalReducer;
+    return {
+        history
+    };
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        searchBookContent: bindActionCreators(updateSearchBook, dispatch)
+        updateSearchBook: bindActionCreators(updateSearchBook, dispatch)
     }
 }
 
