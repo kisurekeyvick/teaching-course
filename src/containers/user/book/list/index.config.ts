@@ -29,7 +29,7 @@ sourceType = sourceType.map((item: IFilterConfigItem) => {
     return {
         ...item,
         value: String(item.value),
-        selected: false
+        selected: item.value === '' ? true : false
     };
 });
 
@@ -48,7 +48,7 @@ export const filterConfig: IFilterConfig = {
     type: [...sourceType],
     format: [...sourceFormat],
     sort: [
-        { name: '默认', value: 'default', selected: false },
+        { name: '默认', value: 'default', selected: true },
         { name: '时间', value: 'time', selected: false, order: 'down' },
         { name: '下载', value: 'download', selected: false, order: 'down' }
     ]

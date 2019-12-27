@@ -383,6 +383,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                             </div>
                         }
                         <div className='filter-box-type'>
+                            <label>资源类型：</label>
                             { this.buildfilterContent({ sourceKey: 'type', componentType: 'common'}) }
                         </div>
                         <div className='filter-box-format'>

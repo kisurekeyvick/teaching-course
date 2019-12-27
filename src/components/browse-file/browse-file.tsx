@@ -23,9 +23,7 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
     const fileFormat: string = String(source.fileFormat);
 
     /** 资源的类型如果是10(视频)，那么就显示半屏幕，否则显示全屏 */
-    const layout = fileFormat === '10' ? {
-        
-    } : { width: '100%', style: { top: 0, height: '100%' } };
+    const layout = { width: '100%', style: { top: 0, height: '100%' } };
 
     /** 其他配置 */
     const otherConfig = {
@@ -60,7 +58,7 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
     return (
         <div className='browse-file-modal-box'>
             <Modal
-                className={`browse-file-modal ${fileFormat === '10' ? 'video-box' : 'common-box'}`}
+                className={`browse-file-modal common-box`}
                 title={title}
                 onOk={handleOk}
                 onCancel={handleOk}
@@ -72,7 +70,7 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
                         { footer ? footer.left : '关闭' }
                     </Button>
                 ]}>
-                    <div className={fileFormat === '10' ? 'video-box' : 'common-box'}>
+                    <div className={'common-box'}>
                         <iframe title='view-iframe' name='previewframe' id='previewframe' width='100%'
                             height='100%'
                             src={src}/>

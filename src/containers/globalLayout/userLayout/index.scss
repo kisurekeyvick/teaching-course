@@ -17,6 +17,15 @@
 
     .ant-layout-content {
         margin-top: 100px;
+        margin-bottom: 48px;
+    }
+
+    .ant-layout-footer {
+        padding: 12px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 300;
     }
 
     .global-head {
@@ -137,6 +146,7 @@
         // height: 100%;
         @include userLayout;
         margin: 0 auto;
+        min-height: 600px;
 
         .expection {
             padding-top: 100px;
