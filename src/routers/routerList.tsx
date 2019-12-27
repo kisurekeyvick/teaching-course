@@ -1,5 +1,6 @@
 import Loadable from 'react-loadable';
 import { ILoadableRoute } from './interface';
+import LoadingComponent from 'components/loading/index';
 
 /** 前台用户登录 */
 export const userRouter: ILoadableRoute[] = [
@@ -7,7 +8,7 @@ export const userRouter: ILoadableRoute[] = [
         path: '/user/:status',
         component: Loadable({
             loader: () => import('../containers/user/user'),
-            loading: () => null,
+            loading: LoadingComponent,
             modules: ['user']
         }),
         key: 1,

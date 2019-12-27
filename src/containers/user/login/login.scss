@@ -2,18 +2,24 @@
 
 .user-login {
     display: flex;
-    background-color: #fff;
-    box-shadow: 5px 5px 5px #ddd;
+    box-shadow: 10px 10px 80px #ffe58f;
+    border-radius: 2px;
     height: 460px;
+    position: relative;
+    // background: transparent url('../../../assets/images/loginBigBg.webp') no-repeat;
+    // background-size: 100% 100%;
 
     .user-login-left {
         flex: 0 0 450px;
+    }
 
-        img {
-            height: 460px;
-            width: 520px;
-            opacity: 0.8;
-        }
+    .background-image {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top:0;
+        z-index: -1;
     }
 
     .user-login-form {
@@ -37,6 +43,7 @@
             text-align: center;
             margin: 80px 0 65px 0;
             font-family: 'STHeit';
+            animation: zoomInUp 2s;
 
             span:last-child {
                 color: $userSecondBGColor;

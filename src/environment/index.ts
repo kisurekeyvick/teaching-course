@@ -21,7 +21,8 @@ export const env = {
      * @desc 配置svg的url，配合组件(components/icon/icon.tsx)使用
      */
     svgUrl: '//at.alicdn.com/t/font_1531539_e14d3lv5vfq.js',
-    browseFileUrl: 'http://cc.microspicy.com/pdfjs/web/viewer.html?file=',
+    /** 三个浏览文件的地址 */
     officeFileUrl: 'https://view.officeapps.live.com/op/view.aspx?src=',
-    videoFileUrl: 'https://file.keking.cn/onlinePreview?url='    
+    pdfFileUrl: 'http://cc.microspicy.com/onlinePreview?url=',
+    otherFileUrl: 'http://cc.microspicy.com/onlinePreview?url='    
 };

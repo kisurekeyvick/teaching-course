@@ -14,7 +14,7 @@ import { LoginParams } from 'containers/user/interface';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { ILogin } from 'common/api/api-interface';
 import { messageFunc } from 'common/utils/function';
-import { loginBgPic } from 'common/service/img-collection';
+import { loginBigBgPic } from 'common/service/img-collection';
 
 const FormItem = Form.Item;
 
@@ -245,8 +245,9 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
         return(
             <div className='user-login'>
+                <img className='background-image' alt='logo' src={loginBigBgPic}/>
                 <div className='user-login-left'>
-                    <img className='background-image' alt='logo' src={loginBgPic}/>
+                    {/*  */}
                 </div>
                 <Form className='user-login-form' onSubmit={this.handleSubmit}>
                     <p className='login-title'><span>欢迎登录</span><span>用户系统</span></p>

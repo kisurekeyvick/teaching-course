@@ -6,7 +6,7 @@ import './index.scss';
 import { IMenuItem } from './index.config';
 import { SvgComponent } from 'components/icon/icon';
 // import { api } from 'common/api/index';
-import noDataImg from 'assets/images/noData.png';
+import { noData } from 'common/service/img-collection';
 import { IMaterialStatusRequest, IMaterialStatusResponse, ITeachChapterList } from 'common/api/api-interface';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
@@ -259,7 +259,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                                 <Skeleton active/>
                                 <Skeleton active/>
                             </> : hasData ? this.buidlTree() : <>
-                                <img className='no-data-img' alt='无数据' src={noDataImg} />
+                                <img className='no-data-img' alt='无数据' src={noData} />
                                 <p className='no-data-desc'>暂时没有教材目录</p>
                             </>
                         }

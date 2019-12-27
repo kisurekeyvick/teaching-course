@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import { Layout, Menu, Icon, Breadcrumb, Popover, Row, BackTop } from 'antd';
 import { menu, IMenuItem } from 'common/admin-menu/menu';
 import { SvgComponent } from 'components/icon/icon';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import './index.scss';
 import { cloneDeep } from 'lodash';
 import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
@@ -84,10 +84,10 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                         </SubMenu>
             } else {
                 return <Menu.Item key={item.key} onClick={() => this.updateBreadcrumbInfo(item)}>
-                            <Link to={item.path}>
+                            <NavLink className='link-item' activeClassName='selected' to={item.path}>
                                 <SvgComponent className={`svg-icon ${item.tags}`} type={item.tags} />
                                 { !this.state.collapsed ? item.title : <span>{item.title}</span>}
-                            </Link>
+                            </NavLink>
                         </Menu.Item>
             }
         }
@@ -190,7 +190,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                         <div className='slide-logo-box'>
                             <img className='slide-logo' alt='slide-logo' src={this.state.collapsed ? simpleLogo : loginLogo} />
                         </div>
-                        <Menu theme='dark' mode='inline' defaultSelectedKeys={['1']}>
+                        <Menu theme='dark' className='admin-layout-menu' mode='inline' defaultSelectedKeys={['1']}>
                             { menuList }
                         </Menu>
                     </Sider>

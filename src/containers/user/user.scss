@@ -1,6 +1,10 @@
 @import '../../assets/styles/global.container.scss';
 
 .user-system-login-box {
+    height: 100%;
+    background: #fff url('../../assets/images/loginBigBg.webp') no-repeat;
+    background-size: 100% 100%;
+
     .user-container-box {
         width: 850px;
         display: block;
@@ -8,50 +12,3 @@
         margin-top:5%;
     }
 }
-
-// .layout-login-box {
-// //    @include layout-login-box;
-
-//     img.background-image {
-//         position: absolute;
-//         left: 0;
-//         top:0;
-//         width: 100%;
-//         opacity: 0.6;
-//     }
-
-
-//     .layout-login-box-head {
-//         // @include layout-login-box-head;
-//         img {
-//             background-color: $userColor;
-//             border-radius: 5px;
-//         }
-//     }
-
-//     .user-container-box{
-//     //    @include content-container-box;
-
-//         .user-login .ant-tabs-bar {
-//             text-align: center;
-//         }
-//     }
-// }
-
-// @media (min-width: 769px) {
-//     .layout-login-box {
-//         .login-content-box {
-//             // @include login-content-box;
-//         }
-//     }
-// }
-
-// @media (max-width: 768px) {
-//     .layout-login-box {
-//         .login-content-box {
-//             // @include login-content-box-midScreen;
-//             // background-color: pink;
-//         }
-//     }
-// }
-

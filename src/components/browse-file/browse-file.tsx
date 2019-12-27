@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
-// import { dictionary, IDictionaryItem } from 'common/dictionary/index';
 import { env } from 'environment/index';
 import './browse-file.scss';
 
@@ -17,13 +16,6 @@ export interface IBrowseFileModalProps {
     source: any;
     [key: string]: any;
 }
-
-interface IState {
-    [key: string]: any;
-}
-
-/** 资源格式 */
-// const sourceFormat: IDictionaryItem[] = [...dictionary.get('source-format')!];
 
 export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props => {
     const { title, handleOkCallBack, footer, source, modalVisible } = props;
@@ -44,7 +36,26 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
         handleOkCallBack();
     }
 
-    const src: string = `${env.browseFileUrl}${encodeURIComponent(source.url)}`;
+    const src: string = ((): string => {
+        let innerUrl: string = '';
+
+        if (fileFormat === '1' ||
+            fileFormat === '2' ||
+            fileFormat === '3' ||
+            fileFormat === '4' ||
+            fileFormat === '5' ||
+            fileFormat === '6') {
+            /** 适用于： .doc .docx .xls .xlsx .ppt .pptx */
+            innerUrl = env.officeFileUrl;
+        } else if (fileFormat === '8') {
+            innerUrl = env.pdfFileUrl;
+        } else {
+            /** jpg，jpeg，png，gif，tif, zip,rar,jar,tar,gzip, mp3,wav,mp4,flv */
+            innerUrl = env.otherFileUrl;
+        }
+
+        return `${innerUrl}${encodeURIComponent(source.url)}`;
+    })();
 
     return (
         <div className='browse-file-modal-box'>

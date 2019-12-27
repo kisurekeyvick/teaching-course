@@ -12,6 +12,32 @@
             background-color: #fff;
         }
 
+        .admin-layout-menu {
+            li.ant-menu-item {
+                background-color: transparent;
+                padding-left: 0 !important;
+                padding-right: 0;
+                margin-bottom: 0;
+                margin-top: 1px;
+
+                a.link-item {
+                    width: 100%;
+                    padding-left: 24px;
+
+                    &.selected,
+                    &:hover {
+                        background-color: $userColor;
+                    }
+                }
+
+                &:last-child {
+                    a.link-item {
+                        margin-bottom: 0px;
+                    }
+                }
+            }
+        }
+
         ul.ant-menu {
             li:first-child {
                 margin-top: 0;

@@ -5,6 +5,7 @@ import { SvgComponent } from 'components/icon/icon';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import { messageFunc } from 'common/utils/function';
 import { ITeachChapterList } from 'common/api/api-interface';
+import { noData } from 'common/service/img-collection';
 import './course-tree.scss';
 
 export interface ICourseTreeProps {
@@ -207,7 +208,7 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
     }
 
     public render() {
-        const { isLoading } = this.state;
+        const { isLoading, hasData } = this.state;
 
         return <div className='course-tree-container-box'>
                     <div className='tree-menu'>
@@ -215,7 +216,10 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
                             isLoading ? <>
                                 <Skeleton active/>
                                 <Skeleton active/>
-                            </> : this.buidlTree()
+                            </> : hasData ? this.buidlTree() : <>
+                                <img className='no-data-img' alt='无数据' src={noData} />
+                                <p className='no-data-desc'>暂时没有教材目录</p>
+                            </>
                         }
                     </div>
                 </div>

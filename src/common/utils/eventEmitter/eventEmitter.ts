@@ -7,8 +7,6 @@ class EventEmitter {
     public on = (event: string, cb: any) => {
         const listener = this.listener;
 
-        console.log('listener[event]', listener[event]);
-
         if (listener[event] && listener[event].length > this.maxListener) {
             return;
         }
