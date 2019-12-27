@@ -8,7 +8,6 @@ import defaultCollectionPic from 'assets/images/defaultCollectionPic.jpg';
 /** 登录页图片 */
 import loginBgPic from 'assets/images/loginBg.webp';
 import loginLogo from 'assets/images/logo.jpg';
-import loginBigBgPic from 'assets/images/loginBigBg.webp';
 /**用户banner背景图 */
 import userBannerBgPic from 'assets/images/user-banner-bg.png';
 /** 后台logo */
@@ -37,7 +36,6 @@ export {
     /** 登录页背景图片 */
     loginBgPic,
     loginLogo,
-    loginBigBgPic,
     /**用户banner背景图 */
     userBannerBgPic,
     /** 后台logo */

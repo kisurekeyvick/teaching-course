@@ -3,7 +3,6 @@ import { Form, Input, Button, Checkbox, Icon, Row, Col } from 'antd';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IForm, loginFormItem } from './login-config';
-import { CookieService } from 'common/utils/cache/cookie';
 import { api } from 'common/api/index';
 import LocalStorageService from 'common/utils/cache/local-storage';
 import './login.scss';
@@ -13,8 +12,8 @@ import { bindActionCreators } from 'redux';
 import { LoginParams } from 'containers/user/interface';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { ILogin } from 'common/api/api-interface';
-import { messageFunc } from 'common/utils/function';
-import { loginBigBgPic } from 'common/service/img-collection';
+import { messageFunc, getScreenInfo } from 'common/utils/function';
+import { env } from 'environment/index';
 
 const FormItem = Form.Item;
 
@@ -27,10 +26,10 @@ interface IState {
     verificationImage: string;
     errorMsg: string;
     isLoading: boolean;
+    style: any;
 }
 
 class UserLogin extends React.PureComponent<IProps, IState> {
-    private _cookie: CookieService;
     public localStorageService: LocalStorageService;
     public config: any;
     public timeInterval: any;
@@ -41,7 +40,10 @@ class UserLogin extends React.PureComponent<IProps, IState> {
         this.state = {
             errorMsg: '',
             verificationImage: '',
-            isLoading: false
+            isLoading: false,
+            style: {
+                height: '610px'
+            }
         };
 
         this.config = {
@@ -49,7 +51,6 @@ class UserLogin extends React.PureComponent<IProps, IState> {
             tabIndex: '1'
         };
 
-        this._cookie = new CookieService();
         this.localStorageService = new LocalStorageService();
     }
 
@@ -59,6 +60,20 @@ class UserLogin extends React.PureComponent<IProps, IState> {
      */
     public componentDidMount() {
         this.readRememberPwd();
+        window.addEventListener('resize', this.handleResize);
+    }
+
+    /**
+     * @func
+     * @desc 处理屏幕发生变化
+     */
+    public handleResize = (e: any) => {
+        const { offsetHeight } = getScreenInfo();
+        this.setState({
+            style: {
+                height: offsetHeight + 'px'
+            }
+        });
     }
 
     /**
@@ -132,7 +147,6 @@ class UserLogin extends React.PureComponent<IProps, IState> {
                 };
 
                 const loading = messageFunc('正在登录中...');
-
 
                 this.setState({
                     isLoading: true
@@ -242,15 +256,13 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
     public render() {
         const { getFieldDecorator } = this.props.form;
+        const { style } = this.state;
 
         return(
-            <div className='user-login'>
-                <img className='background-image' alt='logo' src={loginBigBgPic}/>
-                <div className='user-login-left'>
-                    {/*  */}
-                </div>
+            <div className='user-login' style={style}>
+                <div className='login-left-bg' />
                 <Form className='user-login-form' onSubmit={this.handleSubmit}>
-                    <p className='login-title'><span>欢迎登录</span><span>用户系统</span></p>
+                    <p className='login-title'><span>城市轨道交通课程资源管理系统</span></p>
                     {
                         this.config.loginFormItem.map((item: IForm, index: number) => {
                             return <FormItem
@@ -262,6 +274,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
                         })
                     }
                 </Form>
+                <p className='footer'>{env.footerText}</p>
             </div>
         );
     }
