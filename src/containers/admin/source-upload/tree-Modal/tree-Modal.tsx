@@ -74,7 +74,7 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
             
             res.length && (state = {...state, ...{
                 menus: res,
-                hasData: false//res.length > 0
+                hasData: res.length > 0
             }});
 
             this.setState({

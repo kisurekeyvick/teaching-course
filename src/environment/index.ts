@@ -23,6 +23,6 @@ export const env = {
     svgUrl: '//at.alicdn.com/t/font_1531539_e14d3lv5vfq.js',
     /** 三个浏览文件的地址 */
     officeFileUrl: 'https://view.officeapps.live.com/op/view.aspx?src=',
-    pdfFileUrl: 'http://cc.microspicy.com/onlinePreview?url=',
-    otherFileUrl: 'http://cc.microspicy.com/onlinePreview?url='    
+    pdfFileUrl: 'http://cc.microspicy.com:8012/onlinePreview?url=',
+    otherFileUrl: 'http://cc.microspicy.com:8012/onlinePreview?url='    
 };
