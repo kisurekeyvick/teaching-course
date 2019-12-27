@@ -73,6 +73,7 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
                     <div className={'common-box'}>
                         <iframe title='view-iframe' name='previewframe' id='previewframe' width='100%'
                             height='100%'
+                            allowFullScreen={true}
                             src={src}/>
                     </div>
             </Modal>

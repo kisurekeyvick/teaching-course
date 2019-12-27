@@ -60,6 +60,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
      */
     public componentDidMount() {
         this.readRememberPwd();
+        this.handleResize();
         window.addEventListener('resize', this.handleResize);
     }
 
@@ -67,7 +68,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
      * @func
      * @desc 处理屏幕发生变化
      */
-    public handleResize = (e: any) => {
+    public handleResize = (e?: any) => {
         const { offsetHeight } = getScreenInfo();
         this.setState({
             style: {
@@ -252,6 +253,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
     public componentWillUnmount() {
         this.timeInterval && clearInterval(this.timeInterval);
+        window.removeEventListener('resize', this.handleResize);
     }
 
     public render() {
