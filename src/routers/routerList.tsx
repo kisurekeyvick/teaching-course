@@ -127,6 +127,16 @@ export const behindPagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
+        path: '/admin/system/userManage',
+        component: Loadable({
+            loader: () => import('../containers/admin/user-manage/user-manage'),
+            loading: () => null,
+            modules: ['userManage']
+        }),
+        key: 5,
+        exact: true
+    },
+    {
         path: '/admin/system/state',
         component: Loadable({
             loader: () => import('../containers/admin/system-status/system-status'),

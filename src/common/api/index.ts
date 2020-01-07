@@ -49,12 +49,13 @@ export const api = {
     updateCoverFile: httpRequest(`POST /material/updateCoverFile`),
     /** 上传用户头像 */
     updateTeacherFile: httpRequest(`POST /material/updateTeacherFile`),
-
     /** 下载文件 */
     download: httpRequest(`GET /material/download`),
-
     /** 更新章节资源信息 */
     updateResources: httpRequest(`POST /material/updateResources`),
+
+    /** 查询个人信息列表 */
+    queryPersonList: httpRequest(`POST /teacher/queryPersonList`),
     
     /** mock */
     loadSourceManageResult: (param?: any) => {

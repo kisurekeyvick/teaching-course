@@ -34,7 +34,7 @@
                 }
 
                 &:hover {
-                    color: $color;
+                    color: $userColor;
                 }
             }
 
@@ -47,13 +47,19 @@
                 margin: 0 12px;
 
                 &:hover {
-                    color: $color;
+                    color: $userColor;
                 }
             }
 
             .cancel-svg {
                 margin-top: 3px;
                 float: left;
+            }
+
+            p.highlighted {
+                color: $userColor;
+                animation: heartBeat 3.5s;
+                animation-iteration-count: infinite;
             }
         }
     }

@@ -501,3 +501,30 @@ export interface IUpdateResourcesRequest extends ITeachChapterResList {
 }
 
 export interface IUpdateResourcesResponseResult extends IAjaxCommonResponse {}
+
+export interface IQueryTeachChapterListRes {
+    hasNextPage: boolean;
+    list: ITeachChapterResList[];
+    pageNum: number;
+    pageSize: number;
+    total: number;
+}
+
+/** 教师列表查询返回结果 */
+export interface IQueryPersonListResponseResult extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: {
+            teachChapterList: IQueryTeachChapterListRes;
+        };
+        success: boolean;
+    },
+}
+
+export interface IQueryPersonListRequestParams {
+    pageInfo?:{
+        pageNum: number;
+        pageSize: number;
+    };
+}

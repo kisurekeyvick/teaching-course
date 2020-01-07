@@ -90,7 +90,6 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
      * @desc 取消
      */
     public cancel = () => {
-        console.log(this.props.source);
         this.props.callBack({ type: 'cancel' });
     }
 

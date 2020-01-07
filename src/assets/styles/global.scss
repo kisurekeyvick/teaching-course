@@ -569,3 +569,30 @@ $secondMainColor: #f9f0ff;
       opacity: 1
   }
 }
+
+@keyframes heartBeat {
+  0% {
+      -webkit-transform: scale(1);
+      transform: scale(1)
+  }
+
+  14% {
+      -webkit-transform: scale(1.3);
+      transform: scale(1.3)
+  }
+
+  28% {
+      -webkit-transform: scale(1);
+      transform: scale(1)
+  }
+
+  42% {
+      -webkit-transform: scale(1.3);
+      transform: scale(1.3)
+  }
+
+  70% {
+      -webkit-transform: scale(1);
+      transform: scale(1)
+  }
+}

@@ -34,7 +34,7 @@ export const menu: IMenuItem[] = [
         children: []
     },
     {
-        title: '用户状态',
+        title: '用户管理',
         path: '/admin/system/userManage',
         key: '4',
         tags: 'icon-user-manage',
