@@ -57,7 +57,8 @@ export const api = {
     queryPersonList: httpRequest(`POST /teacher/queryPersonList`),
     /** 注册用户 */
     register: httpRequest(`POST /teacher/register`),
-    
+    /** 删除用户 */
+    deleteUser: httpRequest(`POST /teacher/delete`),
     /** mock */
     loadSourceManageResult: (param?: any) => {
         return new Promise((resolve: any, reject: any) => {

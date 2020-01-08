@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { api } from 'common/api/index';
 import { messageFunc } from 'common/utils/function';
-import { IQueryPersonListResponseResult, IQueryPersonListRequestParams, ITeachChapterResList } from 'common/api/api-interface';
+import { IQueryPersonListResponseResult, IQueryPersonListRequestParams, IQueryPersonDataResult, 
+    IAccountInfo, IDeleteUserResponseResult } from 'common/api/api-interface';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { Table, Row, Col, Button, Icon, Skeleton, Popconfirm, Divider, Drawer } from 'antd';
 import { IConfig, columns } from './user-manage.config';
@@ -16,11 +17,12 @@ interface IUserManageContainerProps {
 }
 
 interface IState {
-    dataSource: ITeachChapterResList[];
+    dataSource: IQueryPersonDataResult[];
     hasData: boolean;
     pageInfo: IPageInfo;
     isLoading: boolean;
     selectedRowKeys: string[] | number[];
+    selectedRows: IQueryPersonDataResult[];
     showDrawer: boolean;
     currentEditSource: any;
     operation: 'add' | 'edit' | null; 
@@ -39,6 +41,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
             isLoading: false,
             showDrawer: false,
             selectedRowKeys: [],
+            selectedRows: [],
             currentEditSource: null,
             operation: null,
             /** 分页 */
@@ -59,7 +62,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
         const userName = columns.find((item: any) => item.dataIndex === 'userName');
 
         if (operation) {
-            operation.render = (text: string, record: ITeachChapterResList) => {
+            operation.render = (text: string, record: IAccountInfo) => {
                 return <span className='table-operation-box'>
                             <Popconfirm title='请确认删除。' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
                             <Divider type='vertical' />
@@ -69,7 +72,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
         }
 
         if (userName) {
-            userName.render = (text: string, record: ITeachChapterResList) => {
+            userName.render = (text: string, record: IAccountInfo) => {
                 return <span>
                     <img className='user-img' alt='user-img' src={record.link || defaultUserPic}/>
                     <span>{text}</span>
@@ -96,7 +99,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
             if (res.status === 200 && res.data.success) {
                 const { total, pageNum, list = [], pageSize } = res.data.result.teachChapterList;
                 
-                const dataSource = list.map((item: ITeachChapterResList, index: number) => {
+                const dataSource = list.map((item: IQueryPersonDataResult, index: number) => {
                     item.key = `${item.id}-${index}`;
                     item.updateTime = item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : '';
                     return item;
@@ -171,18 +174,53 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
     }
 
     /** 
+     * @callback
+     * @desc 批量删除用户
+     */
+    public batchDeleteUser = () => {
+        const { selectedRows } = this.state;
+        const requestArr:Array<Promise<any>> = selectedRows.map((item: IQueryPersonDataResult) => {
+            const params: FormData = new FormData();
+            params.set('teacherId', item.teacherId);
+            return api.deleteUser(params);
+        });
+
+        const loading = messageFunc('正在删除中...');
+        Promise.all(requestArr).then((res: IDeleteUserResponseResult[]) => {
+            if (res.every((resItem: IDeleteUserResponseResult) => resItem.status === 200 && resItem.data.success)) {
+                loading.success(res[0].data.desc);
+                this.loadPersonList();
+            } else {
+                loading.error('删除失败');
+            }
+        });
+    }
+
+    /** 
      * @func
      * @desc 删除用户
      */
-    public deleteSource = (record: ITeachChapterResList) => {
-        // const loading = messageFunc('正在删除中...');
+    public deleteSource = (record: IAccountInfo) => {
+        const loading = messageFunc('正在删除中...');
+
+        const params: FormData = new FormData();
+        params.set('teacherId', record.teacherId);
+
+        api.deleteUser(params).then((res: IDeleteUserResponseResult) => {
+            if (res.status === 200 && res.data.success) {
+                loading.success(res.data.desc);
+                this.loadPersonList();
+            } else {
+                loading.error(res.data.desc);
+            }
+        });
     }
 
     /** 
      * @func
      * @desc 编辑用户
      */
-    public editSource = (record: ITeachChapterResList) => {
+    public editSource = (record: IAccountInfo) => {
         this.setState({
             operation: 'edit',
             showDrawer: true,
@@ -194,8 +232,8 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
      * @callback
      * @desc 选中改变
      */
-    public onSelectChange = (keys: string[] | number[], selectedRows: any) => {
-        this.setState({ selectedRowKeys: keys });
+    public onSelectChange = (keys: string[] | number[], selectedRows: IQueryPersonDataResult[]) => {
+        this.setState({ selectedRowKeys: keys, selectedRows });
     }
 
     /** 
@@ -250,7 +288,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Button type='primary' className='btn-refresh' onClick={this.addUser}><Icon type="plus" />新增用户</Button>
-                            <Button type='primary' disabled={selectedRowKeys.length === 0} className='btn-refresh' onClick={this.addUser}><Icon type="delete" />批量删除</Button>
+                            <Button type='primary' disabled={selectedRowKeys.length === 0} className='btn-refresh' onClick={this.batchDeleteUser}><Icon type="delete" />批量删除</Button>
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
                     </Row>

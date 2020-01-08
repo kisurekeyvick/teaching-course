@@ -505,7 +505,7 @@ export interface IUpdateResourcesResponseResult extends IAjaxCommonResponse {}
 
 export interface IQueryTeachChapterListRes {
     hasNextPage: boolean;
-    list: ITeachChapterResList[];
+    list: IQueryPersonDataResult[];
     pageNum: number;
     pageSize: number;
     total: number;
@@ -551,3 +551,10 @@ export interface IUserRegisterResponseResult extends IAjaxCommonResponse {
         success: boolean;
     }
 }
+
+/** 删除用户请求参数 */
+export interface IDeleteUserRequestParams {
+    teacherId: string;
+}
+
+export interface IDeleteUserResponseResult extends IAjaxCommonResponse {}

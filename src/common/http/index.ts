@@ -35,7 +35,8 @@ const httpRequest: IHttpRequest = (config: Config) => {
         }
 
         if (Object.prototype.toString.call(value) === '[object FormData]') {
-            (value as FormData).set('teacherId', teacherInfo.teacherId);
+            const exit =  (value as FormData).get('teacherId');
+            !exit && (value as FormData).set('teacherId', teacherInfo.teacherId);
         }
 
         return request({
