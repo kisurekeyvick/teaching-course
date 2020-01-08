@@ -533,3 +533,66 @@ $secondMainColor: #f9f0ff;
       transform: translateZ(0)
   }
 }
+
+@keyframes zoomInUp {
+  0% {
+      opacity: 0;
+      -webkit-transform: scale3d(.1,.1,.1) translate3d(0,1000px,0);
+      transform: scale3d(.1,.1,.1) translate3d(0,1000px,0);
+      -webkit-animation-timing-function: cubic-bezier(.55,.055,.675,.19);
+      animation-timing-function: cubic-bezier(.55,.055,.675,.19)
+  }
+
+  60% {
+      opacity: 1;
+      -webkit-transform: scale3d(.475,.475,.475) translate3d(0,-60px,0);
+      transform: scale3d(.475,.475,.475) translate3d(0,-60px,0);
+      -webkit-animation-timing-function: cubic-bezier(.175,.885,.32,1);
+      animation-timing-function: cubic-bezier(.175,.885,.32,1)
+  }
+}
+
+@keyframes rotateInUpLeft {
+  0% {
+      -webkit-transform-origin: left bottom;
+      transform-origin: left bottom;
+      -webkit-transform: rotate(45deg);
+      transform: rotate(45deg);
+      opacity: 0
+  }
+
+  to {
+      -webkit-transform-origin: left bottom;
+      transform-origin: left bottom;
+      -webkit-transform: translateZ(0);
+      transform: translateZ(0);
+      opacity: 1
+  }
+}
+
+@keyframes heartBeat {
+  0% {
+      -webkit-transform: scale(1);
+      transform: scale(1)
+  }
+
+  14% {
+      -webkit-transform: scale(1.3);
+      transform: scale(1.3)
+  }
+
+  28% {
+      -webkit-transform: scale(1);
+      transform: scale(1)
+  }
+
+  42% {
+      -webkit-transform: scale(1.3);
+      transform: scale(1.3)
+  }
+
+  70% {
+      -webkit-transform: scale(1);
+      transform: scale(1)
+  }
+}

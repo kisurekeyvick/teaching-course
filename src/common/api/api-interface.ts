@@ -329,6 +329,7 @@ export interface IQueryPersonDataResult {
     teacherId: string;
     updateTime: string;
     userName: string;
+    [key: string]: any;
 }
 
 /** 查询个人信息返回参数 */
@@ -501,3 +502,59 @@ export interface IUpdateResourcesRequest extends ITeachChapterResList {
 }
 
 export interface IUpdateResourcesResponseResult extends IAjaxCommonResponse {}
+
+export interface IQueryTeachChapterListRes {
+    hasNextPage: boolean;
+    list: IQueryPersonDataResult[];
+    pageNum: number;
+    pageSize: number;
+    total: number;
+}
+
+/** 教师列表查询返回结果 */
+export interface IQueryPersonListResponseResult extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: {
+            teachChapterList: IQueryTeachChapterListRes;
+        };
+        success: boolean;
+    },
+}
+
+export interface IQueryPersonListRequestParams {
+    pageInfo?:{
+        pageNum: number;
+        pageSize: number;
+    };
+}
+
+/** 用户注册请求参数 */
+export interface IUserRegisterRequestParams {
+    loginName: string;
+    password: string;
+}
+
+export interface IAccountInfo extends IQueryPersonDataResult {
+    id: number;
+    teacherId: string;
+    [key: string]: any;
+}
+
+/** 用户注册完成返回结果 */
+export interface IUserRegisterResponseResult extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: IAccountInfo;
+        success: boolean;
+    }
+}
+
+/** 删除用户请求参数 */
+export interface IDeleteUserRequestParams {
+    teacherId: string;
+}
+
+export interface IDeleteUserResponseResult extends IAjaxCommonResponse {}

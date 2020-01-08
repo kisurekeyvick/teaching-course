@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal, Button } from 'antd';
-// import { dictionary, IDictionaryItem } from 'common/dictionary/index';
 import { env } from 'environment/index';
 import './browse-file.scss';
 
@@ -18,22 +17,13 @@ export interface IBrowseFileModalProps {
     [key: string]: any;
 }
 
-interface IState {
-    [key: string]: any;
-}
-
-/** 资源格式 */
-// const sourceFormat: IDictionaryItem[] = [...dictionary.get('source-format')!];
-
 export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props => {
-    const { title, handleOkCallBack, handleCancelCallBack, footer, source, modalVisible } = props;
+    const { title, handleOkCallBack, footer, source, modalVisible } = props;
 
     const fileFormat: string = String(source.fileFormat);
 
     /** 资源的类型如果是10(视频)，那么就显示半屏幕，否则显示全屏 */
-    const layout = fileFormat === '10' ? {
-        
-    } : { width: '100%', style: { top: 0, height: '100%' } };
+    const layout = { width: '100%', style: { top: 0, height: '100%' } };
 
     /** 其他配置 */
     const otherConfig = {
@@ -44,33 +34,46 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
         handleOkCallBack();
     }
 
-    function handleCancel() {
-        handleCancelCallBack();
-    }
+    const src: string = ((): string => {
+        let innerUrl: string = '';
 
-    const src: string = `${env.browseFileUrl}${encodeURIComponent(source.url)}`;
+        if (fileFormat === '1' ||
+            fileFormat === '2' ||
+            fileFormat === '3' ||
+            fileFormat === '4' ||
+            fileFormat === '5' ||
+            fileFormat === '6') {
+            /** 适用于： .doc .docx .xls .xlsx .ppt .pptx */
+            innerUrl = env.officeFileUrl;
+        } else if (fileFormat === '8') {
+            innerUrl = env.pdfFileUrl;
+        } else {
+            /** jpg，jpeg，png，gif，tif, zip,rar,jar,tar,gzip, mp3,wav,mp4,flv */
+            innerUrl = env.otherFileUrl;
+        }
+
+        return `${innerUrl}${encodeURIComponent(source.url)}`;
+    })();
 
     return (
         <div className='browse-file-modal-box'>
             <Modal
-                className={`browse-file-modal ${fileFormat === '10' ? 'video-box' : 'common-box'}`}
+                className={`browse-file-modal common-box`}
                 title={title}
                 onOk={handleOk}
-                onCancel={handleCancel}
+                onCancel={handleOk}
                 {...otherConfig}
                 visible={modalVisible}
                 maskClosable={false}
                 footer={[
                     <Button key='cancel' onClick={handleOk}>
-                        { footer ? footer.left : '取消' }
-                    </Button>,
-                    <Button key='sure' type='primary' onClick={handleCancel}>
-                        { footer ? footer.right : '确认' }
+                        { footer ? footer.left : '关闭' }
                     </Button>
                 ]}>
-                    <div className={fileFormat === '10' ? 'video-box' : 'common-box'}>
+                    <div className={'common-box'}>
                         <iframe title='view-iframe' name='previewframe' id='previewframe' width='100%'
                             height='100%'
+                            allowFullScreen={true}
                             src={src}/>
                     </div>
             </Modal>

@@ -8,6 +8,7 @@ export interface IFormItem {
     controlName: string;
     controlType?: string;
     source?: IDictionaryItem[];
+    maxLength?: number;
     state: string;
 }
 
@@ -30,8 +31,8 @@ export const formItems: IFormItem[] = [
         state: 'location',
     },
     {
-        label: '标题',
-        placeholder: '请输入标题',
+        label: '课程标题',
+        placeholder: '请输入课程标题',
         key: '3',
         rules: [
             {
@@ -44,11 +45,12 @@ export const formItems: IFormItem[] = [
         controlType: 'text'
     },
     {
-        label: '描述',
-        placeholder: '请输入描述',
+        label: '教学目标',
+        placeholder: '请输入教学目标(字数不超过200)',
         key: '4',
         controlName: 'input',
         controlType: 'textarea',
+        maxLength: 200,
         state: 'desc'
     },
     {

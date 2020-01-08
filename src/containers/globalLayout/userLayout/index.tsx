@@ -4,23 +4,24 @@ import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateSearchBook } from 'store/globalLayout/action';
 import { IHeadMenu, headMenus, IConfig, menusContentConfig, IMenusContentConfig } from './index.config';
-import { NavLink } from "react-router-dom";
-import { Layout, Icon, Popover, Row, Col, Tooltip, message, Divider } from 'antd';
+import { NavLink, Link } from "react-router-dom";
+import { Layout, Icon, Popover, Row, Col, Tooltip, message, Divider, BackTop, Input } from 'antd';
 import { cloneDeep } from 'lodash';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { SvgComponent } from 'components/icon/icon';
 import { ISignOutResponseResult } from 'common/api/api-interface';
 import { api } from 'common/api/index';
-import { getUserBaseInfo, localStorageService } from 'common/utils/function';
+import { getUserBaseInfo, localStorageService, debounce } from 'common/utils/function';
 import { defaultUserPic, schoolLogo, userBannerBgPic } from 'common/service/img-collection';
-import { globalEventEmitter, EventEmitterList } from 'common/utils/eventEmitter/list';
+import { globalEventEmitter, EventEmitterList, bookSearchEventEmitter } from 'common/utils/eventEmitter/list';
 import './index.scss';
 
 const { Header, Content, Footer } = Layout;
 
 type IGlobalLayoutProps = {
     children: any;
-    searchBookContent: Function;
+    updateSearchBook: Function;
+    history: any;
     [key: string]: any;
 }
 
@@ -28,6 +29,8 @@ interface IState {
     [key: string]: any;
     teacherCache: any;
 }
+
+const { Search } = Input;
 
 class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
     public config: IConfig;
@@ -38,7 +41,8 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
 
         this.config = {
             headMenus:  cloneDeep(headMenus),
-            menusContent: this.menusContentList(menusContentConfig)
+            menusContent: this.menusContentList(menusContentConfig),
+            searchDebounce: debounce(2000)
         };
 
         this.state = {
@@ -168,6 +172,22 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         }
     }
 
+    /** 
+     * @callback
+     * @desc 搜索资源
+     */
+    public handleSearch = (value: string) => {
+        const { history } = this.props;
+
+        if (history.hasOwnProperty('push')) {
+            history.push(`/search`);
+
+           this.config.searchDebounce(() => {
+                bookSearchEventEmitter.emit(EventEmitterList.SEARCHCOURSEEVENT, value);
+           });
+        }
+    }
+
     public render() {
         const headMenu: React.ReactNode = this.buildHeadMenu();
 
@@ -176,12 +196,14 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     <div className='global-head'>
                         <img className='banner-bg' alt='banner-bg' src={userBannerBgPic}/>
                         <div className='global-head-left'>
-                            <img alt='logo' src={schoolLogo}/>
+                            <Link className='logo-link-home' to='/book' ref={this.childref}/>
+                            <img alt='logo' src={schoolLogo} />
                         </div>
                         <div className='global-head-right'>
                             <NavLink className='link-item' to='/book' activeClassName='selected'>课程资源</NavLink>
                             <NavLink className='link-item' to='/collection' activeClassName='selected'>收藏</NavLink>
                             <NavLink className='link-item' to='/search' activeClassName='selected'>检索</NavLink>
+                            <Search className='global-search-material' placeholder='搜索课程资源' onSearch={this.handleSearch}/>
                             <Divider type="vertical" />
                             <ul className='right-menu'>
                                 { headMenu }
@@ -190,25 +212,29 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     </div>
                 </Header>
                 <Content>
-                    <div className='global-body' ref={this.childref}>
+                    <div className='global-body'>
                         { this.props.children }
                     </div>
                     <Footer style={{ textAlign: 'center' }}>
                         { env.footerText }
                     </Footer>
                 </Content>
+                <BackTop />
             </Layout>
                 
     }
 }
 
-function mapStateToProps() {
-    return {};
+function mapStateToProps(state: any) {
+    const { history } = state.globalReducer;
+    return {
+        history
+    };
 }
 
 function mapDispatchToProps(dispatch: any) {
     return {
-        searchBookContent: bindActionCreators(updateSearchBook, dispatch)
+        updateSearchBook: bindActionCreators(updateSearchBook, dispatch)
     }
 }
 

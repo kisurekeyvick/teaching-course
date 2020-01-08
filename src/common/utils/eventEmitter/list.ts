@@ -11,3 +11,4 @@ export enum EventEmitterList {
 }
 
 export const globalEventEmitter = new EventEmitter(20);
+export const bookSearchEventEmitter = new EventEmitter(2);

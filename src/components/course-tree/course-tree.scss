@@ -1,4 +1,6 @@
-.admin-course-tree-modal {
+@import '../../assets/styles/global.scss';
+
+.course-tree-container-box {
     .svg-icon-course {
         font-size: 18px !important;
         transform: rotate(90deg) !important;
@@ -22,21 +24,20 @@
         margin: 5px;
     }
 
-    .ant-modal-body {
-        padding: 12px 24px;
+    .ant-tree-node-selected {
+        background-color: $userSecondBGColor !important;
+        color: #fff !important;
     }
 
-    .tree-menu {
-        .no-data-img {
-            width: 200px;
-            display: block;
-            margin: 0 auto;
-        }
-    
-        .no-data-desc {
-            text-align: center;
-            margin-top: 24px;
-            font-size: 12px;
-        }
+    .no-data-img {
+        width: 200px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .no-data-desc {
+        text-align: center;
+        margin-top: 24px;
+        font-size: 12px;
     }
 }

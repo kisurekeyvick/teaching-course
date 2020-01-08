@@ -33,6 +33,7 @@ interface IDataSource {
     size: string;
     type: string;
     children?: IDataSource[];
+    materialId?: string;
     [key: string]: any;
 }
 
@@ -41,6 +42,7 @@ interface IState {
     hasData: boolean;
     isLoading: boolean;
     editingKey: string;
+    editMaterId: string;
 }
 
 // const { Search } = Input;
@@ -63,7 +65,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             dataSource: [],
             hasData: false,
             isLoading: true,
-            editingKey: ''
+            editingKey: '',
+            editMaterId: ''
         };
     }
 
@@ -136,15 +139,18 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
         if (target) {
             target.render = (text: string, record: any) => {
                 const editable = this.isEditing(record);
+                const isChildrenEidt = this.isChildrenEditing(record);
 
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
+                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
+                                { record.children ? '删除课程' : '删除章节' }
+                            </Popconfirm>
                             <Divider type='vertical' />
                             <p><Icon className='operation-box-icon' type='eye' />查看资源</p>
                             <Divider type='vertical' />
                             {
                                 record.children && <>
-                                    <p onClick={() => this.addCourseSecondaryDirectory(record)}><Icon className='operation-box-icon' type='plus' />新增二级目录页</p>
+                                    <p onClick={() => this.addCourseSecondaryDirectory(record)}><Icon className='operation-box-icon' type='plus' />新增章节</p>
                                     <Divider type='vertical' />
                                 </>
                             }
@@ -153,7 +159,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                                     <EditableContext.Consumer>
                                         {
                                             form => (
-                                                <p onClick={() => this.modifyCourseComplete(form, record)}><Icon className='operation-box-icon' type='save' />修改完成</p>
+                                                <p className={record.children? 'chapter-parent': ''} onClick={() => this.modifyCourseComplete(form, record)}><Icon className='operation-box-icon' type='save' />保存修改</p>
                                             )
                                         }
                                     </EditableContext.Consumer>
@@ -162,8 +168,21 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                                     <Divider type='vertical' />
                                 </> : 
                                 <>
-                                    <p onClick={() => this.editCourse(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
-                                    <Divider type='vertical' />
+                                    {
+                                        isChildrenEidt ? <>
+                                            <EditableContext.Consumer>
+                                                {
+                                                    form => (
+                                                        <p className={record.children? 'highlighted': ''} onClick={() => this.modifyCourseComplete(form, record)}><Icon className='operation-box-icon' type='save' />保存修改</p>
+                                                    )
+                                                }
+                                            </EditableContext.Consumer>
+                                            <Divider type='vertical' />
+                                        </> : <>
+                                            <p onClick={() => this.editCourse(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
+                                            <Divider type='vertical' />
+                                        </>
+                                    }
                                 </>
                             }
                             <p onClick={() => this.moveCourse(record, 'up')}><Icon className='operation-box-icon' type='arrow-up' />上移</p>
@@ -181,6 +200,24 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 是否处于编辑状态
      */
     public isEditing = (record: ITableRecord) => record.key === this.state.editingKey;
+    
+    /**
+     * @func
+     * @desc 课程下的某个章节正在处于编辑状态
+     */
+    public isChildrenEditing = (record: ITableRecord): boolean => {
+        const { editingKey, editMaterId } = this.state;
+
+        if (editingKey === record.key) {
+            return false;
+        }
+
+        if (record.value === editMaterId) {
+            return true;
+        }
+
+        return false;
+    } 
 
     /** 
      * @callback
@@ -414,7 +451,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 取消修改课程
      */
     public cancelModifyCourse = (record: ITableRecord) => {
-        this.setState({ editingKey: '' });
+        this.setState({ editingKey: '', editMaterId: '' });
     }
 
     /** 
@@ -422,7 +459,10 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 编辑教程
      */
     public editCourse = (record: ITableRecord) => {
-        this.setState({ editingKey: record.key });
+        this.setState({ 
+            editingKey: record.key,
+            editMaterId: record.materialId! 
+        });
     }
 
     /** 
@@ -592,7 +632,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                             score: item.s,
                             size: item.size,
                             type: String(item.type),
-                            loaded: true
+                            loaded: true,
+                            materialId: item.materialId
                         };
                     }).sort((x: IDataSource, y: IDataSource) => {
                         return y.weight - x.weight;

@@ -43,6 +43,7 @@ export interface ITableRecord {
     size: string;
     type: string;
     weight: number;
+    materialId?: string;
     [key: string]: any;
 }
 

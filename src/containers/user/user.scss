@@ -1,57 +1,9 @@
 @import '../../assets/styles/global.container.scss';
 
 .user-system-login-box {
-    .user-container-box {
-        width: 850px;
-        display: block;
-        margin: 0 auto;
-        margin-top:5%;
+    height: 100%;
+
+    .login-content-box {
+        height: 100%;
     }
 }
-
-// .layout-login-box {
-// //    @include layout-login-box;
-
-//     img.background-image {
-//         position: absolute;
-//         left: 0;
-//         top:0;
-//         width: 100%;
-//         opacity: 0.6;
-//     }
-
-
-//     .layout-login-box-head {
-//         // @include layout-login-box-head;
-//         img {
-//             background-color: $userColor;
-//             border-radius: 5px;
-//         }
-//     }
-
-//     .user-container-box{
-//     //    @include content-container-box;
-
-//         .user-login .ant-tabs-bar {
-//             text-align: center;
-//         }
-//     }
-// }
-
-// @media (min-width: 769px) {
-//     .layout-login-box {
-//         .login-content-box {
-//             // @include login-content-box;
-//         }
-//     }
-// }
-
-// @media (max-width: 768px) {
-//     .layout-login-box {
-//         .login-content-box {
-//             // @include login-content-box-midScreen;
-//             // background-color: pink;
-//         }
-//     }
-// }
-

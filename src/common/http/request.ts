@@ -91,7 +91,7 @@ function relogin(desc: string) {
     const pageType = localStorageService.get(StorageItemName.PAGETYPE);
     const result: string = pageType ? pageType.value['type'] : 'front';
 
-    message.error(`${desc}, 5秒钟后将跳转至登录页。`, 5, () => {
+    message.error(`${desc}, 2秒钟后将跳转至登录页。`, 2, () => {
         window.location.href = result === 'behind' ? '/admin/login' : '/user/login';
     });
 }

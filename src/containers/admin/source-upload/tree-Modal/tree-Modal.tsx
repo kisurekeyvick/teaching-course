@@ -4,6 +4,7 @@ import { IMenuItem } from 'containers/user/book/directory/index.config';
 import { SvgComponent } from 'components/icon/icon';
 import { loadMaterialMenu, loadSectionList } from 'common/service/tree-ajax';
 import { messageFunc } from 'common/utils/function';
+import { noData } from 'common/service/img-collection';
 import './tree-Modal.scss';
 
 export interface ITreeModalProps {
@@ -153,23 +154,23 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
     public buidlTree = () => {
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
-                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-tree-node' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
+                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
         };
 
-        return <Tree 
+        return <Tree
                     showLine
                     loadData={this.handleTreeNodeLoad}
                     onSelect={this.selectNode}
-                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-tree'/>}>
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-subway'/>}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>
     }
 
     public render() {
-        const { isLoading } = this.state;
+        const { isLoading, hasData } = this.state;
 
         return <div>
                     <Modal 
@@ -186,7 +187,10 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
                                     isLoading ? <>
                                         <Skeleton active/>
                                         <Skeleton active/>
-                                    </> : this.buidlTree()
+                                    </> : hasData ? this.buidlTree() : <>
+                                        <img className='no-data-img' alt='无数据' src={noData} />
+                                        <p className='no-data-desc'>暂时没有教材目录</p>
+                                    </>
                                 }
                             </div>
                     </Modal>

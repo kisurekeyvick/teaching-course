@@ -13,6 +13,7 @@ import { downloadFile } from 'common/utils/function';
 import { ITeachChapterList } from 'common/api/api-interface';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
 import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
+import { debounce } from 'common/utils/function';
 import './index.scss';
 
 interface IState {
@@ -26,12 +27,14 @@ interface IState {
     isLoading: boolean;
     modalVisible: boolean;
     currentViewSource: ITeachChapterList | null;
+    searchCriteria: any;
     updateTime: number;
 }
 
 interface IConifg {
     maxScore: number;
-    materialOperation: IDictionaryItem[]
+    materialOperation: IDictionaryItem[];
+    searchDebounce: any;
 }
 
 class BookListContainer extends React.PureComponent<IBookListProps, IState> {
@@ -55,12 +58,15 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
             isLoading: false,
             modalVisible: false,
             currentViewSource: null,
+            /** 搜索条件 */
+            searchCriteria: {},
             updateTime: 0
         };
 
         this.config = {
             maxScore: 10,
-            materialOperation: dictionary.get('material-operation')!
+            materialOperation: dictionary.get('material-operation')!,
+            searchDebounce: debounce(1500)
         };
     }
 
@@ -95,7 +101,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
      * @func
      * @desc 搜索条件点击
      */
-    public filterBtnClick = (item: IFilterConfigItem, sourceKey: string) => {
+    public filterBtnClick = (item: IFilterConfigItem, sourceKey: string, order: string) => {
         let items:IFilterConfigItem[] = this.state.filterConfig[sourceKey];
 
         items = items.map((i: IFilterConfigItem) => {
@@ -126,6 +132,9 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                 [sourceKey]: items
             }
         });
+
+        const actualOrder = order === 'down' ? 'up' : 'down';
+        this.filterDataSource({ name: sourceKey, value: String(item.value), order: actualOrder });
     }
 
     /** 
@@ -135,6 +144,83 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
     public radioGroupChange = (e: any) => {
         this.setState({
             format: e.target.value
+        });
+
+        this.filterDataSource({ name: 'format', value: e.target.value });
+    }
+
+    /** 
+     * @func
+     * @desc 进行数据过滤
+     */
+    public filterDataSource = ({ name, value, order = '' }: { name: string; value: string, order?: string }) => {
+        const { searchDebounce } = this.config;
+        const { searchCriteria } = this.state;
+        const currentSearchCriteria = {
+            ...searchCriteria,
+            [name]: value
+        };
+
+        this.setState({
+            searchCriteria: currentSearchCriteria,
+            isLoading: true,
+            updateTime: Date.now()
+        }, () => {
+            searchDebounce(() => {
+                let { sourceBooklist, pageInfo } = this.state;
+                /** 如果原本无数据，则不需要排序筛选 */
+                if (sourceBooklist.length === 0) {
+                    this.setState({
+                        isLoading: false,
+                        updateTime: Date.now()
+                    });
+
+                    return;
+                }
+
+                 /** 条件 */
+                const criteria = this.state.searchCriteria;
+                let booklist: ITeachChapterList[] = [];
+
+                /** 如果存在资源格式 */
+                if (criteria.hasOwnProperty('format')) {
+                    booklist = sourceBooklist.filter((item: ITeachChapterList) => item.fileFormat === criteria.format);
+                }
+
+                /** 如果存在资源类型 */
+                if (criteria.hasOwnProperty('type')) {
+                    const source: ITeachChapterList[] =  booklist.length > 0 ? booklist : sourceBooklist;
+                    booklist = source.filter((item: ITeachChapterList) => item.fileType === criteria.type);
+                }
+
+                /** 如果存在排序 */
+                if (criteria.hasOwnProperty('sort')) {
+                    const source: ITeachChapterList[] =  booklist.length > 0 ? booklist : sourceBooklist;
+                    /** 这里如果使用的是default那么则不会进行排序 */
+                    (source.length > 0 && value !== 'default') && source.sort((x: ITeachChapterList, y: ITeachChapterList) => {
+                        if (value === 'time') {
+                            return order === 'up' ? new Date(y.updateTime).getTime() - new Date(x.updateTime).getTime() :
+                            new Date(x.updateTime).getTime() - new Date(y.updateTime).getTime();
+                        }
+
+                        return order === 'up' ? y.downloadCount - x.downloadCount : x.downloadCount - y.downloadCount;
+                    });
+                    
+                    booklist = source;
+                }
+
+                this.setState({
+                    booklist,
+                    pageInfo: {
+                        ...pageInfo,
+                        currentPage: 1,
+                        totalCount: booklist.length
+                    },
+                    hasData: booklist.length > 0,
+                    isLoading: false,
+                    updateTime: Date.now()
+                });
+            });
         });
     }
 
@@ -234,7 +320,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                         (type === 'common' || type === undefined) ?
                         items.map((item: IFilterConfigItem, index: number) => {
                             const spanContent:React.ReactNode = <span key={item.value} className={`${item.selected ? 'selected' : ''}`} 
-                                                                    onClick={() => this.filterBtnClick(item, sourceKey)}>
+                                                                    onClick={() => this.filterBtnClick(item, sourceKey, item.order || '')}>
                                                                     { item.name }
                                                                     { item.order && <Icon type={`arrow-${item.order}`} /> }
                                                                 </span>;
@@ -297,6 +383,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                             </div>
                         }
                         <div className='filter-box-type'>
+                            <label>资源类型：</label>
                             { this.buildfilterContent({ sourceKey: 'type', componentType: 'common'}) }
                         </div>
                         <div className='filter-box-format'>

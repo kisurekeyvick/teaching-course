@@ -24,17 +24,17 @@ interface IFilterConfig {
 
 /** 资源类型 */
 let sourceType: IFilterConfigItem[] = [...(dictionary.get('source-type')!)];
-sourceType.unshift({ name: '全部', value: '0' });
+sourceType.unshift({ name: '全部', value: '' });
 sourceType = sourceType.map((item: IFilterConfigItem) => {
     return {
         ...item,
         value: String(item.value),
-        selected: false
+        selected: item.value === '' ? true : false
     };
 });
 
 let sourceFormat: IFilterConfigItem[] = [...(dictionary.get('source-format')!)];
-sourceFormat.unshift({ name: '全部', value: '0' });
+sourceFormat.unshift({ name: '全部', value: '' });
 sourceFormat = sourceFormat.map((item: IFilterConfigItem) => {
     return {
         ...item,
@@ -48,10 +48,9 @@ export const filterConfig: IFilterConfig = {
     type: [...sourceType],
     format: [...sourceFormat],
     sort: [
-        { name: '默认', value: 'default', selected: false, order: 'down' },
-        { name: '时间', value: 'time', selected: false },
-        { name: '下载', value: 'download', selected: false },
-        { name: '评分', value: 'score', selected: false }
+        { name: '默认', value: 'default', selected: true },
+        { name: '时间', value: 'time', selected: false, order: 'down' },
+        { name: '下载', value: 'download', selected: false, order: 'down' }
     ]
 };
 

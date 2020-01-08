@@ -6,11 +6,12 @@
 }
 
 .book-container {
-    height: 100%;
+    // height: 100%;
 
     .book-body {
         display: flex;
-        height: 100%;
+        // height: 100%;
+        margin-bottom: 24px;
 
         .lefeAnimate, .rightAnimate {
             animation: slideInUp 1.5s;

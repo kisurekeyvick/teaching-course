@@ -54,11 +54,6 @@ export default class UserContainer extends React.Component<IProps, IState> {
                     {/* <img className='background-image' style={this.state.style} alt='logo' src={env.loginBackground}/> */}
                     <div className='login-content-box'>
                         <Row>
-                            {/* <Col span={24}>
-                                <div className='layout-login-box-head'>
-                                    <img alt='logo' src={schoolLogo} />
-                                </div>
-                            </Col> */}
                             <Col span={24}>
                                 <div className='user-container-box'>
                                     <UserLogin {...loginProps}/>

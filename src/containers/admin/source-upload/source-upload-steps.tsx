@@ -77,7 +77,6 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
      */
     public handleUploadStepFirst = (result:IAddSectionResponseResultDataResult) => {
         const { enableTabs } = this.state;
-        console.log(result);
         enableTabs.push('upload');
         this.setState({
             enableTabs,

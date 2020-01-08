@@ -1,45 +1,33 @@
 @import '../../../assets/styles/global.container.scss';
 
 .user-login {
-    display: flex;
     background-color: #fff;
-    box-shadow: 5px 5px 5px #ddd;
-    height: 460px;
+    width: 100%;
 
-    .user-login-left {
-        flex: 0 0 450px;
-
-        img {
-            height: 460px;
-            width: 520px;
-            opacity: 0.8;
-        }
+    .login-left-bg {
+        width: calc(100% - 300px);
+        background: #fff url('../../../assets/images/loginBigBg.jpg') no-repeat;
+        background-size: 100% 100%;
+        height: 100%;
+        float: left;
     }
 
     .user-login-form {
-        flex: 1;
-    }
-
-
-    .ant-tabs-bar {
-        border-bottom: 0px;
-    }
-
-    .user-login-form {
-       @include login-form;
-       padding: 18px 50px 18px 50px;
+        @include login-form;
+        padding: 18px 30px 18px 30px;
+        width: 300px;
+        float: right;
 
         p.login-title {
-            color: #000;
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 15px;
             text-transform: uppercase;
             text-align: center;
-            margin: 80px 0 65px 0;
+            margin: 80px 48px 65px 48px;
             font-family: 'STHeit';
+            animation: zoomInUp 2s;
 
             span:last-child {
-                color: $userSecondBGColor;
+                color: #444;
                 margin-left: 8px;
             }
         }
@@ -142,5 +130,18 @@
         .ant-tabs-nav-scroll {
             text-align: center;
         }
+    }
+
+    .ant-tabs-bar {
+        border-bottom: 0px;
+    }
+
+    .footer {
+        text-align: center;
+        font-size: 12px;
+        position: fixed;
+        bottom: 24px;
+        width: 200px;
+        right: 50px;
     }
 }

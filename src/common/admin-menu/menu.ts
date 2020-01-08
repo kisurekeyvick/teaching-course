@@ -9,21 +9,21 @@ export interface IMenuItem {
 
 export const menu: IMenuItem[] = [
     {
+        title: '目录管理',
+        path: '/admin/system/directoryManage',
+        key: '1',
+        tags: 'icon-tree-manage',
+        parentKey: null,
+        children: []
+    },
+    {
         title: '资源上传',
         path: '/admin/system/upload',
-        key: '1',
+        key: '2',
         tags: 'icon-upload-manage',
         parentKey: null,
         children: [
         ]
-    },
-    {
-        title: '目录管理',
-        path: '/admin/system/directoryManage',
-        key: '2',
-        tags: 'icon-tree-manage',
-        parentKey: null,
-        children: []
     },
     {
         title: '资源管理',
@@ -34,7 +34,7 @@ export const menu: IMenuItem[] = [
         children: []
     },
     {
-        title: '用户状态',
+        title: '用户管理',
         path: '/admin/system/userManage',
         key: '4',
         tags: 'icon-user-manage',

@@ -6,7 +6,7 @@
 }
 
 @mixin smallsize {
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .book-list {
@@ -68,7 +68,8 @@
             span {
                 cursor: pointer;
 
-                &.selected {
+                &.selected,
+                &:hover {
                     color: $userColor;
                 }
             }
@@ -84,6 +85,10 @@
                 left: 3px;
                 width: 5px;
                 height: 5px;
+            }
+
+            i.anticon.anticon-arrow-down {
+                font-size: 12px;
             }
         }
     }
@@ -162,6 +167,8 @@
                     & > span.desc {
                         @include smallsize;
                         display: block;
+                        max-height: 40px;
+                        overflow: hidden;
                     }
                     
                     div.booklist-item-bottom-right-detail {
@@ -213,6 +220,7 @@
                     text-align: center;
                     padding: 0 8px;
                     margin: 0 2px;
+                    color: #fff;
 
                     &:hover, &.selected {
                         color: #fff;
@@ -238,8 +246,8 @@
             }
 
             &:hover {
-                padding: 11px;
-                border: 1px solid $userColor;
+                padding: 12px;
+                // border: 1px solid $userColor;
                 border-radius: 5px;
 
                 .booklist-operation {

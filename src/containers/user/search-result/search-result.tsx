@@ -1,11 +1,10 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { Divider, Skeleton, Tag, Row, Col, message, Input } from 'antd';
+import { Divider, Skeleton, Tag, Row, Col, message } from 'antd';
 import { IDataSource } from './search-result.config';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { api } from 'common/api/index';
 import { IMaterialSearchRequest, IMaterialSearchResponse, IMaterialSearchList } from 'common/api/api-interface';
-import { EventEmitterList, globalEventEmitter } from 'common/utils/eventEmitter/list';
 import { messageFunc, debounce, downloadFile } from 'common/utils/function';
 import { defaultUserPic } from 'common/service/img-collection';
 import { dictionary, IDictionaryItem } from 'common/dictionary/index';
@@ -14,6 +13,7 @@ import { noData } from 'common/service/img-collection';
 import { SvgComponent } from 'components/icon/icon';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
 import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
+import { EventEmitterList, bookSearchEventEmitter } from 'common/utils/eventEmitter/list';
 import './search-result.scss';
 
 interface ISearchResultProps {
@@ -36,9 +36,10 @@ interface IState {
     pageInfo: IPageInfo;
     modalVisible: boolean;
     currentViewSource: IDataSource | null;
+    searchCount: number;
 }
 
-const { Search } = Input;
+// const { Search } = Input;
 
 class SearchResultContainer extends React.PureComponent<ISearchResultProps, IState> {
     public config: IConfig;
@@ -55,7 +56,8 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             /** 分页 */
             pageInfo: {...defaultPageInfo},
             modalVisible: false,
-            currentViewSource: null
+            currentViewSource: null,
+            searchCount: 0
         };
 
 
@@ -74,21 +76,20 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
 
     public componentDidMount() {
         const self = this;
-        const initParams = this.getMaterialSearchRequestParams();
-        this.loadSearchResult(initParams);
-        
-        globalEventEmitter.on(EventEmitterList.SEARCHCOURSEEVENT, function(...res: any[]) {
-            if (res[0].searchBook !== self.config.searchBookHistory) {
-                self.config.searchBookHistory = res[0].searchBook;
-                initParams.content = res[0].searchBook;
-                self.loadSearchResult(initParams);
-            }
+
+        bookSearchEventEmitter.on(EventEmitterList.SEARCHCOURSEEVENT, function(content: string) {
+            self.config.searchBookHistory = content;
+
+            const initParams = self.getMaterialSearchRequestParams();
+            initParams.content = content;
+
+            self.loadSearchResult(initParams);
         });
     }
 
     /** 
      * @func
-     * @desc 加载修改结果
+     * @desc 加载搜索结果
      */
     public loadSearchResult = (params: IMaterialSearchRequest) => {
         const loading = messageFunc();
@@ -115,7 +116,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     }
                 });
 
-                const { pageInfo } = this.state;
+                const { pageInfo, searchCount } = this.state;
                 const { total, pageNum } = teachMaterialDto;
 
                 this.setState({
@@ -128,7 +129,8 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                             pageSize: params.pageInfo.pageSize,
                             totalCount: total
                         }
-                    }
+                    },
+                    searchCount: searchCount + 1
                 });
 
                 loading.success(res.data.desc);
@@ -387,9 +389,9 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
 
         return (
             <div className='search-result-container animateCss'>
-                <div className='search-control-box'>
+                {/* <div className='search-control-box'>
                     <Search className='search-control' placeholder='搜索教材资源' onSearch={this.searchBook}/>
-                </div>
+                </div> */}
                 <div className='search-conditions'>
                     { this.buildfilterNode(searchSourceType, searchSourceFormat) }
                 </div>
@@ -421,6 +423,10 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                 </div>
             </div>
         )
+    }
+
+    public componentWillUnmount() {
+        bookSearchEventEmitter.removeAllListener(EventEmitterList.SEARCHCOURSEEVENT);
     }
 }
 

@@ -29,13 +29,14 @@ const httpRequest: IHttpRequest = (config: Config) => {
         let value = payload;
         const teacherInfo = getUserBaseInfo();
 
-        if (Object.prototype.toString.call(value) === '[object Object]') {
+        if (Object.prototype.toString.call(value) === '[object Object]' && !(value!).hasOwnProperty('teacherId')) {
             value = {...value, 
                 ...teacherInfo && {teacherId: teacherInfo.teacherId}}
         }
 
         if (Object.prototype.toString.call(value) === '[object FormData]') {
-            (value as FormData).set('teacherId', teacherInfo.teacherId);
+            const exit =  (value as FormData).get('teacherId');
+            !exit && (value as FormData).set('teacherId', teacherInfo.teacherId);
         }
 
         return request({

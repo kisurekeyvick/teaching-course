@@ -1,0 +1,160 @@
+#casePourpre {
+    background-color : #422c83;
+    height : 140px;
+    width : 150px;
+    padding-top : 10px;
+    float : left;
+    position : relative;
+}
+
+#casePourpre #load {
+    color : #886ed7;
+    font-family : calibri;
+    text-align : center;
+    position : absolute;
+    top : 42px;
+    left :42px;
+}
+
+#vague {
+    position : absolute;
+    top : 72px;
+    left : 20px;
+  }
+  
+  #vague1 {
+    height : 5px;
+    width : 5px;
+    background-color : #886ed7;
+    float : left;
+    animation : vague1 2.5s infinite;
+    -webkit-animation : vague1 2.5s infinite;
+  }
+  
+  @-webkit-keyframes vague1 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  @keyframes vague1 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  #vague2 {
+    height : 5px;
+    width : 5px;
+    background-color : #886ed7;
+    float : left;
+    animation : vague2 2.5s infinite;
+    -webkit-animation : vague2 2.5s infinite;
+    animation-delay : 0.5s;
+    -webkit-animation-delay : 0.5s;
+  }
+  
+  @-webkit-keyframes vague2 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  @keyframes vague2 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  #vague3 {
+    height : 5px;
+    width : 5px;
+    background-color : #886ed7;
+    float : left;
+    animation : vague3 2.5s infinite;
+    -webkit-animation : vague3 2.5s infinite;
+    animation-delay : 1s;
+    -webkit-animation-delay : 1s;
+  }
+  
+  @-webkit-keyframes vague3 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  @keyframes vague3 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  #vague4 {
+    height : 5px;
+    width : 5px;
+    background-color : #886ed7;
+    float : left;
+    animation : vague4 2.5s infinite;
+    -webkit-animation : vague4 2.5s infinite;
+    animation-delay : 1.5s;
+    -webkit-animation-delay : 1.5s;
+  }
+  
+  @-webkit-keyframes vague4 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  @keyframes vague4 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  #vague5 {
+    height : 5px;
+    width : 5px;
+    background-color : #886ed7;
+    float : left;
+    animation : vague5 2.5s infinite;
+    -webkit-animation : vague5 2.5s infinite;
+    animation-delay : 2s;
+    -webkit-animation-delay : 2s;
+  }
+  
+  @-webkit-keyframes vague5 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  @keyframes vague5 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  #vague6 {
+    height : 5px;
+    width : 5px;
+    background-color : #886ed7;
+    float : left;
+    animation : vague6 2.5s infinite;
+    -webkit-animation : vague6 2.5s infinite;
+    animation-delay : 2.5s;
+    -webkit-animation-delay : 2.5s;
+  }
+  
+  @-webkit-keyframes vague6 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  
+  @keyframes vague6 {
+    0% {height : 5px;}
+    50% {height : 30px;}
+    100% {height : 5px;}
+  }
+  

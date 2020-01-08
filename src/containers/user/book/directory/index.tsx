@@ -6,7 +6,7 @@ import './index.scss';
 import { IMenuItem } from './index.config';
 import { SvgComponent } from 'components/icon/icon';
 // import { api } from 'common/api/index';
-import noDataImg from 'assets/images/noData.png';
+import { noData } from 'common/service/img-collection';
 import { IMaterialStatusRequest, IMaterialStatusResponse, ITeachChapterList } from 'common/api/api-interface';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import {connect} from 'react-redux';
@@ -190,7 +190,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
             if (!course.loaded) {
                 return this.handleTreeNodeLoad(treeNode);
             } else {
-                /** 如果是一件被加载过了 */
+                /** 如果是已经被加载过了 */
                 showList = courseChildren.reduce((cur: ITeachChapterList[], pre: IMenuItem) => {
                     const teachChapterList: ITeachChapterList[] = pre.teachChapterList!;
                     return cur.concat(teachChapterList);
@@ -230,7 +230,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
     public buidlTree = () => {
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
-                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-tree-node' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
+                return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
             });
@@ -239,7 +239,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         return <Tree 
                     showLine
                     loadData={this.handleTreeNodeLoad}
-                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-tree'/>}
+                    switcherIcon={<SvgComponent className='svg-icon-course' type='icon-subway'/>}
                     onSelect={this.selectNode}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>
@@ -259,7 +259,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                                 <Skeleton active/>
                                 <Skeleton active/>
                             </> : hasData ? this.buidlTree() : <>
-                                <img className='no-data-img' alt='无数据' src={noDataImg} />
+                                <img className='no-data-img' alt='无数据' src={noData} />
                                 <p className='no-data-desc'>暂时没有教材目录</p>
                             </>
                         }

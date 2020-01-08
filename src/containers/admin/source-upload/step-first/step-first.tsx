@@ -97,14 +97,14 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                                 if (item.controlName === 'input') {
                                     item.controlType === 'text' && (control = <Input placeholder={item.placeholder}/>);
 
-                                    item.controlType === 'textarea' && (control = <Input.TextArea placeholder={item.placeholder} autosize={{ minRows: 3, maxRows: 5 }}/>);
+                                    item.controlType === 'textarea' && (control = <Input.TextArea maxLength={item.maxLength} placeholder={item.placeholder} autosize={{ minRows: 3, maxRows: 5 }}/>);
                                 
                                     return control;
                                 }
 
                                 if (item.controlName === 'button') {
                                     control = <>
-                                        <Button type='primary' onClick={() => this.handleTreeModalClick(true)}>选择节点</Button>
+                                        <Button type='primary' onClick={() => this.handleTreeModalClick(true)}>选择章节</Button>
                                         { location && <span className='tree-node-location'>{location}</span> }
                                     </>
 
