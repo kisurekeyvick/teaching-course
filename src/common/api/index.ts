@@ -53,9 +53,10 @@ export const api = {
     download: httpRequest(`GET /material/download`),
     /** 更新章节资源信息 */
     updateResources: httpRequest(`POST /material/updateResources`),
-
     /** 查询个人信息列表 */
     queryPersonList: httpRequest(`POST /teacher/queryPersonList`),
+    /** 注册用户 */
+    register: httpRequest(`POST /teacher/register`),
     
     /** mock */
     loadSourceManageResult: (param?: any) => {

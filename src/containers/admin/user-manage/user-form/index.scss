@@ -1,0 +1,33 @@
+@import '../../../../assets/styles/global.container.scss';
+
+.user-form-edit-container {
+    margin-top: 12px;
+
+    .nav-head {
+        text-align: center;
+        margin-bottom: 48px;
+
+        .nav-item {
+            padding: 5px 12px;
+            cursor: pointer;
+
+            &:first-child {
+                border-radius: 5px 0 0 5px;
+            }
+
+            &:last-child {
+                border-radius: 0 5px 5px 0;
+            }
+
+            &.complete {
+                background-color: $userSecondBGColor;
+                color: #fff;
+            }
+
+            &.selected, &:hover {
+                background-color: $userColor;
+                color: #fff;
+            }
+        }
+    }
+}

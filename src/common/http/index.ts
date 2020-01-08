@@ -29,7 +29,7 @@ const httpRequest: IHttpRequest = (config: Config) => {
         let value = payload;
         const teacherInfo = getUserBaseInfo();
 
-        if (Object.prototype.toString.call(value) === '[object Object]') {
+        if (Object.prototype.toString.call(value) === '[object Object]' && !(value!).hasOwnProperty('teacherId')) {
             value = {...value, 
                 ...teacherInfo && {teacherId: teacherInfo.teacherId}}
         }

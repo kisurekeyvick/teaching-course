@@ -8,6 +8,7 @@ import { IConfig, columns } from './user-manage.config';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { defaultUserPic } from 'common/service/img-collection';
+import { UserFormModifyContainer, IUserFormModifyProps } from './user-form/index';
 import './user-manage.scss';
 
 interface IUserManageContainerProps {
@@ -38,7 +39,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
             isLoading: false,
             showDrawer: false,
             selectedRowKeys: [],
-            currentEditSource: {},
+            currentEditSource: null,
             operation: null,
             /** 分页 */
             pageInfo: {...defaultPageInfo},
@@ -93,7 +94,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
 
         api.queryPersonList(params).then((res: IQueryPersonListResponseResult) => {
             if (res.status === 200 && res.data.success) {
-                const { total, pageNum, list = [] } = res.data.result.teachChapterList;
+                const { total, pageNum, list = [], pageSize } = res.data.result.teachChapterList;
                 
                 const dataSource = list.map((item: ITeachChapterResList, index: number) => {
                     item.key = `${item.id}-${index}`;
@@ -107,7 +108,8 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
                     hasData: dataSource.length > 0,
                     pageInfo: {
                         ...pageInfo, ...{
-                            pageNum,
+                            pageSize,
+                            currentPage: pageNum,
                             totalCount: total
                         }
                     },
@@ -164,6 +166,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
         this.setState({
             operation: 'add',
             showDrawer: true,
+            currentEditSource: null
         });
     }
 
@@ -172,7 +175,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
      * @desc 删除用户
      */
     public deleteSource = (record: ITeachChapterResList) => {
-        const loading = messageFunc('正在删除中...');
+        // const loading = messageFunc('正在删除中...');
     }
 
     /** 
@@ -205,9 +208,22 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
         });
     }
 
+    /** 
+     * @func
+     * @desc 处理Drawer发出的事件
+     */
+    public handleUserFormModifyEvent = ({ hideDrawer }: {hideDrawer: boolean}) => {
+        if (hideDrawer) {
+            this.setState({
+                showDrawer: false
+            });
+    
+            this.loadPersonList();
+        }
+    }
 
     public render() {
-        const { isLoading, hasData, dataSource, pageInfo, selectedRowKeys, showDrawer, operation } = this.state;
+        const { isLoading, hasData, dataSource, pageInfo, selectedRowKeys, showDrawer, operation, currentEditSource } = this.state;
         
         const pageComponentProps: IPageComponnetProps = {
             ...pageInfo,
@@ -219,7 +235,14 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
             onChange: this.onSelectChange
         };
 
-        const drawerTitle: string = operation === 'add' ? '新增用户' : operation === 'edit' ? '编辑用户' : '';
+        const drawerTitle: string = operation === 'edit' ? '编辑用户' : '新增用户';
+
+        const userFormModifyProps: IUserFormModifyProps = {
+            userInfo: currentEditSource,
+            updateTime: Date.now(),
+            operation,
+            eventEmitterFunc: this.handleUserFormModifyEvent
+        };
 
         return (
             <div className='user-manage-container animateCss'>
@@ -261,7 +284,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
                     onClose={() => this.toggleDrawer(false)}
                     visible={showDrawer}
                     maskClosable={false}>
-
+                    { showDrawer && <UserFormModifyContainer {...userFormModifyProps}/> }
                 </Drawer>
             </div>
         )

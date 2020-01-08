@@ -1,13 +1,16 @@
 import React from 'react';
-import { Form, Button, Col, Row, Input, Select, Radio, message, Upload, Icon } from 'antd';
+import { Form, Button, Input } from 'antd';
 import { api } from 'common/api/index';
-import { IUserFormModifyProps } from './step-second.config';
-import { messageFunc, IMessageFuncRes, getBase64 } from 'common/utils/function';
-import { IUpdateTeacherFileResponseResult } from 'common/api/api-interface';
+import { IUserModifyStepSecondProps, IValue, IFormItem, formItem } from './step-second.config';
+import { messageFunc } from 'common/utils/function';
 import { dictionary, IDictionaryItem } from 'common/dictionary/index';
+import { formItemLayout, submitLayout } from '../step-first/step-first.config';
+import { defaultUserPic } from 'common/service/img-collection';
+import { IPersonUpdateRequestParams, IPersonUpdateResponseResult } from 'common/api/api-interface';
 import './step-second.scss';
 
 interface IState {
+    img: any
     [key: string]: any;
 }
 
@@ -15,20 +18,21 @@ interface IConfig {
     uploadPicFormat: string[];
 }
 
-const { Item } = Form;
-const { TextArea } = Input;
-
-class userFormModify extends React.PureComponent<IUserFormModifyProps, IState> {
+class UserModifyStepSecondContainer extends React.PureComponent<IUserModifyStepSecondProps, IState> {
     public config: IConfig;
 
-    constructor(public props: IUserFormModifyProps) {
+    constructor(public props: IUserModifyStepSecondProps) {
         super(props);
+
+        this.state = {
+            img: defaultUserPic
+        };
 
         this.config = {
             uploadPicFormat: [...dictionary.get('upload-pic-format')!].map((item: IDictionaryItem) => {
                 return String(item.value);
             })
-        }
+        };
     }
 
     /** 
@@ -40,48 +44,95 @@ class userFormModify extends React.PureComponent<IUserFormModifyProps, IState> {
     }
 
     /** 
-     * @callback
-     * @desc 上传之前处理
+     * @func
+     * @desc 构建表单
      */
-    public beforeUpload = (file: any): boolean => {
-        const { uploadPicFormat } = this.config;
-        const fileType = file.type.replace('image/', '');
+    public createForm = (formItems: IFormItem[]): React.ReactNode => {
+        const { getFieldDecorator } = this.props.form;
+        const { userInfo } = this.props;
+        const souce: any = {
+            ...userInfo && {
+                userName: userInfo.userName,
+                position: userInfo.position,
+                desc: userInfo.desc
+            }
+        };
 
-        if(uploadPicFormat.includes(fileType)) {
-            return true;
-        } else {
-            const msg: string = uploadPicFormat.join('、').replace(/、$/, '');
-            message.warn(`头像格式只支持： ${msg}`)
-        }
+        return <>
+            {
+                formItems.map((item: IFormItem) => {
+                    const Control: React.ReactNode = ((): React.ReactNode => {
+                        let control: React.ReactNode = <div></div>;
 
-        return false;
+                        if (item.controlName === 'input') {
+                            item.controlType === 'text' && (control = <Input placeholder={item.placeholder}/>);
+
+                            item.controlType === 'password' && (control = <Input.Password placeholder={item.placeholder}/>)
+
+                            return control;
+                        }
+
+                        return control;
+                    })();
+
+                    return <Form.Item className='user-modify-step-first-form-item' label={item.label} key={item.key}>
+                                {
+                                    getFieldDecorator(item.state, {
+                                        initialValue: souce[item.state] || '',
+                                        rules: item.rules
+                                    })(Control)
+                                }
+                            </Form.Item>
+                })
+            }
+        </>
     }
 
-    
     /** 
      * @callback
-     * @desc 处理上传
+     * @desc 保存
      */
-    public handleUploadRequest = (e: any) => {
-        const { uploadFilePersonParams } = this.state;
-        const loading = messageFunc('开始上传中...');
-        const params: FormData = new FormData(); 
-        params.set('teacherDto', JSON.stringify({...uploadFilePersonParams}));
+    public handleSubmit = (e: any) => {
+        e.preventDefault();
 
-        const file: File = e.file;
-        params.set('file', file);
+        this.props.form.validateFieldsAndScroll((err: any, values: IValue) => {
+            if (!err) {
+                const loading = messageFunc('开始更新信息...');
 
-        api.updateTeacherFile(params).then((res: IUpdateTeacherFileResponseResult) => {
-            if (res.status === 200 && res.data.success) {
-                loading.success(res.data.desc);
-                e.onSuccess();
-                this.props.eventEmitterFunc();
-            } else {
-                loading.error(res.data.desc);
-                e.onError();
+                const { loginName, password, teacherId } = this.props.userInfo;
+                const params: IPersonUpdateRequestParams = {
+                    loginName,
+                    password,
+                    position: values.position,
+                    userName: values.userName,
+                    desc: values.desc,
+                    teacherId
+                };
+
+                api.updateTeacher(params).then((res: IPersonUpdateResponseResult) => {
+                    if (res.status === 200 && res.data.success) {
+                        loading.success(res.data.desc);
+                        this.props.eventEmitterFunc();
+                    } else {
+                        loading.error(res.data.desc);
+                    }
+                });
             }
         });
     }
+
+    public render() {
+        return <div className='user-modify-step-second'>
+                <Form {...formItemLayout} onSubmit={this.handleSubmit}>
+                    { this.createForm(formItem) }
+                    <Form.Item {...submitLayout} className='submit-control'>
+                        <Button type="primary" htmlType="submit">
+                            保存
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
+    }
 }
 
-export default Form.create()(userFormModify);
+export default Form.create()(UserModifyStepSecondContainer);

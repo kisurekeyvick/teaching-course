@@ -329,6 +329,7 @@ export interface IQueryPersonDataResult {
     teacherId: string;
     updateTime: string;
     userName: string;
+    [key: string]: any;
 }
 
 /** 查询个人信息返回参数 */
@@ -527,4 +528,26 @@ export interface IQueryPersonListRequestParams {
         pageNum: number;
         pageSize: number;
     };
+}
+
+/** 用户注册请求参数 */
+export interface IUserRegisterRequestParams {
+    loginName: string;
+    password: string;
+}
+
+export interface IAccountInfo extends IQueryPersonDataResult {
+    id: number;
+    teacherId: string;
+    [key: string]: any;
+}
+
+/** 用户注册完成返回结果 */
+export interface IUserRegisterResponseResult extends IAjaxCommonResponse {
+    data: {
+        desc: string;
+        isAdministrators: number;
+        result: IAccountInfo;
+        success: boolean;
+    }
 }
