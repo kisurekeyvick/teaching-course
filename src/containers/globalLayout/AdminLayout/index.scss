@@ -16,7 +16,7 @@
             li.ant-menu-item {
                 background-color: transparent;
                 padding-left: 0 !important;
-                padding-right: 0;
+                padding-right: 0 !important;
                 margin-bottom: 0;
                 margin-top: 1px;
 
@@ -49,6 +49,7 @@
                 .svg-icon {
                     color: #fff;
                     font-size: 18px;
+                    margin-top: 1px;
                 }
             }
 
@@ -75,6 +76,10 @@
                         height: 100%;
                         width: 100%;
                         float: left;
+
+                        &.link-item {
+                            padding-left: 30px;
+                        }
                     }
                 }
     
