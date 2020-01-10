@@ -21,6 +21,8 @@ interface IState {
     menus: Array<IMenuItem>;
     isLoading: boolean;
     hasData: boolean;
+    expandedKeys: string[];
+    canExpandedKeys: boolean;
 }
 
 interface ITreeModalConfig extends ICommon {
@@ -44,7 +46,9 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
         this.state = {
             menus: [],
             isLoading: false,
-            hasData: false
+            hasData: false,
+            expandedKeys: [],
+            canExpandedKeys: false
         };
 
         this.config = {
@@ -181,8 +185,30 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
         if (selectedKeys.length > 0) {
+            this.updateExpandedKeysState(e.node);
             this.pushChapterMaterial(selectedKeys[0], this.state.menus, e);
         }
+    }
+
+    /** 
+     * @func
+     * @desc 更新expandedKeys状态
+     */
+    public updateExpandedKeysState = (node: any, bool: boolean = true) => {
+        const { eventKey, children } = node.props;
+        const childrenKeys = (children || []).map((item: ITeachChapterList) => item.key);
+        this.setState({
+            expandedKeys: [eventKey].concat(childrenKeys),
+            canExpandedKeys: bool
+        }); 
+    }
+
+    /** 
+     * @callback
+     * @desc 处理节点展开事件
+     */
+    public handleTreeNodeExpand = (expandedKeys: string[], {expanded: bool, node}: any) => {
+        this.updateExpandedKeysState(node, bool);
     }
 
     /** 
@@ -190,6 +216,14 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
      * @desc 构建教材目录
      */
     public buidlTree = () => {
+        const { expandedKeys, canExpandedKeys } = this.state;
+        const otherTreeProps = {
+            expandedKeys: [],
+            ...canExpandedKeys && {
+                expandedKeys
+            }
+        };
+
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
                 return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
@@ -198,10 +232,12 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
             });
         };
 
-        return <Tree 
+        return <Tree
+                    {...otherTreeProps} 
                     showLine
                     loadData={this.handleTreeNodeLoad}
                     onSelect={this.selectNode}
+                    onExpand={this.handleTreeNodeExpand}
                     switcherIcon={<SvgComponent className='svg-icon-course' type='icon-subway'/>}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>

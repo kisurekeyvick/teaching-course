@@ -14,8 +14,14 @@ export const IconFont = Icon.createFromIconfontCN({
 });
 
 export const SvgComponent: React.FC<IIconProps> = props => {
+    const innerProps = {
+        ...props.onClick && {
+            onClick: props.onClick
+        }
+    };
+
     return (
-        <i aria-hidden="true" className={`anticon ${props.className}`}>
+        <i aria-hidden="true" className={`anticon ${props.className}`} {...innerProps}>
             <svg className="svg-icon">
                 <use xlinkHref={`#${props.type}`} />
             </svg>

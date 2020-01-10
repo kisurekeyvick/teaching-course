@@ -400,10 +400,6 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 expandedRowKeys: [record.key].concat(keys),
                 canExpandedRowKeys
             });
-
-            // this.setState({
-            //     dataSource
-            // });
         }
     };
 

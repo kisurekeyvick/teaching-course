@@ -21,6 +21,8 @@ interface IState {
     menus: IMenuItem[];
     hasData: boolean;
     isLoading: boolean;
+    expandedKeys: string[];
+    canExpandedKeys: boolean;
 }
 
 interface IConfig {
@@ -35,7 +37,9 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         this.state = {
             menus: [],
             hasData: false,
-            isLoading: false
+            isLoading: false,
+            expandedKeys: [],
+            canExpandedKeys: false
         };
 
         this.config = {
@@ -155,6 +159,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
         if (selectedKeys.length > 0) {
+            this.updateExpandedKeysState(e.node);
             this.pushChapterMaterial(selectedKeys[0], {}, this.state.menus, () => {}, e.node);
         }
     }
@@ -225,9 +230,38 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
 
     /** 
      * @func
+     * @desc 更新expandedKeys状态
+     */
+    public updateExpandedKeysState = (node: any, bool: boolean = true) => {
+        const { eventKey, children } = node.props;
+        const childrenKeys = (children || []).map((item: ITeachChapterList) => item.key);
+        this.setState({
+            expandedKeys: [eventKey].concat(childrenKeys),
+            canExpandedKeys: bool
+        }); 
+    }
+
+    /** 
+     * @callback
+     * @desc 处理节点展开事件
+     */
+    public handleTreeNodeExpand = (expandedKeys: string[], {expanded: bool, node}: any) => {
+        this.updateExpandedKeysState(node, bool);
+    }
+
+    /** 
+     * @func
      * @desc 构建教材目录
      */
     public buidlTree = () => {
+        const { expandedKeys, canExpandedKeys } = this.state;
+        const otherTreeProps = {
+            expandedKeys: [],
+            ...canExpandedKeys && {
+                expandedKeys
+            }
+        };
+
         const buildTreeNode = (children: IMenuItem[]) => {
             return children.map((child: IMenuItem) => {
                 return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
@@ -236,10 +270,12 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
             });
         };
 
-        return <Tree 
+        return <Tree
+                    {...otherTreeProps} 
                     showLine
                     loadData={this.handleTreeNodeLoad}
                     switcherIcon={<SvgComponent className='svg-icon-course' type='icon-subway'/>}
+                    onExpand={this.handleTreeNodeExpand}
                     onSelect={this.selectNode}>
                     { buildTreeNode(this.state.menus) }
                 </Tree>
