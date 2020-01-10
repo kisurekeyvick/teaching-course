@@ -11,7 +11,7 @@ import { cloneDeep } from 'lodash';
 import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
 import { localStorageService, getUserBaseInfo } from 'common/utils/function';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
-import { simpleLogo, loginLogo, defaultUserPic } from 'common/service/img-collection';
+import { loginLogo, simpleLogo, defaultUserPic } from 'common/service/img-collection';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;

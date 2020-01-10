@@ -41,7 +41,10 @@ interface IState {
     dataSource: IDataSource[];
     hasData: boolean;
     isLoading: boolean;
+    isSaving: boolean;
     editingKey: string;
+    expandedRowKeys: string[];
+    canExpandedRowKeys: boolean;
 }
 
 // const { Search } = Input;
@@ -64,7 +67,10 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             dataSource: [],
             hasData: false,
             isLoading: true,
-            editingKey: ''
+            isSaving: false,
+            editingKey: '',
+            expandedRowKeys: [],
+            canExpandedRowKeys: true
         };
     }
 
@@ -152,12 +158,22 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
         });
 
         const loading = messageFunc();
+        this.setState({
+            isSaving: true
+        });
+        
         Promise.all([...newSourceRequestArr, ...oldSourceRequestArr]).then((res: IAddChapterAllRequestResult[]) => {
             if (res.every((resItem: IAddChapterAllRequestResult) => resItem.status === 200 && resItem.data.success)) {
                 loading.success('保存成功！');
             } else {
                 loading.error('存在失败的保存');
             }
+        }).finally(() => {
+            this.setState({
+                isSaving: false
+            });
+
+            this.loadTeachingMenu();
         });
     }
 
@@ -361,7 +377,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     public addCourseSecondaryDirectory = (record: ITableRecord) => {
         const item = addCourseFieldTemplate({needChildren: false});
         const index: number = this.state.dataSource.findIndex((source: IDataSource) => source.key === record.key);
-        
+        console.log('record', record);
         if (index > -1) {
             const dataSource = cloneDeep(this.state.dataSource);
 
@@ -369,9 +385,25 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
 
             this.buildDataSourceKey(dataSource[index]);
 
+            const canExpandedRowKeys: boolean = (() => {
+                if (record.id === null || record.loaded) {
+                    return true;
+                }
+
+                return false;
+            })();
+            
+            const keys = (record.children || []).map((item) => item.key);
+
             this.setState({
-                dataSource
+                dataSource,
+                expandedRowKeys: [record.key].concat(keys),
+                canExpandedRowKeys
             });
+
+            // this.setState({
+            //     dataSource
+            // });
         }
     };
 
@@ -673,7 +705,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
 
             this.setState({
                 ...state,
-                editingKey: ''
+                editingKey: '',
+                canExpandedRowKeys: false
             });
 
             loading.success();
@@ -685,6 +718,10 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 展开加载相关课程的章节
      */
     public handleTableItemExpand = (expanded: boolean, record: IDataSource) => {
+        this.setState({
+            canExpandedRowKeys: false
+        });
+        
         if (expanded && !record.loaded) {
             const loading = messageFunc();
             const params: FormData = new FormData();
@@ -733,14 +770,6 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 }
             });
         }
-    }
-
-    /** 
-     * @callback
-     * @desc 搜素课程名 
-     */
-    public handleInputSearch = (e: any) => {
-        // const { value } = e.target;
     }
 
     /** 
@@ -798,10 +827,15 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     }
 
     public render() {
-        const { hasData, dataSource, isLoading } = this.state;
+        const { hasData, dataSource, isLoading, isSaving, expandedRowKeys, canExpandedRowKeys } = this.state;
         const components = {
             body: {
                 cell: EditableCell
+            }
+        };
+        const otherTableProps = {
+            ...canExpandedRowKeys && {
+                expandedRowKeys
             }
         };
 
@@ -811,7 +845,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Button type='primary' className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
-                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse}><Icon type="save" />保存</Button>
+                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse} disabled={isSaving}><Icon type="save" />保存课程</Button>
                             {/* <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存课程权重</Button> */}
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
@@ -824,6 +858,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                             <Skeleton />
                         </> : <EditableContext.Provider value={this.props.form}>
                                 <Table
+                                    {...otherTableProps}
                                     components={components}
                                     columns={this.renderColumns()}
                                     dataSource={hasData ? dataSource : undefined }

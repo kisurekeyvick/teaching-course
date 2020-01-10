@@ -113,11 +113,11 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
                     })
                 });
                 loading.success();
-                this.pushChapterMaterial(`${treeNode.props.dataRef.value}-0`, menusState);
+                this.pushChapterMaterial(`${treeNode.props.dataRef.value}-${matchOutermostLayerKey}`, menusState);
                 resolve();
             }, (reject: string) => {
                 loading.warn(reject);
-                this.props.handleClick({ isLoading: 'false' });
+                this.props.handleClick({ isLoading: 'false', showList: [], breadcrumb: [treeNode.props.title] });
                 resolve();
             });
         });

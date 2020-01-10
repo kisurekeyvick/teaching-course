@@ -12,7 +12,7 @@ interface IState {
     currentTab: 'account' | 'detailInfo';
     updateTime: number;
     userInfo: IQueryPersonDataResult | null;
-    addAccountInfo: IAccountInfo | null;
+    operation: 'add' | 'edit' | null;
     [key: string]: any;
 }
 
@@ -33,17 +33,18 @@ export class UserFormModifyContainer extends React.PureComponent<IUserFormModify
             currentTab: 'account',
             userInfo: null,
             updateTime: 0,
-            addAccountInfo: null
+            operation: null
         };
     }
 
     static getDerivedStateFromProps(nextProps: IUserFormModifyProps, prevState: IState) {
         if (nextProps.updateTime > prevState.updateTime) {
-            const { userInfo } = nextProps;
+            const { userInfo, operation } = nextProps;
 
             return {
                 enableTabs: userInfo ? ['account', 'detailInfo'] : ['account'],
-                userInfo
+                userInfo,
+                operation
             }
         }
         
@@ -63,7 +64,7 @@ export class UserFormModifyContainer extends React.PureComponent<IUserFormModify
                 currentTab
             });
         } else {
-            message.warn('请按照步骤进行相关操作！');
+            message.warn('请先创建账号再进行个人信息填写！');
         }
     }
 
@@ -78,7 +79,9 @@ export class UserFormModifyContainer extends React.PureComponent<IUserFormModify
 
         this.setState({
             currentTab: 'detailInfo',
-            enableTabs
+            enableTabs,
+            operation: 'edit',
+            updateTime: Date.now()
         });
     }
 
@@ -89,7 +92,8 @@ export class UserFormModifyContainer extends React.PureComponent<IUserFormModify
     public handleUserModifyStepFirstCb = (account: IAccountInfo) => {
         this.handleStepFirst();
         this.setState({
-            addAccountInfo: account
+            userInfo: account,
+            updateTime: Date.now()
         });
     }
 
@@ -121,8 +125,7 @@ export class UserFormModifyContainer extends React.PureComponent<IUserFormModify
     }
 
     public render() {
-        const { currentTab, userInfo, addAccountInfo } = this.state;
-        const { operation } = this.props;
+        const { currentTab, userInfo, operation } = this.state;
         
         const userModifyStepFirstProps: any = {
             operation,
@@ -131,7 +134,7 @@ export class UserFormModifyContainer extends React.PureComponent<IUserFormModify
         };
         
         const userModifyStepSecondprops: any = {
-            userInfo: operation === 'edit' ? userInfo : addAccountInfo,
+            userInfo,
             eventEmitterFunc: this.handleUserModifyStepSecondCb
         };
 

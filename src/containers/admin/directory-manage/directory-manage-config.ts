@@ -66,3 +66,9 @@ export const addCourseFieldTemplate = ({needChildren} = {needChildren: true}) =>
     type: '',
     ...needChildren && {children:[]}
 });
+
+export interface IStateFunc {
+    setCoureNew: Function;
+    setCoureOld: Function;
+    setCoureNull: Function;
+}

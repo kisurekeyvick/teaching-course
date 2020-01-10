@@ -112,7 +112,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                     })
                 });
 
-                this.pushChapterMaterial(`${treeNode.props.dataRef.value}-0`, {
+                this.pushChapterMaterial(`${treeNode.props.dataRef.value}-${matchOutermostLayerKey}`, {
                     isLoading: 'false'
                 }, menusState, loading.success);
                 resolve();
