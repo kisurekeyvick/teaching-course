@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { api } from 'common/api/index';
 import { cloneDeep } from 'lodash';
-import { Table, Divider, Icon, Row, Col, Popconfirm, BackTop, Skeleton, Form, notification, Button } from 'antd';
+import { Table, Divider, Icon, Row, Col, Popconfirm, BackTop, Skeleton, Form, Button } from 'antd';
 import { columns, IConfig, ITableRecord, addCourseFieldTemplate } from './directory-manage-config';
 import { SvgComponent } from 'components/icon/icon';
 import './directory-manage-table.scss';
@@ -41,8 +41,10 @@ interface IState {
     dataSource: IDataSource[];
     hasData: boolean;
     isLoading: boolean;
+    isSaving: boolean;
     editingKey: string;
-    editMaterId: string;
+    expandedRowKeys: string[];
+    canExpandedRowKeys: boolean;
 }
 
 // const { Search } = Input;
@@ -65,8 +67,10 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             dataSource: [],
             hasData: false,
             isLoading: true,
+            isSaving: false,
             editingKey: '',
-            editMaterId: ''
+            expandedRowKeys: [],
+            canExpandedRowKeys: true
         };
     }
 
@@ -74,58 +78,181 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
         this.loadTeachingMenu();
     }
 
-    public globalNotify = () => {
-        const key: string = `open${Date.now()}`;
-        const btn: React.ReactNode = (
-            <Button type="primary" size="small" onClick={() => this.saveAllCourse(key)}>
-                确认
-            </Button>
-        );
-        notification.open({
-            message: `课程修改保存`,
-            description: '保存以后，数据将存储到数据库中，请确认自己的修改无误',
-            key,
-            btn,
-            duration: null
-        });
-    }
+    // public globalNotify = () => {
+    //     const key: string = `open${Date.now()}`;
+    //     const btn: React.ReactNode = (
+    //         <Button type="primary" size="small" onClick={() => this.saveAllCourse(key)}>
+    //             确认
+    //         </Button>
+    //     );
+    //     notification.open({
+    //         message: `课程修改保存`,
+    //         description: '保存以后，数据将存储到数据库中，请确认自己的修改无误',
+    //         key,
+    //         btn,
+    //         duration: null
+    //     });
+    // }
 
     /**
      * @callback
      * @desc 保存所有修改的课程数据
      */
-    public saveAllCourse = (key: string) => {
-        notification.close(key);
+    // public saveAllCourse = (key: string) => {
+    //     notification.close(key);
 
-        const dataSource: IUpdateChapterAllRequest[] = this.state.dataSource.map((item) => {
-            return {
-                chapterResponseDtoList: [],
-                teachMaterial: {
-                    contributors: item.contributors,
-                    desc: item.desc,
-                    materlId: item.materlId,
-                    pic: item.pic,
-                    score: item.score,
-                    size: item.size,
-                    title: item.title,
-                    type: item.type,
-                    weight: item.weight
-                }
-            };
+    //     const dataSource: IUpdateChapterAllRequest[] = this.state.dataSource.map((item) => {
+    //         return {
+    //             chapterResponseDtoList: [],
+    //             teachMaterial: {
+    //                 contributors: item.contributors,
+    //                 desc: item.desc,
+    //                 materlId: item.materlId,
+    //                 pic: item.pic,
+    //                 score: item.score,
+    //                 size: item.size,
+    //                 title: item.title,
+    //                 type: item.type,
+    //                 weight: item.weight
+    //             }
+    //         };
+    //     });
+
+    //     const requestArr: Array<Promise<any>> = dataSource.map((params: IUpdateChapterAllRequest) => {
+    //         return api.updateChapterAll(params);
+    //     });
+
+    //     const loading = messageFunc();
+
+    //     Promise.all(requestArr).then((res: IAddChapterAllRequestResult[]) => {
+    //         if (res.every((resItem: IAddChapterAllRequestResult) => resItem.status === 200 && resItem.data.success)) {
+    //             loading.success('课程权重保存完成');
+    //         } else {
+    //             loading.error('存在课程权重保存失败');
+    //         }
+    //     });
+    // }
+
+    /** 
+     * @callback
+     * @desc 保存所有的课程
+     */
+    public saveTotalCourse = () => {
+        const newSource: IDataSource[] = [];
+        const oldSource: IDataSource[] = [];
+        const { dataSource } = this.state;
+        
+        dataSource.forEach((item: IDataSource) => {
+            item.id && oldSource.push(item);
+            !item.id && newSource.push(item);
         });
 
-        const requestArr: Array<Promise<any>> = dataSource.map((params: IUpdateChapterAllRequest) => {
+        const newSourceFormat: IAddChapterAllRequest[] = this.newSourceFormat(newSource);
+        const newSourceRequestArr: Array<Promise<any>> = newSourceFormat.map((params: IAddChapterAllRequest) => {
+            return api.addChapterAll(params);
+        });
+
+        const oldSourceFormat: IUpdateChapterAllRequest[] = this.oldSourceFormat(oldSource);
+        const oldSourceRequestArr: Array<Promise<any>> = oldSourceFormat.map((params: IUpdateChapterAllRequest) => {
             return api.updateChapterAll(params);
         });
 
         const loading = messageFunc();
-
-        Promise.all(requestArr).then((res: IAddChapterAllRequestResult[]) => {
+        this.setState({
+            isSaving: true
+        });
+        
+        Promise.all([...newSourceRequestArr, ...oldSourceRequestArr]).then((res: IAddChapterAllRequestResult[]) => {
             if (res.every((resItem: IAddChapterAllRequestResult) => resItem.status === 200 && resItem.data.success)) {
-                loading.success('课程权重保存完成');
+                loading.success('保存成功！');
             } else {
-                loading.error('存在课程权重保存失败');
+                loading.error('存在失败的保存');
             }
+        }).finally(() => {
+            this.setState({
+                isSaving: false
+            });
+
+            this.loadTeachingMenu();
+        });
+    }
+
+    /** 
+     * @func
+     * @desc format新增的数据
+     */
+    public newSourceFormat = (source: IDataSource[]): IAddChapterAllRequest[] => {
+        return source.map((item: IDataSource) => {
+            const chapterResponseDtoList: IAddChapterAllChapterRequestDtoList[] = (item.children || []).reduce((pre: Array<{ section: any }>,cur: IDataSource) => {
+                const item = {
+                    name: cur.name,
+                    type: 1,
+                    weight: 10
+                };
+    
+                return pre.concat({ section: item });
+            }, []);
+
+            const params: IAddChapterAllRequest = {
+                chapterResponseDtoList,
+                teachMaterial: {
+                    title: item.name,
+                    type: 'Type1'
+                }
+            };
+
+            return params;
+        });
+    }
+
+    /** 
+     * @func
+     * @desc format老旧的数据
+     */
+    public oldSourceFormat = (source: IDataSource[]): IUpdateChapterAllRequest[] => {
+        return source.map((sourceItem: IDataSource) => {
+            const chapterResponseDtoList: IUpdateChapterAllChapterResponseList[] = (sourceItem.children || []).reduce((pre: Array<{ section: any }>,cur: IDataSource) => {
+                const item = {
+                    section: {
+                        chapterId: cur.value,
+                        materialId: sourceItem.value,
+                        name: cur.name,
+                        parentId: sourceItem.value,
+                        type: 1,
+                        weight: cur.weight,
+                        id: cur.id
+                    },
+                    ...cur.teachChapterList && { teachChapterList: cur.teachChapterList.map((i: ITeachChapterList) => {
+                        return {
+                            chapterId: i.chapterId,
+                            materialId: i.materialId,
+                            name: i.name,
+                            parentId: i.parentId,
+                            type: i.type,
+                            weight: i.weight,
+                            id: i.id
+                        };
+                    }) }
+                }; 
+                return pre.concat(item);
+            }, []);
+
+            const params: IUpdateChapterAllRequest = {
+                chapterResponseDtoList,
+                teachMaterial: {
+                    contributors: sourceItem.contributors,
+                    desc: sourceItem.desc,
+                    materlId: sourceItem.materlId,
+                    pic: sourceItem.pic,
+                    score: sourceItem.score,
+                    size: sourceItem.size,
+                    title: sourceItem.title,
+                    type: sourceItem.type,
+                    weight: sourceItem.weight
+                }
+            };
+
+            return params;
         });
     }
 
@@ -139,14 +266,11 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
         if (target) {
             target.render = (text: string, record: any) => {
                 const editable = this.isEditing(record);
-                const isChildrenEidt = this.isChildrenEditing(record);
 
                 return <span className='table-operation-box'>
                             <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
                                 { record.children ? '删除课程' : '删除章节' }
                             </Popconfirm>
-                            <Divider type='vertical' />
-                            <p><Icon className='operation-box-icon' type='eye' />查看资源</p>
                             <Divider type='vertical' />
                             {
                                 record.children && <>
@@ -168,21 +292,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                                     <Divider type='vertical' />
                                 </> : 
                                 <>
-                                    {
-                                        isChildrenEidt ? <>
-                                            <EditableContext.Consumer>
-                                                {
-                                                    form => (
-                                                        <p className={record.children? 'highlighted': ''} onClick={() => this.modifyCourseComplete(form, record)}><Icon className='operation-box-icon' type='save' />保存修改</p>
-                                                    )
-                                                }
-                                            </EditableContext.Consumer>
-                                            <Divider type='vertical' />
-                                        </> : <>
-                                            <p onClick={() => this.editCourse(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
-                                            <Divider type='vertical' />
-                                        </>
-                                    }
+                                    <p onClick={() => this.editCourse(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
+                                    <Divider type='vertical' />
                                 </>
                             }
                             <p onClick={() => this.moveCourse(record, 'up')}><Icon className='operation-box-icon' type='arrow-up' />上移</p>
@@ -200,24 +311,6 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 是否处于编辑状态
      */
     public isEditing = (record: ITableRecord) => record.key === this.state.editingKey;
-    
-    /**
-     * @func
-     * @desc 课程下的某个章节正在处于编辑状态
-     */
-    public isChildrenEditing = (record: ITableRecord): boolean => {
-        const { editingKey, editMaterId } = this.state;
-
-        if (editingKey === record.key) {
-            return false;
-        }
-
-        if (record.value === editMaterId) {
-            return true;
-        }
-
-        return false;
-    } 
 
     /** 
      * @callback
@@ -284,7 +377,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     public addCourseSecondaryDirectory = (record: ITableRecord) => {
         const item = addCourseFieldTemplate({needChildren: false});
         const index: number = this.state.dataSource.findIndex((source: IDataSource) => source.key === record.key);
-        
+
         if (index > -1) {
             const dataSource = cloneDeep(this.state.dataSource);
 
@@ -292,8 +385,20 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
 
             this.buildDataSourceKey(dataSource[index]);
 
+            const canExpandedRowKeys: boolean = (() => {
+                if (record.id === null || record.loaded) {
+                    return true;
+                }
+
+                return false;
+            })();
+            
+            const keys = (record.children || []).map((item) => item.key);
+
             this.setState({
-                dataSource
+                dataSource,
+                expandedRowKeys: [record.key].concat(keys),
+                canExpandedRowKeys
             });
         }
     };
@@ -309,46 +414,48 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
             }
 
             /** 如果是课程修改 那么将调用接口保存其下的所有章节 */
-            if (record.key.split('-').length === 1) {
-                /** 新增 */
-                !record.id && this.addChapterAll(record, row);
-                /** 修改 */
-                record.id && this.updateChapterAll(record, row);
-            } else {
-                /** 如果是课程的章节修改，则前端表面保存 */
-                const indexArr: number[] = this.getCurrentItemIndex(record);
+            // if (record.key.split('-').length === 1) {
+            //     /** 新增 */
+            //     !record.id && this.addChapterAll(record, row);
+            //     /** 修改 */
+            //     record.id && this.updateChapterAll(record, row);
+            // } else {
+               
+            // }
 
-                if (indexArr.length > 0) {
-                    const dataSource = cloneDeep(this.state.dataSource);
-                    let parent: any = dataSource;
+            /** 如果是课程的章节修改，则前端表面保存 */
+            const indexArr: number[] = this.getCurrentItemIndex(record);
 
-                    for(let i = 0; i < indexArr.length; i++) {
-                        if (i === indexArr.length - 1) {
-                            const index: number = indexArr[i];
+            if (indexArr.length > 0) {
+                const dataSource = cloneDeep(this.state.dataSource);
+                let parent: any = dataSource;
 
-                            if (i === 0) {
-                                const item = dataSource[index];
-                                dataSource.splice(index, 1, {
-                                    ...item,
-                                    ...row
-                                });
-                            } else if (i > 0) {
-                                const item = parent.children[index];
-                                parent.children.splice(index, 1, {
-                                    ...item,
-                                    ...row
-                                });
-                            }
-                        } else {
-                            parent = dataSource[indexArr[i]];
+                for(let i = 0; i < indexArr.length; i++) {
+                    if (i === indexArr.length - 1) {
+                        const index: number = indexArr[i];
+
+                        if (i === 0) {
+                            const item = dataSource[index];
+                            dataSource.splice(index, 1, {
+                                ...item,
+                                ...row
+                            });
+                        } else if (i > 0) {
+                            const item = parent.children[index];
+                            parent.children.splice(index, 1, {
+                                ...item,
+                                ...row
+                            });
                         }
+                    } else {
+                        parent = dataSource[indexArr[i]];
                     }
-
-                    this.setState({
-                        dataSource,
-                        editingKey: ''
-                    });
                 }
+
+                this.setState({
+                    dataSource,
+                    editingKey: ''
+                });
             }
         });
     }
@@ -357,101 +464,101 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @func
      * @desc 新建教材全集
      */
-    public addChapterAll = (record: ITableRecord, row: any) => {
-        const chapterResponseDtoList: IAddChapterAllChapterRequestDtoList[] = (record.children || []).reduce((pre,cur: IDataSource) => {
-            const item = {
-                name: cur.name,
-                type: 1,
-                weight: 10
-            };
+    // public addChapterAll = (record: ITableRecord, row: any) => {
+    //     const chapterResponseDtoList: IAddChapterAllChapterRequestDtoList[] = (record.children || []).reduce((pre,cur: IDataSource) => {
+    //         const item = {
+    //             name: cur.name,
+    //             type: 1,
+    //             weight: 10
+    //         };
 
-            return pre.concat({ section: item });
-        }, []);
+    //         return pre.concat({ section: item });
+    //     }, []);
 
-        const params: IAddChapterAllRequest = {
-            chapterResponseDtoList,
-            teachMaterial: {
-                title: row.name,
-                type: 'Type1'
-            }
-        };
+    //     const params: IAddChapterAllRequest = {
+    //         chapterResponseDtoList,
+    //         teachMaterial: {
+    //             title: row.name,
+    //             type: 'Type1'
+    //         }
+    //     };
 
-        const loading = messageFunc();
+    //     const loading = messageFunc();
 
-        api.addChapterAll(params).then((res: IAddChapterAllRequestResult) => {
-            if (res.status === 200 && res.data.success) {
-                loading.success(res.data.desc);
-                this.loadTeachingMenu();
-            } else {
-                loading.error(res.data.desc);
-            }
-        });
-    }
+    //     api.addChapterAll(params).then((res: IAddChapterAllRequestResult) => {
+    //         if (res.status === 200 && res.data.success) {
+    //             loading.success(res.data.desc);
+    //             this.loadTeachingMenu();
+    //         } else {
+    //             loading.error(res.data.desc);
+    //         }
+    //     });
+    // }
 
     /** 
      * @func
      * @desc 更新教材全集
      */
-    public updateChapterAll = (record: ITableRecord, row: any) => {
-        const chapterResponseDtoList: IUpdateChapterAllChapterResponseList[] = (record.children || []).reduce((pre,cur: IDataSource) => {
-            const item = {
-                section: {
-                    chapterId: cur.value,
-                    materialId: record.value,
-                    name: cur.name,
-                    parentId: record.value,
-                    type: 1,
-                    weight: cur.weight,
-                    id: cur.id
-                },
-                ...cur.teachChapterList && { teachChapterList: cur.teachChapterList.map((i: ITeachChapterList) => {
-                    return {
-                        chapterId: i.chapterId,
-                        materialId: i.materialId,
-                        name: i.name,
-                        parentId: i.parentId,
-                        type: i.type,
-                        weight: i.weight,
-                        id: i.id
-                    };
-                }) }
-            }; 
-            return pre.concat(item);
-        }, []);
+    // public updateChapterAll = (record: ITableRecord, row: any) => {
+    //     const chapterResponseDtoList: IUpdateChapterAllChapterResponseList[] = (record.children || []).reduce((pre,cur: IDataSource) => {
+    //         const item = {
+    //             section: {
+    //                 chapterId: cur.value,
+    //                 materialId: record.value,
+    //                 name: cur.name,
+    //                 parentId: record.value,
+    //                 type: 1,
+    //                 weight: cur.weight,
+    //                 id: cur.id
+    //             },
+    //             ...cur.teachChapterList && { teachChapterList: cur.teachChapterList.map((i: ITeachChapterList) => {
+    //                 return {
+    //                     chapterId: i.chapterId,
+    //                     materialId: i.materialId,
+    //                     name: i.name,
+    //                     parentId: i.parentId,
+    //                     type: i.type,
+    //                     weight: i.weight,
+    //                     id: i.id
+    //                 };
+    //             }) }
+    //         }; 
+    //         return pre.concat(item);
+    //     }, []);
 
-        const loading = messageFunc();
+    //     const loading = messageFunc();
 
-        const params: IUpdateChapterAllRequest = {
-            chapterResponseDtoList,
-            teachMaterial: {
-                materlId: record.value,
-                desc: record.desc,
-                pic: record.pic,
-                contributors: record.contributors,
-                score: record.score,
-                size: record.size,
-                title: row.name,
-                type: record.type,
-                weight: record.weight
-            }
-        };
+    //     const params: IUpdateChapterAllRequest = {
+    //         chapterResponseDtoList,
+    //         teachMaterial: {
+    //             materlId: record.value,
+    //             desc: record.desc,
+    //             pic: record.pic,
+    //             contributors: record.contributors,
+    //             score: record.score,
+    //             size: record.size,
+    //             title: row.name,
+    //             type: record.type,
+    //             weight: record.weight
+    //         }
+    //     };
 
-        api.updateChapterAll(params).then((res: IAddChapterAllRequestResult) => {
-            if (res.status === 200 && res.data.success) {
-                loading.success(res.data.desc);
-                this.loadTeachingMenu();
-            } else {
-                loading.error(res.data.desc);
-            }
-        });
-    }
+    //     api.updateChapterAll(params).then((res: IAddChapterAllRequestResult) => {
+    //         if (res.status === 200 && res.data.success) {
+    //             loading.success(res.data.desc);
+    //             this.loadTeachingMenu();
+    //         } else {
+    //             loading.error(res.data.desc);
+    //         }
+    //     });
+    // }
 
     /** 
      * @callback
      * @desc 取消修改课程
      */
     public cancelModifyCourse = (record: ITableRecord) => {
-        this.setState({ editingKey: '', editMaterId: '' });
+        this.setState({ editingKey: '' });
     }
 
     /** 
@@ -460,8 +567,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      */
     public editCourse = (record: ITableRecord) => {
         this.setState({ 
-            editingKey: record.key,
-            editMaterId: record.materialId! 
+            editingKey: record.key
         });
     }
 
@@ -595,7 +701,8 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
 
             this.setState({
                 ...state,
-                editingKey: ''
+                editingKey: '',
+                canExpandedRowKeys: false
             });
 
             loading.success();
@@ -607,6 +714,10 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
      * @desc 展开加载相关课程的章节
      */
     public handleTableItemExpand = (expanded: boolean, record: IDataSource) => {
+        this.setState({
+            canExpandedRowKeys: false
+        });
+
         if (expanded && !record.loaded) {
             const loading = messageFunc();
             const params: FormData = new FormData();
@@ -655,14 +766,6 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 }
             });
         }
-    }
-
-    /** 
-     * @callback
-     * @desc 搜素课程名 
-     */
-    public handleInputSearch = (e: any) => {
-        // const { value } = e.target;
     }
 
     /** 
@@ -720,10 +823,15 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     }
 
     public render() {
-        const { hasData, dataSource, isLoading } = this.state;
+        const { hasData, dataSource, isLoading, isSaving, expandedRowKeys, canExpandedRowKeys } = this.state;
         const components = {
             body: {
                 cell: EditableCell
+            }
+        };
+        const otherTableProps = {
+            ...canExpandedRowKeys && {
+                expandedRowKeys
             }
         };
 
@@ -733,12 +841,10 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Button type='primary' className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
-                            <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存课程权重</Button>
+                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse} disabled={isSaving}><Icon type="save" />保存课程</Button>
+                            {/* <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存课程权重</Button> */}
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>
-                        {/* <Col className='operation-box-col' sm={24} md={12}>
-                            <Search style={{ marginBottom: 8 }} placeholder='输入内容快速定位教材目录节点' onChange={this.handleInputSearch} />
-                        </Col> */}
                     </Row>
                 </div>
                 <div className='table-box'>
@@ -748,6 +854,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                             <Skeleton />
                         </> : <EditableContext.Provider value={this.props.form}>
                                 <Table
+                                    {...otherTableProps}
                                     components={components}
                                     columns={this.renderColumns()}
                                     dataSource={hasData ? dataSource : undefined }

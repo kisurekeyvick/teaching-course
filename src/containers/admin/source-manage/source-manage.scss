@@ -49,7 +49,6 @@
     
                 .ant-breadcrumb {
                     display: inline-block;
-                    @include smallsize;
     
                     & > span:last-child {
                         color: $userColor;

@@ -39,16 +39,6 @@ export const pagesRouter: ILoadableRoute[] = [
         exact: true
     },
     {
-        path: '/book/id/:id',
-        component: Loadable({
-            loader: () => import('../containers/user/book/list/detail/index'),
-            loading: () => null,
-            modules: ['bookDetail']
-        }),
-        key: 4,
-        exact: true
-    },
-    {
         path: '/search',
         component: Loadable({
             loader: () => import('../containers/user/search-result/search-result'),

@@ -55,12 +55,6 @@
                 margin-top: 3px;
                 float: left;
             }
-
-            p.highlighted {
-                color: $userColor;
-                animation: heartBeat 3.5s;
-                animation-iteration-count: infinite;
-            }
         }
     }
 }

@@ -1,8 +1,15 @@
 export const columns = [
     {
-        title: '用户名',
+        title: '用户',
         dataIndex: 'userName',
         key: 'userName',
+        ellipsis: true,
+        width: 200,
+    },
+    {
+        title: '登录名',
+        dataIndex: 'loginName',
+        key: 'loginName',
         ellipsis: true,
         width: 200,
     },
