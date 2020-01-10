@@ -377,7 +377,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
     public addCourseSecondaryDirectory = (record: ITableRecord) => {
         const item = addCourseFieldTemplate({needChildren: false});
         const index: number = this.state.dataSource.findIndex((source: IDataSource) => source.key === record.key);
-        console.log('record', record);
+
         if (index > -1) {
             const dataSource = cloneDeep(this.state.dataSource);
 
@@ -721,7 +721,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
         this.setState({
             canExpandedRowKeys: false
         });
-        
+
         if (expanded && !record.loaded) {
             const loading = messageFunc();
             const params: FormData = new FormData();
