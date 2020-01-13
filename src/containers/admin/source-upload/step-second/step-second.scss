@@ -40,5 +40,9 @@
         .ant-upload.ant-upload-select-picture-card > .ant-upload {
             padding: 0;
         }
+
+        img.uploading-image {
+            height: 350px;
+        }
     }
 }

@@ -158,7 +158,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
         </div>
 
         return <Popover  content={content} placement='bottomRight' trigger={'click'}>
-                    <img alt='用户头像' className='user-portrait' src={teacherCache.link || defaultUserPic} />
+                    <img alt='user-img' className='user-portrait' src={teacherCache.link || defaultUserPic} />
                 </Popover>
     }
 

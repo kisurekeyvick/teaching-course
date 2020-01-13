@@ -10,6 +10,8 @@ import loginLogo from 'assets/images/logo.jpg';
 import userBannerBgPic from 'assets/images/user-banner-bg.png';
 /** 后台logo */
 import simpleLogo from 'assets/images/simpleLogo.jpg';
+/** 上传中 */
+import uploading from 'assets/images/uploading.gif';
 
 /** 文件格式图 */
 import DOC from 'assets/images/file-format/DOC.png';
@@ -36,6 +38,8 @@ export {
     userBannerBgPic,
     /** 后台logo */
     simpleLogo,
+    /** 上传中 */
+    uploading,
     /**文件格式 */
     DOC,
     DOCX,

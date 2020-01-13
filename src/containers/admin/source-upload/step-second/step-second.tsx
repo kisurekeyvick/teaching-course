@@ -5,7 +5,7 @@ import { api } from 'common/api/index';
 import { messageFunc, IMessageFuncRes, getBase64 } from 'common/utils/function';
 import { IUploadFileResponseResult, IAddSectionResponseResultDataResult } from 'common/api/api-interface';
 import { dictionary, IDictionaryItem } from 'common/dictionary/index';
-import { defaultBookPic } from 'common/service/img-collection';
+import { defaultBookPic, uploading } from 'common/service/img-collection';
 import './step-second.scss';
 
 interface IUploadStepSecondProps {
@@ -209,10 +209,15 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
                     <img src={imgSrc} alt="avatar" style={{ width: '100%' }} /> : 
                     <div><Icon type={loading? 'loading' : 'plus'} /> </div>
                 } */}
-                <div>
-                    <Icon type={loading? 'loading' : 'plus'} /> 
-                    <p className='upload-marked-words'>点击加号选取文件/拖拽文件到此处</p>
-                </div>
+                {
+                    loading ? <div>
+                        <img className='uploading-image' src={uploading} alt='uploading'/>
+                    </div> : 
+                    <div>
+                        <Icon type={'plus'} /> 
+                        <p className='upload-marked-words'>点击加号选取文件/拖拽文件到此处</p>
+                    </div>
+                }
             </>
         }
 
@@ -245,6 +250,7 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
                             { content(materialFileImg, materialFileLoading) }
                         </Upload>
                     </Form.Item>
+                    
         </Form>
     }
 
