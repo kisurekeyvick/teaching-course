@@ -195,12 +195,14 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
      * @desc 更新expandedKeys状态
      */
     public updateExpandedKeysState = (node: any, bool: boolean = true) => {
-        const { eventKey, children } = node.props;
-        const childrenKeys = (children || []).map((item: ITeachChapterList) => item.key);
-        this.setState({
-            expandedKeys: [eventKey].concat(childrenKeys),
-            canExpandedKeys: bool
-        }); 
+        const { eventKey, children }: { eventKey: string, children: any[] } = node.props;
+        if (eventKey.includes(matchOutermostLayerKey)) {
+            const childrenKeys = (children || []).map((item: ITeachChapterList) => item.key);
+            this.setState({
+                expandedKeys: [eventKey].concat(childrenKeys),
+                canExpandedKeys: bool
+            }); 
+        }
     }
 
     /** 

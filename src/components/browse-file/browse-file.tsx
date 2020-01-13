@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
+import { Modal } from 'antd';
 import { env } from 'environment/index';
 import './browse-file.scss';
 
@@ -18,7 +18,7 @@ export interface IBrowseFileModalProps {
 }
 
 export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props => {
-    const { title, handleOkCallBack, footer, source, modalVisible } = props;
+    const { title, handleOkCallBack, source, modalVisible } = props;
 
     const fileFormat: string = String(source.fileFormat);
 
@@ -65,11 +65,7 @@ export const BrowseFileModalComponent: React.FC<IBrowseFileModalProps> = props =
                 {...otherConfig}
                 visible={modalVisible}
                 maskClosable={false}
-                footer={[
-                    <Button key='cancel' onClick={handleOk}>
-                        { footer ? footer.left : '关闭' }
-                    </Button>
-                ]}>
+                footer={null}>
                     <div className={'common-box'}>
                         <iframe title='view-iframe' name='previewframe' id='previewframe' width='100%'
                             height='100%'

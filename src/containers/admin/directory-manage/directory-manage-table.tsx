@@ -246,7 +246,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     pic: sourceItem.pic,
                     score: sourceItem.score,
                     size: sourceItem.size,
-                    title: sourceItem.title,
+                    title: sourceItem.name,
                     type: sourceItem.type,
                     weight: sourceItem.weight
                 }

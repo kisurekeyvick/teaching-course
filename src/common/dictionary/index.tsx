@@ -62,15 +62,15 @@ export const dictionary: Map<string, any[]> = new Map([
 /** 资源格式词典 */
 export const sourceFormat: IDictionaryItem[] = [
     { name: '.doc', value: '1', src: DOC },
-        { name: '.docx', value: '2', src: DOCX },
-        { name: '.xls', value: '3', src: XLS },
-        { name: '.xlsx', value: '4', src: XLSX },
-        { name: '.ppt', value: '5', src: PPT },
-        { name: '.pptx', value: '6', src: PPTX },
-        { name: '.tif', value: '7', src: TIF },
-        { name: '.pdf', value:'8', src: PDF },
-        { name: '.swf', value: '9', src: SWF },
-        { name: '.mp4', value: '10', src: MPFour }
+    { name: '.docx', value: '2', src: DOCX },
+    { name: '.xls', value: '3', src: XLS },
+    { name: '.xlsx', value: '4', src: XLSX },
+    { name: '.ppt', value: '5', src: PPT },
+    { name: '.pptx', value: '6', src: PPTX },
+    { name: '.tif', value: '7', src: TIF },
+    { name: '.pdf', value:'8', src: PDF },
+    { name: '.swf', value: '9', src: SWF },
+    { name: '.mp4', value: '10', src: MPFour }
 ];
 
 export interface IDictionaryItem {

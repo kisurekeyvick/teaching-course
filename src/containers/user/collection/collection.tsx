@@ -9,7 +9,7 @@ import { IPageInfo } from 'components/pagination/index';
 import { messageFunc, downloadFile } from 'common/utils/function';
 import { sourceFormat, matchFieldFindeTarget, IDictionaryItem } from 'common/dictionary/index';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
-import { defaultCollectionPic } from 'common/service/img-collection';
+import { defaultBookPic } from 'common/service/img-collection';
 import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
 import './collection.scss';
 
@@ -87,7 +87,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         id: item.id,
                         isCollect: true,
                         chapterId: item.chapterId,
-                        coverLink: item.coverLink || defaultCollectionPic
+                        coverLink: item.coverLink || defaultBookPic
                     };
                 });
 

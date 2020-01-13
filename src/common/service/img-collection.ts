@@ -3,8 +3,6 @@ import defaultBookPic from 'assets/images/defaultBook.jpg';
 import noData from 'assets/images/noData.png';
 /** 学校logo */
 import schoolLogo from 'assets/images/schoolLogo.png';
-/** 收藏页默认书封面 */
-import defaultCollectionPic from 'assets/images/defaultCollectionPic.jpg';
 /** 登录页图片 */
 import loginBgPic from 'assets/images/loginBg.webp';
 import loginLogo from 'assets/images/logo.jpg';
@@ -31,8 +29,6 @@ export {
     noData,
     /** 学校logo */
     schoolLogo,
-    /** 收藏页默认书封面 */
-    defaultCollectionPic,
     /** 登录页背景图片 */
     loginBgPic,
     loginLogo,

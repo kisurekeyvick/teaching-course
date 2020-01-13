@@ -18,8 +18,8 @@ export interface IFormItem {
 
 export const formItem: IFormItem[] = [
     {
-        label: '用户名',
-        placeholder: '请输入账号',
+        label: '姓名',
+        placeholder: '请输入姓名',
         controlName: 'input',
         controlType: 'text',
         key: '1',

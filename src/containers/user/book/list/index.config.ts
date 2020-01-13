@@ -60,3 +60,18 @@ export interface IRequestParams {
 export interface IResponseData {
 
 }
+
+export const materialOperationMsg = {
+    success: {
+        collect: '收藏成功',
+        praise: '点赞成功',
+        see: '',
+        download: ''
+    },
+    error: {
+        collect: '收藏失败',
+        praise: '点赞失败',
+        see: '',
+        download: ''
+    }
+};

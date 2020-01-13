@@ -33,7 +33,7 @@
             }
         }
         
-        .filter-box-type {
+        .filter-box-type-format {
             @include filterLayout;
         }
         
@@ -120,6 +120,8 @@
 
                     span {
                         color: #333;
+                        font-size: 15px;
+                        font-weight: 600;
                     }
 
                     .lover-svg {

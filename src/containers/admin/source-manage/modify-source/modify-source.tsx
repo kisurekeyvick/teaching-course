@@ -294,7 +294,6 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
         const treeModalProps: ITreeModalProps = {
             handleClick: this.handeTreeModalCallBack
         };
-        console.log('渲染', source);
 
         return (
             <>

@@ -32,6 +32,15 @@
 
         .table-tree {
             flex: 0 0 300px;
+            overflow: hidden;
+
+            span.ant-tree-title {
+                display: block;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+                max-width: 260px;
+            }
         }
 
         .table-tree-content {
@@ -69,7 +78,7 @@
                 margin: 0 12px;
 
                 &:hover {
-                    color: $color;
+                    color: $userColor;
                 }
             }
 
@@ -82,7 +91,7 @@
                 margin: 0 12px 0 0;
 
                 &:hover {
-                    color: $color;
+                    color: $userColor;
                 }
             }
 

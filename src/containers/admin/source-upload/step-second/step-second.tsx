@@ -5,6 +5,7 @@ import { api } from 'common/api/index';
 import { messageFunc, IMessageFuncRes, getBase64 } from 'common/utils/function';
 import { IUploadFileResponseResult, IAddSectionResponseResultDataResult } from 'common/api/api-interface';
 import { dictionary, IDictionaryItem } from 'common/dictionary/index';
+import { defaultBookPic } from 'common/service/img-collection';
 import './step-second.scss';
 
 interface IUploadStepSecondProps {
@@ -44,7 +45,11 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
         };
 
         this.state = {
-            overLinkFile: null,
+            overLinkFile: [{
+                uid: Date.now(),
+                status: 'done',
+                url: defaultBookPic
+            }],
             overLinkFileControlError: false,
             overLinkLoading: false,
             overLinkImg: '',
@@ -204,7 +209,10 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
                     <img src={imgSrc} alt="avatar" style={{ width: '100%' }} /> : 
                     <div><Icon type={loading? 'loading' : 'plus'} /> </div>
                 } */}
-                <div><Icon type={loading? 'loading' : 'plus'} /> </div>
+                <div>
+                    <Icon type={loading? 'loading' : 'plus'} /> 
+                    <p className='upload-marked-words'>点击加号选取文件/拖拽文件到此处</p>
+                </div>
             </>
         }
 
@@ -224,9 +232,10 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
                                 <img alt="example" style={{ width: '100%' }} src={overLinkImg} />
                             </Modal>
                         }
+                        <p className='upload-overLinkFile-warn'>注：该图片将作为资源封面，如果未上传封面，将使用默认封面。</p>
                     </Form.Item>
 
-                    <Form.Item className='upload-step-second-form-item' label={'文件上传'} key={'2'}>
+                    <Form.Item className='upload-step-second-form-item upload-materialFile' label={'文件上传'} key={'2'}>
                         <Upload
                             listType="picture-card"
                             fileList={materialFile}

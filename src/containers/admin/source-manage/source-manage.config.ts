@@ -34,7 +34,7 @@ export const columns = [
         dataIndex: 'operation',
         render: () => {},
         fixed: 'right',
-        width: 180,
+        width: 270,
         editable: false
         // width: '180px',
         // ellipsis: true,

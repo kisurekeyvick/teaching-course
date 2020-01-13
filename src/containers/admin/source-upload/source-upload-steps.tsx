@@ -24,7 +24,7 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
         super(props);
 
         this.state = {
-            enableTabs: ['selectNode'],
+            enableTabs: ['selectNode', 'upload'],
             currentTab: 'selectNode',
             courseNode: null
         };

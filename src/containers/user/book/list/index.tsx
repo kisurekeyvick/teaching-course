@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
-import { filterConfig, IFilterConfigItem, imgList } from './index.config';
-import { Divider, Radio, Icon, Skeleton, message, Breadcrumb } from 'antd';
+import { filterConfig, IFilterConfigItem, imgList, materialOperationMsg } from './index.config';
+import { Divider, Radio, Icon, Skeleton, message, Breadcrumb, Select, Row, Col  } from 'antd';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { cloneDeep } from 'lodash';
 import { IBookListProps } from '../interface';
@@ -17,6 +17,7 @@ import { debounce } from 'common/utils/function';
 import './index.scss';
 
 interface IState {
+    type: string;
     format: string;
     filterConfig: any;
     sourceBooklist: ITeachChapterList[];
@@ -37,6 +38,10 @@ interface IConifg {
     searchDebounce: any;
 }
 
+type ItypeStr = 'collect' | 'praise' | 'see' | 'download';
+
+const { Option } = Select;
+
 class BookListContainer extends React.PureComponent<IBookListProps, IState> {
     public config: IConifg;
 
@@ -44,6 +49,8 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
         super(props);
 
         this.state = {
+            /** 资源类型 */
+            type: '',
             /** 资源格式 */
             format: '',
             /** 搜索条件 */
@@ -149,6 +156,24 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
         this.filterDataSource({ name: 'format', value: e.target.value });
     }
 
+    /**
+     * @func
+     * @desc 选择发生变化
+     */
+    public handleSelectChange = (e: any, sourceKey: string) => {
+        if (sourceKey === 'format') {
+            this.setState({
+                format: e
+            });
+        } else if (sourceKey === 'type') {
+            this.setState({
+                type: e
+            });
+        }
+
+        this.filterDataSource({ name: sourceKey, value: e });
+    }
+
     /** 
      * @func
      * @desc 进行数据过滤
@@ -184,13 +209,14 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
                 /** 如果存在资源格式 */
                 if (criteria.hasOwnProperty('format')) {
-                    booklist = sourceBooklist.filter((item: ITeachChapterList) => item.fileFormat === criteria.format);
+                    booklist = criteria.format === '' ?
+                                sourceBooklist : sourceBooklist.filter((item: ITeachChapterList) => item.fileFormat === criteria.format);
                 }
 
                 /** 如果存在资源类型 */
                 if (criteria.hasOwnProperty('type')) {
                     const source: ITeachChapterList[] =  booklist.length > 0 ? booklist : sourceBooklist;
-                    booklist = source.filter((item: ITeachChapterList) => item.fileType === criteria.type);
+                    booklist = criteria.type === '' ? source : source.filter((item: ITeachChapterList) => item.fileType === criteria.type);
                 }
 
                 /** 如果存在排序 */
@@ -247,7 +273,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
      * @func
      * @desc 收藏 点赞 阅读 下载
      */
-    public handleMaterialOperation = (item: ITeachChapterList, typeStr: 'collect' | 'praise' | 'see' | 'download') => {
+    public handleMaterialOperation = (item: ITeachChapterList, typeStr: ItypeStr) => {
         const canMessage: boolean = typeStr === 'collect' || typeStr === 'praise';
 
         handleMaterialOperation({ operation: typeStr, sourceItem: item }).then(({ bool, desc }: IPromiseResolve) => {
@@ -267,9 +293,9 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                     updateTime: Date.now()
                 });
 
-                message.success(desc);
+                message.success(this.buildString(typeStr, 'success'));
             } else {
-                canMessage && message.error(desc);
+                canMessage && message.error(this.buildString(typeStr, 'error'));
             }
         });
 
@@ -282,6 +308,14 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
         if (typeStr === 'see') {
             this.showDetail(item);
         }
+    }
+
+    /** 
+     * @func
+     * @desc 构建提示语
+     */
+    public buildString = (typeStr: ItypeStr, status: 'success' | 'error' ): string => {
+        return materialOperationMsg[status][typeStr];
     }
 
     /** 
@@ -317,7 +351,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
         return <div className='filter-item-content'>
                     {
-                        (type === 'common' || type === undefined) ?
+                        (type === 'common' || type === undefined) &&
                         items.map((item: IFilterConfigItem, index: number) => {
                             const spanContent:React.ReactNode = <span key={item.value} className={`${item.selected ? 'selected' : ''}`} 
                                                                     onClick={() => this.filterBtnClick(item, sourceKey, item.order || '')}>
@@ -329,10 +363,33 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                     { index !== 0 && <Divider type="vertical" key={`${item.value}-divider`}/> }
                                     { spanContent }
                                 </React.Fragment>
-                        }) :
+                        })
+                    }
+                    {
                         type === 'radio' && <Radio.Group options={items as any} onChange={this.radioGroupChange} value={state}></Radio.Group>
                     }
+                    {
+                        type === 'select' && <Select 
+                                                showSearch
+                                                style={{ width: 150 }}
+                                                filterOption={(input, option) => this.filterOption(input, option)}
+                                                onChange={(e) => this.handleSelectChange(e, sourceKey)}>
+                                                {
+                                                    items.map((item: IFilterConfigItem, index: number) => {
+                                                        return <Option value={item.value} key={`${item.value}-${index}`}>{item.name}</Option>
+                                                    })
+                                                }
+                                            </Select>
+                    }
                 </div>
+    }
+
+    /** 
+     * @func
+     * @desc 筛选项条件过滤
+     */
+    public filterOption = (input: string, option: any): boolean => {
+        return option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
     }
 
     public handleModalOk = () => {
@@ -382,13 +439,17 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                 </Breadcrumb>
                             </div>
                         }
-                        <div className='filter-box-type'>
-                            <label>资源类型：</label>
-                            { this.buildfilterContent({ sourceKey: 'type', componentType: 'common'}) }
-                        </div>
-                        <div className='filter-box-format'>
-                            <label>资源格式：</label>
-                            { this.buildfilterContent({ sourceKey: 'format', componentType: 'radio', state: format }) }
+                        <div className='filter-box-type-format '>
+                            <Row gutter={16}>
+                                <Col span={8}>
+                                    <label>资源类型：</label>
+                                    { this.buildfilterContent({ sourceKey: 'type', componentType: 'select'}) }
+                                </Col>
+                                <Col span={8}>
+                                    <label>资源格式：</label>
+                                    { this.buildfilterContent({ sourceKey: 'format', componentType: 'select', state: format }) }
+                                </Col>
+                            </Row>
                         </div>
                         <div className='filter-box-sort'>
                             <label>排序：</label>
@@ -421,7 +482,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                         <Divider type="vertical"/>
                                                         <span>下载：{item.downloadCount}</span>
                                                     </div>
-                                                    <p className='contributor'>贡献者：{item.contributors}</p>
+                                                    {/* <p className='contributor'>贡献者：{item.contributors}</p> */}
                                                 </div>
                                             </div>
                                             <div className='booklist-operation'>
