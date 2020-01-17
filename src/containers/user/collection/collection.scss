@@ -27,175 +27,135 @@
     .collection-item {
         border-radius: 5px;
         font-size: 12px;
-        padding: 12px;
         background-color: #fff;
         margin-bottom: 24px;
+        margin-top: 24px;
         height: 230px;
+        width: 200px;
         cursor: pointer;
         position: relative;
         @include box-shadow;
-
-        img.material-cover {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-            top: 0;
-            left: 0;
-            border-radius: 5px;
-        }
-    
-        &::before {
-            content: '';
-            background: #ccc;
-            width: 100%;
-            height: 100%;
-            transform: scale3d(0, 1, 0);
-            transform-origin: center;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
-            transition: all .5s ease .1s;
-            border-radius: 5px;
-        }
-
-        &:hover::before {
-            opacity: 0.6;
-            transform: scale3d(1, 1, 1);
-        }
-
-        .collection-item-animate {
-            width: 100%;
-            display: none;
-            transform: translateX(-50%) translateY(-50%) scale(0);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            z-index: 1;
-            transition: all 0.4s linear 0s;
-
-            p {
-                color: #fff;
-                font-size: 20px;
-                font-weight: 700;
-                text-transform: uppercase;
-                text-shadow: 0 2px 5px #000;
-                margin: 0 0 3px 0;
-                text-align: center;
-                animation: slideInDown 0.5s;
-                overflow: hidden;
-                height: 60px;
-            }
-
-            .collection-item-operation {
-                text-align: left;
-                padding: 0 24px;
-                position: absolute;
-                bottom: -60px;
-                right: 0px;
-                animation: slideInUp 0.5s;
-
-                span {
-                    background-color: #fff;
-                    height: 35px;
-                    width: 35px;
-                    display: inline-block;
-                    transition: all 0.3s;
-                    line-height: 35px;
-                    margin-right: 8px;
-                    color: $userColor;
-                    text-align: center;
-                    float: left;
-                    border-radius: 50%;
-                }
-
-                span.see-btn {
-                    font-size: 17px;
-                    line-height: 30px;
-                    margin-top: -4px;
-                }
-
-                .download-btn {
-                    color: $userColor;
-                    font-size: 18px;
-                    margin-top: -4px;
-                }
-
-                span.disCollect-btn {
-                    margin-top: -4px;
-
-                    .svg-component {
-                        font-size: 17px;
-                    }
-                }
-
-                span:hover {
-                    background-color: $userColor;
-                    color: #fff;
-                }
-            }
-        }
-
-        &:hover {
-            .collection-item-top, .describle, .collection-item-bottom {
-                display: none;
-            }
-
-            .material-cover {
-                opacity: 1;
-            }
-
-            .collection-item-animate {
-                display: block;
-                transform: translateX(-50%) translateY(-50%) scale(1);
-            }
-        }
 
         .collection-item-top {
             margin-bottom: 12px;
             position: relative;
 
             label {
+                color: #333;
                 font-size: 13px;
+                font-weight: 600;
                 cursor: pointer;
+                text-align: center;
+                padding-right: 10px;
+                display: block;
+                min-height: 39px;
+                overflow: hidden;
+                padding: 12px;
             }
 
             .file-format-logo {
                 width: 65px;
                 position: absolute;
-                right: -10px;
-                top: -60px;
+                left: -30px;
+                top: -25px;
+                transform: rotateZ(15deg);
+            }
+
+            .collection-item-target {
+                height: 105px;
+                overflow: hidden;
+                background-color: #fff;
+                margin-bottom: 12px;
+                padding: 12px;
+                border-top: 1px solid #ebedf0;
+            }
+            
+            .collection-item-size {
+                border-top: 1px solid #ebedf0;
+                padding-top: 12px;
+                margin-bottom: 0px;
+                padding: 12px;
+            }
+        }
+
+        .collection-item-animate {
+            width: 100%;
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0%;
+            z-index: 1;
+            transition: all 0.4s linear 0s;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 5px;
+            overflow: hidden;
+            animation: flipInY 1s;
+
+            .collection-item-operation {
+                span.see-btn {
+                    font-size: 16px;
+                    line-height: 30px;
+                    margin-top: -4px;
+                }
+
+                .download-btn {
+                    font-size: 16px;
+                    margin-top: -5px;
+                }
+
+                span.disCollect-btn {
+                    margin-top: -4px;
+
+                    .svg-component {
+                        font-size: 15px;
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            .collection-item-top {
+                display: none;
+            }
+
+            .collection-item-animate {
+                display: block;
+
+                .collection-item-info {
+                    padding: 12px;
+
+                    img.material-cover {
+                        height: 150px;
+                        display: block;
+                        margin: 0 auto;
+                        margin-top: 12px;
+                    }
+                }
+
+                .collection-item-operation {
+                    background-color: $userColor;
+                    height: 45px;
+                    color: #fff;
+                    text-align: center;
+                    line-height: 45px;
+
+                    .hover-span {
+                        display: block;
+                        line-height: 50px;
+                        transition: all .5s ease .1s;
+
+                        &:hover {
+                            color:$userColor;
+                            background-color: #fff;
+                        }
+                    }
+                }
             }
         }
 
         .describle {
             @include lightColor;
-        }
-
-        .collection-item-bottom {
-            .bottom-right {
-                text-align: right;
-                z-index: 100;
-                height: 18px;
-
-                .download-btn {
-                    color: $color;
-                    font-size: 18px;
-                    float: right;
-                    margin-top: -4px;
-                }
-
-                .svg-component {
-                    color: $iconRed;
-                    margin-right: 8px;
-                    margin-top: -5px;
-                    font-size: 17px;
-                    float: right;
-                    margin-top: 1px;
-                }
-            }
         }
     }
 

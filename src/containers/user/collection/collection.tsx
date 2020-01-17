@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, Row, Col, Popconfirm, message, Icon } from 'antd';
+import { Skeleton, Row, Col, Popconfirm, message, Icon, Tag } from 'antd';
 import { IDataSource } from './collection.config';
 import noDataImg from 'assets/images/noData.png';
 import { SvgComponent } from 'components/icon/icon';
@@ -226,33 +226,31 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                 dataSource.map((source: IDataSource, index: number) => {
                                     return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}} key={`${source.id}-${index}`}>
                                                 <div className='collection-item'>
-                                                    <img className='material-cover' alt='书封面' src={source.coverLink}/>
                                                     <div className='collection-item-top' onClick={() => this.lookItem(source)}>
-                                                        <Row>
-                                                            <Col>
-                                                                <label>{source.title}</label>
-                                                            </Col>
-                                                            <Col>
-                                                                { source.typeImg && <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/> }
-                                                            </Col>
-                                                        </Row>
-                                                    </div>
-                                                    <p className='describle' onClick={() => this.lookItem(source)}>{source.desc}</p>
-                                                    <div className='collection-item-bottom'>
-                                                        <Row>
-                                                            <Col span={12}>
-                                                                <label>文件大小：{source.size}</label>
-                                                            </Col>
-                                                        </Row>
+                                                        <label>{source.title}</label>
+                                                        { source.typeImg && <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/> }
+
+                                                        <p className='collection-item-target'><Tag color='red'>教学目标</Tag>{source.desc}</p>
+                                                        <p className='collection-item-size'><Tag color='red'>文件大小</Tag>{source.size}</p>
                                                     </div>
                                                     <div className='collection-item-animate'>
-                                                        <p>{source.title}</p>
+                                                        <div className='collection-item-info'>
+                                                            <img className='material-cover' alt='书封面' src={source.coverLink}/>
+                                                        </div>
                                                         <div className='collection-item-operation'>
-                                                            <span className='see-btn' onClick={() => this.lookItem(source)}><SvgComponent className='icon-svg' type='icon-see'/></span>
-                                                            <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
-                                                            <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
-                                                                <span className='disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
-                                                            </Popconfirm>
+                                                            <Row>
+                                                                <Col span={8}>
+                                                                    <span className='hover-span see-btn' onClick={() => this.lookItem(source)}><SvgComponent className='icon-svg' type='icon-see'/></span>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <span className='hover-span download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
+                                                                        <span className='hover-span disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
+                                                                    </Popconfirm>
+                                                                </Col>
+                                                            </Row>
                                                         </div>
                                                     </div>
                                                 </div>

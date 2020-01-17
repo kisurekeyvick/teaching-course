@@ -171,7 +171,7 @@
                     & > span.desc {
                         @include smallsize;
                         display: block;
-                        max-height: 40px;
+                        height: 80px;
                         overflow: hidden;
                     }
                     
@@ -187,27 +187,27 @@
                 }
             }
 
-            &::before, &::after {
-                content: "";
-                background: $userSecondBGColor;
-                width: 74%;
-                height: 300%;
-                transform: rotate(45deg);
-                position: absolute;
-                top: 25%;
-                right: -100%;
-                z-index: 1;
-                transition: all 0.35s ease;
-                opacity: 0;
-            }
+            // &::before, &::after {
+            //     content: "";
+            //     background: $userColor;
+            //     width: 74%;
+            //     height: 300%;
+            //     transform: rotate(45deg);
+            //     position: absolute;
+            //     top: 25%;
+            //     right: -100%;
+            //     z-index: 1;
+            //     transition: all 0.35s ease;
+            //     opacity: 0;
+            // }
 
-            &::after {
-                width: 90%;
-                height: 135%;
-                right: auto;
-                left: 10%;
-                top: -250%;
-            }
+            // &::after {
+            //     width: 90%;
+            //     height: 135%;
+            //     right: auto;
+            //     left: 10%;
+            //     top: -250%;
+            // }
 
             .booklist-operation {
                 position: absolute;
@@ -250,15 +250,24 @@
             }
 
             &:hover {
-                padding: 12px;
-                // border: 1px solid $userColor;
-                border-radius: 5px;
+                padding: 16px 11px 11px 11px;
+                box-shadow: 10px 10px 50px #aaa;
+                transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
+                height: 190px;
 
                 .booklist-operation {
                     top: 0;
-                    right: 2%;
+                    right: 0%;
                     display: block;
-                    animation: bounceInRight 1s;
+                    animation: fadeIn 1s;
+                    background-color: $userColor;
+                    padding: 0 0 0 12px;
+
+                    .booklist-operation-item {
+                        .icon-svg {
+                            margin-top: 70px;
+                        }
+                    }
                 }
             }
         }

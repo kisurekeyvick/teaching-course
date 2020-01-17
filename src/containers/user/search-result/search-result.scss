@@ -1,11 +1,16 @@
 @import '../../../assets/styles//global.container.scss';
 @import '../../../assets/styles/global.scss';
-
+@mixin weight {
+    color: #333;
+    font-size: 15px;
+    font-weight: 600;
+}
 .search-result-container {
     height: 100%;
-    margin-top: 32px;
+    margin-top: 24px;
     background-color: #fff;
     position: relative;
+    margin-bottom: 96px;
 
     &.animateCss {
         animation: slideInUp 0.5s;
@@ -53,7 +58,7 @@
             margin-bottom: 24px;
 
             .content-item {
-                @include backgroundAnimate(rgba(0,0,0,.03));
+                // @include backgroundAnimate(rgba(0,0,0,.03));
                 @include smallsize;
                 padding: 12px;
                 position: relative;
@@ -65,7 +70,13 @@
                 }
 
                 p.content-item-title {
-                    font-size: 14px;
+                    color: #333;
+                    @include weight;
+                }
+
+                p.content-item-desc {
+                    height: 70px;
+                    overflow: hidden;
                 }
 
                 .content-item-other-info {
@@ -83,32 +94,36 @@
                         margin-top: 3px;
                     }
 
+                    .directory, .createTime {
+                        @include weight;
+                    }
+
                     .contributor, .directory {
                         color: $userColor;
                     }
                 }
 
-                &::before, &::after {
-                    content: "";
-                    background: $userSecondBGColor;
-                    width: 74%;
-                    height: 300%;
-                    transform: rotate(45deg);
-                    position: absolute;
-                    top: 25%;
-                    right: -100%;
-                    z-index: 1;
-                    transition: all 0.35s ease;
-                    opacity: 0;
-                }
+                // &::before, &::after {
+                //     content: "";
+                //     background: $userColor;
+                //     width: 74%;
+                //     height: 300%;
+                //     transform: rotate(45deg);
+                //     position: absolute;
+                //     top: 25%;
+                //     right: -100%;
+                //     z-index: 1;
+                //     transition: all 0.35s ease;
+                //     opacity: 0;
+                // }
     
-                &::after {
-                    width: 90%;
-                    height: 135%;
-                    right: auto;
-                    left: 10%;
-                    top: -250%;
-                }
+                // &::after {
+                //     width: 90%;
+                //     height: 135%;
+                //     right: auto;
+                //     left: 10%;
+                //     top: -250%;
+                // }
 
                 .searchList-operation {
                     position: absolute;
@@ -116,7 +131,7 @@
                     height: 100%;
                     top: 50%;
                     right:100%;
-                    width: 220px;
+                    width: 250px;
                     z-index: 50;
             
                     .searchList-operation-item {
@@ -125,6 +140,7 @@
                         text-align: center;
                         padding: 0 8px;
                         margin: 0 2px;
+                        color: #fff;
 
                         &:hover, &.selected {
                             color: #fff;
@@ -150,15 +166,24 @@
                 }
 
                 &:hover {
-                    padding: 11px;
-                    border: 1px solid $userColor;
-                    border-radius: 5px;
+                    min-height: 190px;
+                    padding: 21px 11px 11px 11px;
+                    box-shadow: 10px 10px 50px #aaa;
+                    transition: all 0.4s cubic-bezier(0.42, 0, 0.58, 1);
 
                     .searchList-operation {
                         top: 0;
-                        right: 2%;
+                        right: 0%;
                         display: block;
-                        animation: bounceInRight 1s;
+                        animation: fadeIn 1s;
+                        background-color: $userColor;
+                        padding: 0 0 0 12px;
+
+                        .searchList-operation-item {
+                            .icon-svg {
+                                margin-top: 70px;
+                            }
+                        }
                     }
                 }
             }

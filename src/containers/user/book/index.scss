@@ -7,7 +7,7 @@
 }
 
 .book-container {
-    // height: 100%;
+        min-height: 358px;
 
     .book-body {
         display: flex;
@@ -32,6 +32,7 @@
             background-color: #fff;
             margin-top: 20px;
             margin-bottom: 48px;
+            min-height: 358px;
         }
     
         .book-right {

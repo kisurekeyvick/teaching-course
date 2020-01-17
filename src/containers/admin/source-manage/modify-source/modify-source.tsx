@@ -288,7 +288,7 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
     }
 
     public render() {
-        const { source, location, treeModalVisible } = this.state;
+        const { source, treeModalVisible } = this.state;
         const { getFieldDecorator } = this.props.form;
         const { sourceFormat = [], rules, sourceType = [] } = this.config;
         const treeModalProps: ITreeModalProps = {
@@ -317,17 +317,17 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                             <Item label='资源简介'>
                                 {
                                     getFieldDecorator('desc', { initialValue: source.desc, rules: rules.introduction })(
-                                        <TextArea placeholder='请输入资源简介'/>
+                                        <TextArea placeholder='请输入资源简介（字数不超过200）' maxLength={200} autosize={{ minRows: 3, maxRows: 5 }}/>
                                     )
                                 }
                             </Item>
                         </Col>
-                        <Col xs={{span: 24}}>
+                        {/* <Col xs={{span: 24}}>
                             <Item label='课程章节'>
                                 <Button type='primary' onClick={() => this.handleTreeModalClick(true)}>选择节点</Button>
                                 { location && <span className='tree-node-location'>{location}</span> }
                             </Item>
-                        </Col>
+                        </Col> */}
                         <Col xs={{span: 24}}>
                             <Item label='资源类型'>
                                 {

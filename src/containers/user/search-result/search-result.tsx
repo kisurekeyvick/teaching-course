@@ -108,7 +108,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                         id: item.id,
                         createTime: item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : '',
                         contributors: item.contributors,
-                        directory: `${item.materialName || ''} > ${item.chapterName || ''}`,
+                        directory: `${item.materialName ? item.materialName + ' > ' : ''} ${item.chapterName || ''}`,
                         userImg: item.teacherLink || defaultUserPic,
                         url: item.link,
                         fileFormat: item.fileFormat,
