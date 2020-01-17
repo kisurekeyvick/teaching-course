@@ -125,7 +125,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     isLoading: false,
                     pageInfo: {
                         ...pageInfo, ...{
-                            pageNum,
+                            currentPage: pageNum,
                             pageSize: params.pageInfo.pageSize,
                             totalCount: total
                         }
@@ -371,7 +371,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
     }
 
     public render() {
-        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData, modalVisible, currentViewSource } = this.state;
+        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData, modalVisible, currentViewSource, pageInfo } = this.state;
         const pageComponentProps: IPageComponnetProps = {
             ...this.state.pageInfo,
             pageChange: this.pageChange
@@ -402,7 +402,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                             <Skeleton active/>
                             <Skeleton active/>
                         </> : <>
-                            <Tag className='source-result-tag' color='red'>共找到{dataSource.length}个结果</Tag>
+                            <Tag className='source-result-tag' color='red'>共找到{pageInfo.totalCount}个结果</Tag>
                             <div className='content-items-box'>
                                 { this.buildResultItems() }
                             </div>
