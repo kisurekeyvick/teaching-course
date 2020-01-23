@@ -6,7 +6,7 @@ export const currentEnv: CurrentEnv = process.env.NODE_ENV as CurrentEnv;
 /** 环境地址列表 */
 export const baseUrlList = {
     development: 'http://api.microspicy.com:8078',  // '/api/microspicy', //'/api/microspicy', //
-    production: 'http://127.0.0.1:8078'
+    production: `http://${window.location.hostname}:8078`
 };
 
 export const env = {
@@ -21,8 +21,8 @@ export const env = {
      * @desc 配置svg的url，配合组件(components/icon/icon.tsx)使用
      */
     svgUrl: 'http://at.alicdn.com/t/font_1531539_y7j27qle3h.js',
-    /** 三个浏览文件的地址 */
+    /** 三个浏览文件的地址,2020年1月24日修改地址,只能生产环境访问 */
     officeFileUrl: 'https://view.officeapps.live.com/op/view.aspx?src=',
-    pdfFileUrl: 'http://cc.microspicy.com:8012/onlinePreview?url=',
-    otherFileUrl: 'http://cc.microspicy.com:8012/onlinePreview?url='    
+    pdfFileUrl: `http://${window.location.hostname}:8012/onlinePreview?url=`,
+    otherFileUrl: `http://${window.location.hostname}:8012/onlinePreview?url=`    
 };
