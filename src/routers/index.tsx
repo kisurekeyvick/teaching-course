@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-d
 import UserContainer from 'containers/user/user';
 import BehindUserContainer from 'containers/admin/login/login';
 import UserLayout from 'containers/globalLayout/userLayout/index';
-import AdminLayout from 'containers/globalLayout/adminLayout/index';
+import AdminLayout from 'containers/globalLayout/AdminLayout/index';
 import HiddenRouter from 'containers/user/hidden-route/index';
 import { pagesRouter, ILoadableRoute, behindPagesRouter } from './routerList';
 import { localStorageService } from 'common/utils/function';
