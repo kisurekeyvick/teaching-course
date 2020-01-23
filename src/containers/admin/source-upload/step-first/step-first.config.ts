@@ -24,15 +24,15 @@ export const sourceType = dictionary.get('source-type')!
 
 export const formItems: IFormItem[] = [
     {
-        label: '教材上传节点',
+        label: '资源上传节点',
         key: '1',
         controlName: 'button',
         controlType: 'tree',
         state: 'location',
     },
     {
-        label: '课程标题',
-        placeholder: '请输入课程标题',
+        label: '资源标题',
+        placeholder: '请输入资源标题',
         key: '3',
         rules: [
             {
@@ -42,11 +42,12 @@ export const formItems: IFormItem[] = [
         ],
         state: 'name',
         controlName: 'input',
-        controlType: 'text'
+        controlType: 'text',
+        maxLength: 100
     },
     {
-        label: '教学目标',
-        placeholder: '请输入教学目标(字数不超过200)',
+        label: '教学目标(非必填)',
+        placeholder: '请输入教学目标或资源相关描述(不超过200字)',
         key: '4',
         controlName: 'input',
         controlType: 'textarea',

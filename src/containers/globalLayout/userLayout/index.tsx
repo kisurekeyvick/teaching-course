@@ -203,7 +203,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                             <NavLink className='link-item' to='/book' activeClassName='selected'>课程资源</NavLink>
                             <NavLink className='link-item' to='/collection' activeClassName='selected'>我的收藏</NavLink>
                             <NavLink className='link-item' to='/search' activeClassName='selected'>资源检索</NavLink>
-                            <Search className='global-search-material' placeholder='搜索课程资源' onSearch={this.handleSearch}/>
+                            <Search className='global-search-material' placeholder='搜索城轨课程资源' onSearch={this.handleSearch}/>
                             <Divider type="vertical" />
                             <ul className='right-menu'>
                                 { headMenu }

@@ -73,7 +73,7 @@ export default class SourceUploadStepsContainer extends React.Component<ISourceU
 
     /** 
      * @func
-     * @desc 完成第一步：填写资源信息
+     * @desc 完成第一步：填写信息
      */
     public handleUploadStepFirst = (result:IAddSectionResponseResultDataResult) => {
         const { enableTabs } = this.state;

@@ -261,13 +261,13 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     </div> : 
                     <div className='no-data'>
                         <img alt='无数据' src={noDataImg} />
-                        <p>您暂时没有搜藏记录，赶快搜索课程资源，选择您喜欢的课程并收藏吧！</p>
+                        <p>您暂时还没有收藏记录，选择您喜欢的课程并收藏吧！</p>
                     </div>
                 }
                 { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                 <div className='colleaction-bottom'>
                     { canScrollLoad && <p className='can-load-more' onClick={this.loadMore}>加载更多...</p> }
-                    { hasData && !canScrollLoad && <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p> }
+                    { hasData && !canScrollLoad && <p className='can-not-load'>------------------------------------------------------------------我是有底线的------------------------------------------------------------------</p> }
                 </div>
             </div>
         )

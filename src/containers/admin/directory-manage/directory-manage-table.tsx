@@ -841,7 +841,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Button type='primary' className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
-                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse} disabled={isSaving}><Icon type="save" />保存课程</Button>
+                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse} disabled={isSaving}><Icon type="save" />保存全部</Button>
                             {/* <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存课程权重</Button> */}
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>

@@ -14,7 +14,7 @@ export const headMenus: IHeadMenu[] = [
         type: 'SvgComponent',
         value: 'admin-system',
         trigger: 'click',
-        tooltipInfo: '后台管理'
+        tooltipInfo: '进入后台管理'
     },
     // {
     //     icon: 'bell',
@@ -55,7 +55,7 @@ export const menusContentConfig = {
             key: '1'
         },
         {
-            name: '退出',
+            name: '退出系统',
             value: 'exit',
             key: '2'
         }
