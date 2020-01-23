@@ -268,7 +268,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 const editable = this.isEditing(record);
 
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
+                            <Popconfirm title='确认删除?' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
                                 { record.children ? '删除课程' : '删除章节' }
                             </Popconfirm>
                             <Divider type='vertical' />

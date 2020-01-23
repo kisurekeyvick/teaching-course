@@ -246,7 +246,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                                     <span className='hover-span download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
                                                                 </Col>
                                                                 <Col span={8}>
-                                                                    <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
+                                                                    <Popconfirm title='确认要取消收藏吗?' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
                                                                         <span className='hover-span disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
                                                                     </Popconfirm>
                                                                 </Col>
