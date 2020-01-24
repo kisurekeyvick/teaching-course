@@ -300,24 +300,24 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                 <Form onSubmit={this.handleSubmit} className='souce-manage-modify-form' layout='vertical'>
                     <Row gutter={16}>
                         <Col xs={{span: 24}}>
-                            <Item className='course-cover' label='封面'>
+                            <Item className='course-cover' label='资源封面(点击加号上传图片替换封面或拖动图片到方框内)'>
                                 { this.buildOverLinkUploadNode() }
                             </Item>
                         </Col>
                         <Col xs={{span: 24}}>
-                            <Item label='标题'>
+                            <Item label='资源名称'>
                                 {
                                     getFieldDecorator('name', { initialValue: source.name, rules: rules.title })(
-                                        <Input placeholder='请输入标题'/>
+                                        <Input placeholder='请输入资源名称'/>
                                     )
                                 }
                             </Item>
                         </Col>
                         <Col xs={{span: 24}}>
-                            <Item label='资源简介'>
+                            <Item label='教学目标(不超过200字)'>
                                 {
                                     getFieldDecorator('desc', { initialValue: source.desc, rules: rules.introduction })(
-                                        <TextArea placeholder='请输入资源简介（字数不超过200）' maxLength={200} autosize={{ minRows: 3, maxRows: 5 }}/>
+                                        <TextArea placeholder='请输入教学目标或资源相关描述(不超过200字)' maxLength={200} autosize={{ minRows: 3, maxRows: 5 }}/>
                                     )
                                 }
                             </Item>
@@ -344,10 +344,10 @@ class modifySourceContainer extends React.PureComponent<IModifySourceProps, ISta
                             </Item>
                         </Col>
                         <Col xs={{span: 24}}>
-                            <Item label='资源格式'>
+                            <Item label='文件格式'>
                                 {
                                     getFieldDecorator('fileFormat', { initialValue: String(source.fileFormat), rules: rules.format })(
-                                        <Select placeholder='请选择资源格式'>
+                                        <Select placeholder='请选择文件格式'>
                                             {
                                                 sourceFormat.map((format: IDictionaryItem, i: number) => {
                                                     return <Option value={format.value} key={`option-${i}`}>{format.name}</Option>

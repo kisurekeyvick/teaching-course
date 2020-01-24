@@ -224,9 +224,9 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             ...otherParams
         } }).then(({ bool, desc }: IPromiseResolve) => {
             if (bool) {
-                canMessage && message.success(desc);
+                canMessage && message.success(desc,1);
             } else {
-                canMessage && message.error(desc);
+                canMessage && message.error(desc,1);
             }
         });
 

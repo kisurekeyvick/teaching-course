@@ -150,9 +150,9 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
                     const { desc, success } = res.data;
                     
                     if (!success) {
-                        message.error(desc);
+                        message.error(desc,1);
                     } else {    
-                        message.success(desc);
+                        message.success(desc,1);
                         window.location.href = '/user/login';
                     }
                 }

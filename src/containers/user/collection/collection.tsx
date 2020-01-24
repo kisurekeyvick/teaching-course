@@ -147,9 +147,9 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     dataSource: [...dataSource]
                 });
 
-                message.success(desc);
+                message.success(desc,1);
             } else {
-                message.error(desc);
+                message.error(desc,1);
             }
         });
     }

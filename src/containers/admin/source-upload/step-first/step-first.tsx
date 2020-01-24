@@ -201,7 +201,7 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                     }
                 });
 
-                message.success('发布成功');
+                message.success('发布成功',1);
             }
         });
     }

@@ -152,7 +152,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
 
     /** 
      * @callback
-     * @desc    编辑资源
+     * @desc    编辑资源信息
      */
     public editSource = (record: ITeachChapterList) => {
         this.setState({
@@ -337,7 +337,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                                     }
                                 </div>
                                 <Drawer 
-                                    title='编辑资源'
+                                    title='编辑资源信息'
                                     width={520}
                                     onClose={() => this.toggleDrawer(false)}
                                     visible={showDrawer}
