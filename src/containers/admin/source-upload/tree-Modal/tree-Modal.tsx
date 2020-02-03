@@ -4,7 +4,7 @@ import { IMenuItem } from 'containers/user/book/directory/index.config';
 import { SvgComponent } from 'components/icon/icon';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
 import { ITeachChapterList } from 'common/api/api-interface';
-import { messageFunc } from 'common/utils/function';
+import { messageFunc, debounce } from 'common/utils/function';
 import { noData } from 'common/service/img-collection';
 import './tree-Modal.scss';
 
@@ -53,7 +53,8 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
         };
 
         this.config = {
-            currentNode: null
+            currentNode: null,
+            searchDebounce: debounce(500)
         };
     }
 
@@ -140,30 +141,32 @@ export class TreeModalContainer extends React.PureComponent<ITreeModalProps, ISt
      * @desc 选择节点 
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
-        if (selectedKeys.length > 0) {
-            this.updateExpandedKeysState(e.node);
-            this.pushChapterMaterial(selectedKeys[0], this.state.menus, e);
-
-            // const { menus } = this.state;
-            // const keysArr: string[] = selectedKeys[0].split('-');
-            // const treeNode = e.node.props;
-            // const materialId: string = keysArr[0];
-            // const sectionIndex: number = +(keysArr[1]);
-            // const course: IMenuItem = menus.find((menu: IMenuItem) => menu.value === materialId)!;
-            // const courseChildren = course.children!;
-
-            // if (course.children && sectionIndex >= 0) {
-            //     const materialName = course.name;
-            //     const chapterId = courseChildren[sectionIndex].value;
-            //     const chapterName = treeNode.title;
-            //     this.config.currentNode = {
-            //         materialName,
-            //         materialId,
-            //         chapterName,
-            //         chapterId
-            //     };
-            // }
-        }
+        this.config.searchDebounce(() => {
+            if (selectedKeys.length > 0) {
+                this.updateExpandedKeysState(e.node);
+                this.pushChapterMaterial(selectedKeys[0], this.state.menus, e);
+    
+                // const { menus } = this.state;
+                // const keysArr: string[] = selectedKeys[0].split('-');
+                // const treeNode = e.node.props;
+                // const materialId: string = keysArr[0];
+                // const sectionIndex: number = +(keysArr[1]);
+                // const course: IMenuItem = menus.find((menu: IMenuItem) => menu.value === materialId)!;
+                // const courseChildren = course.children!;
+    
+                // if (course.children && sectionIndex >= 0) {
+                //     const materialName = course.name;
+                //     const chapterId = courseChildren[sectionIndex].value;
+                //     const chapterName = treeNode.title;
+                //     this.config.currentNode = {
+                //         materialName,
+                //         materialId,
+                //         chapterName,
+                //         chapterId
+                //     };
+                // }
+            }
+        });
     }
 
     public pushChapterMaterial(selectedKeys: string, stateMenus: IMenuItem[], e?: any) {

@@ -44,6 +44,7 @@ export const columns = [
 export interface IConfig {
     columns: any[];
     sourceFormat: IDictionaryItem[];
+    [key: string]: any;
 }
 
 export const sourceFormat: IDictionaryItem[] = dictionary.get('source-format')!;

@@ -79,13 +79,13 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
     static getDerivedStateFromProps(nextProps: IBookListProps, prevState: IState) {
         if (nextProps.showList && nextProps.updateTime > prevState.updateTime) {
-            const fileFormat: IDictionaryItem[] = dictionary.get('source-format')!;
+            const fileType: IDictionaryItem[] = dictionary.get('source-type')!;
 
             const result: ITeachChapterList[] = nextProps.showList.map((item: any) => {
                 item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
                 item.title = item.name;
                 item.coverLink = item.coverLink || defaultBookPic;
-                item.fileFormatName = item.fileFormat ? (fileFormat.find((file: IDictionaryItem) => item.fileFormat === file.value)!).name : '';
+                item.fileFormatName = item.fileFormat ? (fileType.find((file: IDictionaryItem) => item.fileType === file.value)!).name : '';
                 
                 return {    
                     ...item

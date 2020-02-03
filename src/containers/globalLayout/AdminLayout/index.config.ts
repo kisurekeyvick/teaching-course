@@ -34,22 +34,6 @@ export const userCommonMenuList: IHeadMenu[] = [
         value: 'skip-to-user-system',
         trigger: 'click',
         context: '切换至首页'
-    },
-    {
-        icon: 'icon-skip-page',
-        key: '2',
-        type: 'SvgComponent',
-        value: 'skip-to-user-system',
-        trigger: 'click',
-        context: '切换至首页'
-    },
-    {
-        icon: 'icon-skip-page',
-        key: '3',
-        type: 'SvgComponent',
-        value: 'skip-to-user-system',
-        trigger: 'click',
-        context: '切换至首页'
     }
 ];
 

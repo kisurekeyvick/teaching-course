@@ -3,7 +3,7 @@ import { Tree, Skeleton } from 'antd';
 import { IMenuItem } from 'containers/user/book/directory/index.config';
 import { SvgComponent } from 'components/icon/icon';
 import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'common/service/tree-ajax';
-import { messageFunc } from 'common/utils/function';
+import { messageFunc, debounce } from 'common/utils/function';
 import { ITeachChapterList } from 'common/api/api-interface';
 import { noData } from 'common/service/img-collection';
 import './course-tree.scss';
@@ -52,7 +52,8 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
         };
 
         this.config = {
-            currentNode: null
+            currentNode: null,
+            searchDebounce: debounce(500)
         };
     }
 
@@ -184,10 +185,12 @@ export class CourseTreeContainer extends React.PureComponent<ICourseTreeProps, I
      * @desc 选择节点 
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
-        if (selectedKeys.length > 0) {
-            this.updateExpandedKeysState(e.node);
-            this.pushChapterMaterial(selectedKeys[0], this.state.menus, e);
-        }
+        this.config.searchDebounce(() => {
+            if (selectedKeys.length > 0) {
+                this.updateExpandedKeysState(e.node);
+                this.pushChapterMaterial(selectedKeys[0], this.state.menus, e);
+            }
+        });
     }
 
     /** 
