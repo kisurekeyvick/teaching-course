@@ -224,9 +224,9 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             ...otherParams
         } }).then(({ bool, desc }: IPromiseResolve) => {
             if (bool) {
-                canMessage && message.success(desc);
+                canMessage && message.success(desc,1);
             } else {
-                canMessage && message.error(desc);
+                canMessage && message.error(desc,1);
             }
         });
 
@@ -417,7 +417,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     {
                         !isLoading && !hasData && <div className='no-data'>
                             <img alt='无数据' src={noData} />
-                            <p>很抱歉！没有帮助您找到想要的结果。</p>
+                            <p>抱歉！没有找到相关资源，请更换关键词再试。</p>
                         </div>
                     }
                 </div>

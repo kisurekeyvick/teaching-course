@@ -147,9 +147,9 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     dataSource: [...dataSource]
                 });
 
-                message.success(desc);
+                message.success(desc,1);
             } else {
-                message.error(desc);
+                message.error(desc,1);
             }
         });
     }
@@ -246,7 +246,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                                                     <span className='hover-span download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
                                                                 </Col>
                                                                 <Col span={8}>
-                                                                    <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
+                                                                    <Popconfirm title='确认要取消收藏吗?' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
                                                                         <span className='hover-span disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
                                                                     </Popconfirm>
                                                                 </Col>
@@ -261,13 +261,13 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     </div> : 
                     <div className='no-data'>
                         <img alt='无数据' src={noDataImg} />
-                        <p>您暂时没有搜藏记录，赶快搜索课程资源，选择您喜欢的课程并收藏吧！</p>
+                        <p>您暂时还没有收藏记录，选择您喜欢的课程并收藏吧！</p>
                     </div>
                 }
                 { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                 <div className='colleaction-bottom'>
                     { canScrollLoad && <p className='can-load-more' onClick={this.loadMore}>加载更多...</p> }
-                    { hasData && !canScrollLoad && <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p> }
+                    { hasData && !canScrollLoad && <p className='can-not-load'>------------------------------------------------------------------我是有底线的------------------------------------------------------------------</p> }
                 </div>
             </div>
         )

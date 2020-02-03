@@ -112,7 +112,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
         if (target) {
             target.render = (text: string, record: any) => {
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
+                            <Popconfirm title='确认删除?' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
                             <Divider type='vertical' />
                             <p onClick={() => this.editSource(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
                             <Divider type='vertical' />
@@ -152,7 +152,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
 
     /** 
      * @callback
-     * @desc    编辑资源
+     * @desc    编辑资源信息
      */
     public editSource = (record: ITeachChapterList) => {
         this.setState({
@@ -337,7 +337,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                                     }
                                 </div>
                                 <Drawer 
-                                    title='编辑资源'
+                                    title='编辑资源信息'
                                     width={520}
                                     onClose={() => this.toggleDrawer(false)}
                                     visible={showDrawer}

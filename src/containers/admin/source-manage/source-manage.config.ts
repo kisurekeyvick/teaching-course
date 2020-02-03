@@ -9,14 +9,14 @@ export const columns = [
         width: 150,
     },
     {
-        title: '资源类型',
+        title: '文件格式',
         dataIndex: 'typeName',
         key: 'typeName',
         width: 50,
         ellipsis: true
     },
     {
-        title: '资源简介',
+        title: '详细信息',
         dataIndex: 'desc',
         key: 'desc',
         width: 350,

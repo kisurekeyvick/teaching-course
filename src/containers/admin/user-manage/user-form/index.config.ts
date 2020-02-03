@@ -6,12 +6,12 @@ export interface ITabItem {
 
 export const tabs: ITabItem[] = [
     {
-        name: '账号密码',
+        name: '修改用户密码',
         key: '1',
         value: 'account'
     },
     {
-        name: '个人信息',
+        name: '修改个人信息',
         key: '2',
         value: 'detailInfo'
     }

@@ -97,7 +97,7 @@ export const modifyAccount: IFormItem[] = [
     },
     {
         label: '确认新密码',
-        placeholder: '确认新密码',
+        placeholder: '请再输入新密码',
         controlName: 'input',
         controlType: 'password',
         rules: [

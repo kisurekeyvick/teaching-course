@@ -16,12 +16,12 @@ export interface IControl {
 
 export const controlArray: IControl[] = [
     {
-        name: '用户名',
+        name: '姓名',
         className: 'head-portrait',
         stateName: 'userName',
         focusStateName: 'userNameControlFocus',
         key: '1',
-        placeholder: '请输入用户名'
+        placeholder: '请输入姓名'
     },
     {
         name: '职位',
@@ -32,11 +32,11 @@ export const controlArray: IControl[] = [
         placeholder: '请输入职位'
     },
     {
-        name: '个人介绍',
+        name: '个人简介',
         className: 'introduction desc',
         stateName: 'desc',
         focusStateName: 'introductionControlFocus',
         key: '3',
-        placeholder: '请输入个人介绍'
+        placeholder: '请输入个人简介'
     }
 ]

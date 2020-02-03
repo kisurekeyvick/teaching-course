@@ -32,7 +32,7 @@ export const userMenuList: IHeadMenu[] = [
         type: 'SvgComponent',
         value: 'skip-to-user-system',
         trigger: 'click',
-        context: '切换至前台'
+        context: '切换至首页'
     },
     {
         icon: 'icon-exit',
@@ -40,6 +40,6 @@ export const userMenuList: IHeadMenu[] = [
         type: 'SvgComponent',
         value: 'exit',
         trigger: 'click',
-        context: '退出'
+        context: '退出系统'
     }
 ];

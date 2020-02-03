@@ -452,7 +452,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                             </Row>
                         </div>
                         <div className='filter-box-sort'>
-                            <label>排序：</label>
+                            <label>排序方式：</label>
                             { this.buildfilterContent({ sourceKey: 'sort', componentType: 'common'}) }
                         </div>
                     </div>
@@ -478,7 +478,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                         <Divider type="vertical"/>
                                                         <span>大小：{item.size}</span>
                                                         <Divider type="vertical"/>
-                                                        <span>浏览量：{item.viewCount}</span>
+                                                        <span>浏览：{item.viewCount}</span>
                                                         <Divider type="vertical"/>
                                                         <span>下载：{item.downloadCount}</span>
                                                     </div>
@@ -507,7 +507,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                             }) :
                             <div className='noData'>
                                 <img alt='无数据' src={imgList.noData} />
-                                <p>很抱歉没有符合条件的教材</p>
+                                <p>很抱歉,没有符合条件的课程资源,请重新查询</p>
                             </div>
                         }
                     </div>

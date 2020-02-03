@@ -194,7 +194,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                             <div className='user-container-box'>
                                 <div className='admin-login'>
                                     <Form className='admin-login-form' onSubmit={this.handleSubmit}>
-                                        <p className='login-title'>后台管理系统</p>
+                                        <p className='login-title'>城市轨道交通教学资源管理系统-后台管理登录</p>
                                         {
                                             this.config.loginFormItem.map((item: IForm, index: number) => {
                                                 return <FormItem

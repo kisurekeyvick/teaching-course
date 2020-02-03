@@ -64,7 +64,7 @@ class UserManageContainer extends React.PureComponent<IUserManageContainerProps,
         if (operation) {
             operation.render = (text: string, record: IAccountInfo) => {
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
+                            <Popconfirm title='确认删除?' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
                             <Divider type='vertical' />
                             <p onClick={() => this.editSource(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
                         </span>;
