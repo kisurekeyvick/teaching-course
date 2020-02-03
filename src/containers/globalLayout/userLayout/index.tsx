@@ -42,7 +42,7 @@ class GlobalLayout extends React.Component<IGlobalLayoutProps, IState> {
         this.config = {
             headMenus:  cloneDeep(headMenus),
             menusContent: this.menusContentList(menusContentConfig),
-            searchDebounce: debounce(1000)
+            searchDebounce: debounce(200)
         };
 
         this.state = {

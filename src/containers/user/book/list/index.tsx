@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {connect} from 'react-redux';
 import { filterConfig, IFilterConfigItem, imgList, materialOperationMsg } from './index.config';
-import { Divider, Radio, Icon, Skeleton, message, Breadcrumb, Select, Row, Col  } from 'antd';
+import { Divider, Radio, Icon, Skeleton, message, Breadcrumb, Select, Row, Col, Tag  } from 'antd';
 import { PageComponent, IPageComponnetProps, IPageInfo, defaultPageInfo } from 'components/pagination/index';
 import { cloneDeep } from 'lodash';
 import { IBookListProps } from '../interface';
@@ -79,13 +79,17 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
 
     static getDerivedStateFromProps(nextProps: IBookListProps, prevState: IState) {
         if (nextProps.showList && nextProps.updateTime > prevState.updateTime) {
+            const fileFormat: IDictionaryItem[] = dictionary.get('source-format')!;
+
             const result: ITeachChapterList[] = nextProps.showList.map((item: any) => {
                 item.createTime = dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss');
                 item.title = item.name;
                 item.coverLink = item.coverLink || defaultBookPic;
+                item.fileFormatName = item.fileFormat ? (fileFormat.find((file: IDictionaryItem) => item.fileFormat === file.value)!).name : '';
+                
                 return {    
                     ...item
-                }
+                };
             });
 
             return {
@@ -467,6 +471,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                             <div className='booklist-item-top'>
                                                 <div className='booklist-item-top-left'>
                                                     <span>{ item.title }</span>
+                                                    <Tag className='booklist-item-fileFormat' color='red'>{ item.fileFormatName }</Tag>
                                                 </div>
                                             </div>
                                             <div className='booklist-item-bottom'>
@@ -478,9 +483,13 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                                                         <Divider type="vertical"/>
                                                         <span>大小：{item.size}</span>
                                                         <Divider type="vertical"/>
-                                                        <span>浏览量：{item.viewCount}</span>
+                                                        <span>浏览量：{item.viewCount > 999 ? '999+' : item.viewCount}</span>
                                                         <Divider type="vertical"/>
-                                                        <span>下载：{item.downloadCount}</span>
+                                                        <span>下载：{item.downloadCount > 999 ? '999+' : item.downloadCount}</span>
+                                                        <Divider type="vertical"/>
+                                                        <span>点赞：{item.fabulousCount > 999 ? '999+' : item.fabulousCount}</span>
+                                                        <Divider type="vertical"/>
+                                                        <span>收藏：{item.collectionCount > 999 ? '999+' : item.collectionCount}</span>
                                                     </div>
                                                     {/* <p className='contributor'>贡献者：{item.contributors}</p> */}
                                                 </div>
