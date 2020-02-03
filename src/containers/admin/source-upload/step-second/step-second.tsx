@@ -215,7 +215,7 @@ class UploadStepSecondContainer extends React.PureComponent<IUploadStepSecondPro
                     </div> : 
                     <div>
                         <Icon type={'plus'} /> 
-                        <p className='upload-marked-words'>点击加号选取文件/拖拽文件到此处</p>
+                        <p className='upload-marked-words'>点击选取文件或直接拖拽文件到此处</p>
                     </div>
                 }
             </>

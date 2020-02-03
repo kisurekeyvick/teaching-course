@@ -79,7 +79,8 @@ export const loadSectionList = (params: FormData, treeNode: any, sourceMenu: any
                     return y.weight - x.weight;
                 });
 
-                menus.forEach((menu: IMenuItem) => {
+                menus.forEach((menu: IMenuItem, index: number) => {
+                    menu.key = `${value}-${index}-${menu.id}`;
                     treeNode.props.dataRef.children.push({
                         title: menu.name,
                         key: menu.key

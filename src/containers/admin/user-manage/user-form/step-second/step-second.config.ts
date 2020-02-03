@@ -34,8 +34,8 @@ export const formItem: IFormItem[] = [
         state: 'position',
     },
     {
-        label: '个人介绍',
-        placeholder: '请输入个人介绍',
+        label: '个人简介',
+        placeholder: '请输入个人简介',
         controlName: 'input',
         controlType: 'text',
         key: '3',

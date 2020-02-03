@@ -2,13 +2,13 @@ import * as React from 'react';
 import { env } from 'environment/index';
 import {connect} from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import { Layout, Menu, Icon, Breadcrumb, Popover, Row, BackTop } from 'antd';
+import { Layout, Menu, Icon, Breadcrumb, Popover, BackTop } from 'antd';
 import { menu, IMenuItem } from 'common/admin-menu/menu';
 import { SvgComponent } from 'components/icon/icon';
 import { NavLink } from "react-router-dom";
 import './index.scss';
 import { cloneDeep } from 'lodash';
-import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu } from './index.config';
+import { IAdminLayoutProps, IAdminLayoutState, IConfig, userMenuList, IHeadMenu, userCommonMenuList } from './index.config';
 import { localStorageService, getUserBaseInfo } from 'common/utils/function';
 import { StorageItemName } from 'common/utils/cache/storageCacheList';
 import { loginLogo, simpleLogo, defaultUserPic } from 'common/service/img-collection';
@@ -25,6 +25,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
         this.config = {
             menuList: cloneDeep(menu),
             userMenuList: cloneDeep(userMenuList),
+            userCommonMenuList: cloneDeep(userCommonMenuList),
             teacherCache: getUserBaseInfo()
         };
 
@@ -146,20 +147,33 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
             {
                 this.config.userMenuList.map((item: IHeadMenu) => {
                     return <li onClick={() => this.handleUserMenuClick(item)} key={item.key}>
-                            <Row>
-                                {
-                                    item.type === 'SvgComponent' ? <SvgComponent className={`svg-head-user ${item.icon}`} type={item.icon!}/> : <Icon type={item.icon} />
-                                }
-                                <span>{item.context}</span>
-                            </Row>
+                            { item.type === 'SvgComponent' ? <SvgComponent className={`svg-head-user ${item.icon}`} type={item.icon!}/> : <Icon type={item.icon} /> }
+                            <span>{item.context}</span>
                         </li>;
                 })
             }
         </div>
 
         return <Popover  content={content} placement='bottomRight' trigger={'click'}>
-                    <img alt='user-img' className='user-portrait' src={teacherCache.link || defaultUserPic} />
+                    <img alt='user' className='user-portrait' src={teacherCache.link || defaultUserPic} />
                 </Popover>
+    }
+
+    /** 
+     * @func
+     * @desc 构建head头部的common快捷菜单按钮
+     */
+    public buildQuickMenu = (): React.ReactNode => {
+        const { userCommonMenuList } = this.config;
+        
+        return userCommonMenuList.map((item: IHeadMenu) => {
+            return <span className='quick-menu-item' onClick={() => this.handleUserMenuClick(item)} key={item.key}>
+                        {
+                            item.type === 'SvgComponent' ? <SvgComponent className={`svg-head-user ${item.icon}`} type={item.icon!}/> : <Icon type={item.icon} />
+                        }
+                        <span>{item.context}</span>
+                    </span>
+        });
     }
 
     /** 
@@ -180,6 +194,7 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
         const menuList: React.ReactNode = this.buildMenu();
         const bread: React.ReactNode = this.reateBreadcrumb();
         const userOperation: React.ReactNode = this.buildUserPopMenu();
+        const quickOperation: React.ReactNode = this.buildQuickMenu();
 
         return <Layout className='admin-layout'>
                     <Sider style={{
@@ -195,12 +210,18 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
                         </Menu>
                     </Sider>
                     <Layout>
-                        <Header style={{ background: '#fff', padding: 0}}>
-                            <Icon
-                            className='trigger'
-                            type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
-                            onClick={this.toggle} />
-                            <div className='head-right-box'>{ userOperation }</div>
+                        <Header className='admin-head-box' style={{ background: '#fff', padding: 0}}>
+                            <div className='head-left-box'>
+                                <Icon
+                                className='trigger'
+                                type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}
+                                onClick={this.toggle} />
+                                <div className='system-version'>{`${env.name} ${env.version}`}</div>
+                            </div>
+                            <div className='head-right-box'>
+                                <div className='user-operation'>{ userOperation }</div>
+                                <div className='menu-list'>{ quickOperation }</div>
+                            </div>
                         </Header>
                         <Content>
                             <div className='admin-bread-box'>

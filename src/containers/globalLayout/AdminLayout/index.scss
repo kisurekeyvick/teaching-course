@@ -1,6 +1,35 @@
 @import '../../../assets/styles//global.scss';
 
+@mixin menuItem {
+    li {
+        padding: 6px;
+        cursor: pointer;
+        border-radius: 3px;
+        list-style-type:none;
+
+        .svg-head-user {
+            margin-right: 10px;
+            float: left;
+            margin-top: 4px;
+
+            &.icon-switch-account {
+                font-size: 18px;
+            }
+        }
+
+        &:hover {
+            background-color: #eee;
+        }
+    }
+}
+
+@mixin adminLayout {
+    min-width: 1150px;
+}
+
 .admin-layout {
+    @include adminLayout;
+
     img.slide-logo {
         width: 200px;
         padding: 11px 0;
@@ -92,21 +121,71 @@
         }
     }
 
-    .head-right-box {
-        display: inline-block;
-        float: right;
-        padding-right: 24px;
+    .admin-head-box {
+        display: flex;
 
-        &>i.anticon-user {
-            font-size: 17px;
+        .head-left-box {
+            flex: 1;
+
+            .trigger, .system-version {
+                float: left;
+            }
+
+            .trigger {
+                margin-top: 25px;
+            }
+
+            .system-version {
+                margin-left: 24px;
+                font-weight: 600;
+                font-size: 16px;
+                font-family: Microsoft YaHei;
+            }
         }
 
-        .user-portrait {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            opacity: 0.9;
-            cursor: pointer;
+        .head-right-box {
+            flex: 0 0 500px;
+            padding-right: 24px;
+            text-align: right;
+    
+            &>i.anticon-user {
+                font-size: 17px;
+            }
+
+            .menu-list {
+                float: right;
+                margin-right: 24px;
+
+                .quick-menu-item {
+                    margin-right: 20px;
+                    cursor: pointer;
+                    padding: 10px;
+                    margin: 13px 5px;
+                    float: right;
+                    line-height: 20px;
+                    border-radius: 3px;
+                    background-color: #f0f2f5;
+
+                    .svg-head-user {
+                        margin: 3px 8px 0 0;
+                        float: left;
+                    }
+
+                    &:hover {
+                        background-color: #eee;
+                    }
+                }
+            }
+    
+            .user-portrait {
+                width: 25px;
+                height: 25px;
+                border-radius: 50%;
+                opacity: 0.9;
+                cursor: pointer;
+                float: right;
+                margin: 20px 0 0 0;
+            }
         }
     }
 
@@ -139,23 +218,5 @@
 }
 
 .admin-system-user-menulist {
-    li {
-        padding: 6px;
-        cursor: pointer;
-        border-radius: 3px;
-
-        .svg-head-user {
-            margin-right: 10px;
-            float: left;
-            margin-top: 4px;
-
-            &.icon-switch-account {
-                font-size: 18px;
-            }
-        }
-
-        &:hover {
-            background-color: #eee;
-        }
-    }
+    @include menuItem;
 }
