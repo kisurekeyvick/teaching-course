@@ -10,7 +10,8 @@ export const baseUrlList = {
 };
 
 export const env = {
-    version: 'V1.0.0',
+    version: 'V1.0.12',
+    releaseDate: '2020年2月3日',
     name: '城市轨道交通课程资源管理系统',
     footerText: 'Copyright@Xiamen Infomation School ALL Rights 版权所有@厦门信息学校 闽ICP备 05020335 号',
     /** 

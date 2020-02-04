@@ -294,7 +294,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         return <div className='directory-box'>
                     <div className='directory-title'>
                         <SvgComponent className='book-svg' type='icon-book' />
-                        <p>教材目录</p>
+                        <p>课程目录</p>
                     </div>
                     <div className='directory-menu-box'>
                         {

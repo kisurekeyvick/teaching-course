@@ -516,7 +516,7 @@ class BookListContainer extends React.PureComponent<IBookListProps, IState> {
                             }) :
                             <div className='noData'>
                                 <img alt='无数据' src={imgList.noData} />
-                                <p>很抱歉,没有符合条件的课程资源,请重新查询</p>
+                                <p>暂时还没有符合条件的教学资源，请在左侧课程目录选择相关内容</p>
                             </div>
                         }
                     </div>
