@@ -55,7 +55,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
         window.addEventListener('resize', this.handleResize);
     }
 
-        /**
+    /**
      * @func
      * @desc 处理屏幕发生变化
      */
@@ -90,10 +90,10 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
                 });
 
                 api.login(params).then((res: ILogin) => {
-                    const { data: { success, isAdministrators, desc }, headers } = res;
+                    const { data: { success, isAdministrators, desc, result }, headers } = res;
                     if (res.status === 200 && success) {
                         if (isAdministrators) {
-                            this.saveToLocalStorage({ params, headers }).then(() => {
+                            this.saveToLocalStorage({ params, headers, result }).then(() => {
                                 // this.props.history.push('/admin/system/upload');
                                 window.location.href = '/admin/system/upload';
                                 loading.success(desc);
@@ -121,10 +121,16 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
      * @func
      * @desc 存储信息到本地
      */
-    public saveToLocalStorage = ({ params, headers }: any): Promise<string> => {
+    public saveToLocalStorage = ({ params, headers, result }: any): Promise<string> => {
         return new Promise((resovle) => {
             this.rememberAdminPage({...params, token: headers.token});
             this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
+            // 更新user界面的账号信息
+            const userInfo = this.localStorageService.get(StorageItemName.LOGINCACHE);
+            const value = userInfo ? {...userInfo.value, ...result} : {...result};
+            const endTime: any = dayjs().add(30, 'day').toDate();
+            this.localStorageService.set(StorageItemName.LOGINCACHE, value, endTime);
+
             resovle('');
         });
     }
@@ -231,7 +237,7 @@ class AdminLogin extends React.PureComponent<IProps, IState> {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.handleResize)
+        window.removeEventListener('resize', this.handleResize);
     }
 }
 

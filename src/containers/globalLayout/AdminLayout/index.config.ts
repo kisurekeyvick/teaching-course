@@ -39,6 +39,14 @@ export const userCommonMenuList: IHeadMenu[] = [
 
 export const userMenuList: IHeadMenu[] = [
     {
+        icon: 'icon-switch-account',
+        key: '1',
+        type: 'SvgComponent',
+        value: 'changeAdmin',
+        trigger: 'click',
+        context: '切换管理员账号'
+    },
+    {
         icon: 'icon-exit',
         key: '2',
         type: 'SvgComponent',

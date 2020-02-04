@@ -36,7 +36,6 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
     }
 
     public componentDidMount() {
-
     }
 
     public initBreadcrumbInfo = (): IMenuItem[] => {
@@ -181,8 +180,15 @@ class AdminLayout extends React.Component<IAdminLayoutProps, IAdminLayoutState> 
      * @desc 处理用户菜单点击
      */
     public handleUserMenuClick = (menu: IHeadMenu) => {
-        if (menu.value === 'exit') {
+        if (menu.value === 'changeAdmin') {
+            localStorageService.remove(StorageItemName.BEHINDLOGINCACHE);
             window.location.href = '/admin/login';
+        } else if (menu.value === 'exit') {
+            Object.keys(StorageItemName).forEach((item: string) => {
+                localStorageService.remove(item);
+            });
+            
+            window.location.href = '/user/login';
         } else if (menu.value === 'skip-to-user-system') {
             /** 跳转至前台登录页 */
             localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
