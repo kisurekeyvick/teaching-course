@@ -23,6 +23,7 @@ interface IState {
     isLoading: boolean;
     expandedKeys: string[];
     canExpandedKeys: boolean;
+    style: any;
 }
 
 interface IConfig {
@@ -40,7 +41,8 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
             hasData: false,
             isLoading: false,
             expandedKeys: [],
-            canExpandedKeys: false
+            canExpandedKeys: false,
+            style: {}
         };
 
         this.config = {
@@ -82,6 +84,22 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
 
     public componentDidMount() {
         this.loadFirstLayerMenu();
+        this.handleResize();
+        window.addEventListener('resize', this.handleResize);
+    }
+
+    /**
+     * @func
+     * @desc 处理屏幕发生变化
+     */
+    public handleResize = (e?: any) => {
+        const target = document.querySelector('main.ant-layout-content')!;
+
+        target && this.setState({
+            style: {
+                maxHeight: (target as HTMLElement).offsetHeight + 'px'
+            }
+        });
     }
 
     /**
@@ -288,10 +306,14 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                 </Tree>
     }
 
-    public render() {
-        const { isLoading, hasData } = this.state;
+    public componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+    }
 
-        return <div className='directory-box'>
+    public render() {
+        const { isLoading, hasData, style } = this.state;
+
+        return <div className='directory-box' style={style}>
                     <div className='directory-title'>
                         <SvgComponent className='book-svg' type='icon-book' />
                         <p>课程目录</p>
