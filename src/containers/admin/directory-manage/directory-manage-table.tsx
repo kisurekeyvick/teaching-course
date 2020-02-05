@@ -246,7 +246,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     pic: sourceItem.pic,
                     score: sourceItem.score,
                     size: sourceItem.size,
-                    title: sourceItem.title,
+                    title: sourceItem.name,
                     type: sourceItem.type,
                     weight: sourceItem.weight
                 }
@@ -268,7 +268,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                 const editable = this.isEditing(record);
 
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
+                            <Popconfirm title='确认删除?' onConfirm={() => this.deleteCourse(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />
                                 { record.children ? '删除课程' : '删除章节' }
                             </Popconfirm>
                             <Divider type='vertical' />
@@ -841,7 +841,7 @@ class DirectoryManageContainer extends React.PureComponent<IDirectoryManageProps
                     <Row>
                         <Col className='operation-box-col' sm={24} md={12}>
                             <Button type='primary' className='btn-addCourse' onClick={this.addCourse}><SvgComponent className='add-course-svg' type='icon-add-directory' />添加课程</Button>
-                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse} disabled={isSaving}><Icon type="save" />保存课程</Button>
+                            <Button type='primary' className='btn-save' onClick={this.saveTotalCourse} disabled={isSaving}><Icon type="save" />保存全部</Button>
                             {/* <Button type='primary' className='btn-save' onClick={this.globalNotify}><Icon type="save" />保存课程权重</Button> */}
                             <Button type='primary' className='btn-refresh' onClick={this.refreshDataSource}><Icon type="reload" />刷新</Button>
                         </Col>

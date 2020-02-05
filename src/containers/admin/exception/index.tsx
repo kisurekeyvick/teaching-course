@@ -20,7 +20,7 @@ export default class ExceptionComponent extends React.PureComponent<any, any> {
     public render() {
         const props = {
             type: '404',
-            backText: '返回首页',
+            backText: '返回资源上传',
             redirect: '/admin/system/upload',
             linkTo: this.skipTo
         };

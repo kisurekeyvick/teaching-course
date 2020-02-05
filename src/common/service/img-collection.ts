@@ -3,8 +3,6 @@ import defaultBookPic from 'assets/images/defaultBook.jpg';
 import noData from 'assets/images/noData.png';
 /** 学校logo */
 import schoolLogo from 'assets/images/schoolLogo.png';
-/** 收藏页默认书封面 */
-import defaultCollectionPic from 'assets/images/defaultCollectionPic.jpg';
 /** 登录页图片 */
 import loginBgPic from 'assets/images/loginBg.webp';
 import loginLogo from 'assets/images/logo.jpg';
@@ -12,6 +10,8 @@ import loginLogo from 'assets/images/logo.jpg';
 import userBannerBgPic from 'assets/images/user-banner-bg.png';
 /** 后台logo */
 import simpleLogo from 'assets/images/simpleLogo.jpg';
+/** 上传中 */
+import uploading from 'assets/images/uploading.gif';
 
 /** 文件格式图 */
 import DOC from 'assets/images/file-format/DOC.png';
@@ -31,8 +31,6 @@ export {
     noData,
     /** 学校logo */
     schoolLogo,
-    /** 收藏页默认书封面 */
-    defaultCollectionPic,
     /** 登录页背景图片 */
     loginBgPic,
     loginLogo,
@@ -40,6 +38,8 @@ export {
     userBannerBgPic,
     /** 后台logo */
     simpleLogo,
+    /** 上传中 */
+    uploading,
     /**文件格式 */
     DOC,
     DOCX,

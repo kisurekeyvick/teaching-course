@@ -12,7 +12,7 @@ import { loadMaterialMenu, loadSectionList, matchOutermostLayerKey } from 'commo
 import {connect} from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { updateChapterMaterial } from 'store/material-chapter/action';
-import { messageFunc } from 'common/utils/function';
+import { messageFunc, debounce } from 'common/utils/function';
 import { api } from 'common/api';
 
 const { TreeNode } = Tree;
@@ -23,9 +23,11 @@ interface IState {
     isLoading: boolean;
     expandedKeys: string[];
     canExpandedKeys: boolean;
+    style: any;
 }
 
 interface IConfig {
+    [key: string]: any;
 }
 
 class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
@@ -39,10 +41,12 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
             hasData: false,
             isLoading: false,
             expandedKeys: [],
-            canExpandedKeys: false
+            canExpandedKeys: false,
+            style: {}
         };
 
         this.config = {
+            searchDebounce: debounce(500)
         };
     }
 
@@ -80,6 +84,22 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
 
     public componentDidMount() {
         this.loadFirstLayerMenu();
+        this.handleResize();
+        window.addEventListener('resize', this.handleResize);
+    }
+
+    /**
+     * @func
+     * @desc 处理屏幕发生变化
+     */
+    public handleResize = (e?: any) => {
+        const target = document.querySelector('main.ant-layout-content')!;
+
+        target && this.setState({
+            style: {
+                maxHeight: (target as HTMLElement).offsetHeight + 'px'
+            }
+        });
     }
 
     /**
@@ -158,10 +178,12 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @desc 选择节点 
      */
     public selectNode = (selectedKeys: string[], e?: any) => {
-        if (selectedKeys.length > 0) {
-            this.updateExpandedKeysState(e.node);
-            this.pushChapterMaterial(selectedKeys[0], {}, this.state.menus, () => {}, e.node);
-        }
+        this.config.searchDebounce(() => {
+            if (selectedKeys.length > 0) {
+                this.updateExpandedKeysState(e.node);
+                this.pushChapterMaterial(selectedKeys[0], {}, this.state.menus, () => {}, e.node);
+            }
+        });
     }
 
     /**
@@ -233,12 +255,15 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
      * @desc 更新expandedKeys状态
      */
     public updateExpandedKeysState = (node: any, bool: boolean = true) => {
-        const { eventKey, children } = node.props;
-        const childrenKeys = (children || []).map((item: ITeachChapterList) => item.key);
-        this.setState({
-            expandedKeys: [eventKey].concat(childrenKeys),
-            canExpandedKeys: bool
-        }); 
+        const { eventKey, children }: { eventKey: string, children: any[] } = node.props;
+
+        if (eventKey.includes(matchOutermostLayerKey)) {
+            const childrenKeys = (children || []).map((item: ITeachChapterList) => item.key);
+            this.setState({
+                expandedKeys: [eventKey].concat(childrenKeys),
+                canExpandedKeys: bool
+            }); 
+        }
     }
 
     /** 
@@ -263,7 +288,7 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
         };
 
         const buildTreeNode = (children: IMenuItem[]) => {
-            return children.map((child: IMenuItem) => {
+            return (children || []).map((child: IMenuItem) => {
                 return <TreeNode icon={<SvgComponent className='svg-icon-chapter' type='icon-subway-chapter' />} title={child.name} key={child.key} isLeaf={child.isLeaf} dataRef={child}>
                     { (child.children!).length > 0 && buildTreeNode(child.children!) }
                 </TreeNode>
@@ -281,13 +306,17 @@ class DirectoryContainer extends React.PureComponent<IDirectoryProps, IState> {
                 </Tree>
     }
 
-    public render() {
-        const { isLoading, hasData } = this.state;
+    public componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+    }
 
-        return <div className='directory-box'>
+    public render() {
+        const { isLoading, hasData, style } = this.state;
+
+        return <div className='directory-box' style={style}>
                     <div className='directory-title'>
                         <SvgComponent className='book-svg' type='icon-book' />
-                        <p>教材目录</p>
+                        <p>课程目录</p>
                     </div>
                     <div className='directory-menu-box'>
                         {

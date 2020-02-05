@@ -69,7 +69,7 @@ export const addAccount: IFormItem[] = [
 export const modifyAccount: IFormItem[] = [
     {
         label: '旧密码',
-        placeholder: '请输入原密码（初次设置时可留空）',
+        placeholder: '请输入原密码',
         controlName: 'input',
         controlType: 'password',
         rules: [
@@ -97,7 +97,7 @@ export const modifyAccount: IFormItem[] = [
     },
     {
         label: '确认新密码',
-        placeholder: '确认新密码',
+        placeholder: '请再次输入新密码',
         controlName: 'input',
         controlType: 'password',
         rules: [

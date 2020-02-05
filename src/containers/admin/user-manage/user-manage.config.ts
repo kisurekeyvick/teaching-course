@@ -1,6 +1,6 @@
 export const columns = [
     {
-        title: '用户',
+        title: '姓名',
         dataIndex: 'userName',
         key: 'userName',
         ellipsis: true,

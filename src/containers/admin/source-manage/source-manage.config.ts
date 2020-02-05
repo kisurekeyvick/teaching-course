@@ -9,14 +9,14 @@ export const columns = [
         width: 150,
     },
     {
-        title: '资源类型',
+        title: '文件格式',
         dataIndex: 'typeName',
         key: 'typeName',
         width: 50,
         ellipsis: true
     },
     {
-        title: '资源简介',
+        title: '详细信息',
         dataIndex: 'desc',
         key: 'desc',
         width: 350,
@@ -34,7 +34,7 @@ export const columns = [
         dataIndex: 'operation',
         render: () => {},
         fixed: 'right',
-        width: 180,
+        width: 270,
         editable: false
         // width: '180px',
         // ellipsis: true,
@@ -44,6 +44,7 @@ export const columns = [
 export interface IConfig {
     columns: any[];
     sourceFormat: IDictionaryItem[];
+    [key: string]: any;
 }
 
 export const sourceFormat: IDictionaryItem[] = dictionary.get('source-format')!;

@@ -3,6 +3,8 @@
 }
 
 .browse-file-modal {
+    padding-bottom: 0;
+
     &.common-box {
         .ant-modal-content {
             height: 100%;
@@ -20,6 +22,10 @@
     }
 
     .ant-modal-footer {
+        background-color: #fff;
+    }
+
+    i.anticon.anticon-close.ant-modal-close-icon {
         background-color: #fff;
     }
 }

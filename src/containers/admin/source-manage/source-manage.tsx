@@ -9,6 +9,7 @@ import { CourseTreeContainer, ICourseTreeProps, courseTreeResponse } from 'compo
 import { ITeachChapterList, IDeleteChapterOrSectionRequest, IDeleteChapterOrSectionResponseResult } from 'common/api/api-interface';
 import { findTarget } from 'common/dictionary/index';
 import { messageFunc } from 'common/utils/function';
+import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
 import './source-manage.scss';
 import { api } from 'common/api';
 
@@ -25,6 +26,8 @@ interface IState {
     isLoading: boolean;
     showDrawer: boolean;
     currentEditSource: any;
+    modalVisible: boolean;
+    currentViewSource: ITeachChapterList | null;
     [key: string]: any;
 }
 
@@ -46,7 +49,9 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
             breadcrumb: [],
             /** 分页 */
             pageInfo: {...defaultPageInfo},
-            currentEditSource: {}
+            currentEditSource: {},
+            modalVisible: false,
+            currentViewSource: null,
         };
 
         this.config = {
@@ -107,9 +112,11 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
         if (target) {
             target.render = (text: string, record: any) => {
                 return <span className='table-operation-box'>
-                            <Popconfirm title='请确认删除。' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
+                            <Popconfirm title='确认删除?' onConfirm={() => this.deleteSource(record)} okText='确认' cancelText='取消'><Icon className='operation-box-icon' type='delete' />删除</Popconfirm>
                             <Divider type='vertical' />
                             <p onClick={() => this.editSource(record)}><Icon className='operation-box-icon' type='edit' />修改</p>
+                            <Divider type='vertical' />
+                            <p onClick={() => this.seeSource(record)}><Icon className='operation-box-icon' type="eye" />查看</p>
                         </span>;
             };
         }
@@ -145,7 +152,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
 
     /** 
      * @callback
-     * @desc    编辑资源
+     * @desc    编辑资源信息
      */
     public editSource = (record: ITeachChapterList) => {
         this.setState({
@@ -162,6 +169,17 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
         const { history } = this.props;
         const url: string = '/admin/system/upload';
         history.push(url);
+    }
+
+    /** 
+     * @callback
+     * @desc 查看资源
+     */
+    public seeSource = (record: ITeachChapterList) => {
+        this.setState({
+            modalVisible: true,
+            currentViewSource: {...record, url: record.link},
+        });
     }
 
     /** 
@@ -212,6 +230,20 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
         });
     }
 
+    public handleModalOk = () => {
+        this.setState({
+            modalVisible: false,
+            updateTime: Date.now()
+        });
+    }
+
+    public handleModalCancel = () => {
+        this.setState({
+            modalVisible: false,
+            updateTime: Date.now()
+        });
+    }
+
     /** 
      * @func
      * @desc 编辑组件的回调函数
@@ -229,18 +261,32 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
     }
 
     public render() {
-        const { hasData, dataSource, isLoading, pageInfo, showDrawer, breadcrumb, currentEditSource } = this.state;
+        const { hasData, dataSource, isLoading, pageInfo, showDrawer, breadcrumb, 
+                currentEditSource, modalVisible, currentViewSource } = this.state;
         const pageComponentProps: IPageComponnetProps = {
             ...pageInfo,
             pageChange: this.pageChange
         };
+
         const modifySourceProps: any = {
             callBack: this.modifySourceCallBack,
             source: currentEditSource,
             updateTime: Date.now()
         };
+
         const courseTreeProps: ICourseTreeProps = {
             handleClick: this.handleCourseTreeClick
+        };
+
+        const browseFileModalProps: IBrowseFileModalProps = {
+            handleOkCallBack: this.handleModalOk,
+            handleCancelCallBack: this.handleModalCancel,
+            modalVisible,
+            source: currentViewSource,
+            title: '',
+            ...currentViewSource && {
+                title: currentViewSource.title
+            }
         };
 
         return (
@@ -291,7 +337,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                                     }
                                 </div>
                                 <Drawer 
-                                    title='编辑资源'
+                                    title='编辑资源信息'
                                     width={520}
                                     onClose={() => this.toggleDrawer(false)}
                                     visible={showDrawer}
@@ -301,6 +347,7 @@ class SourceManageContainer extends React.PureComponent<ISourceManageContainerPr
                             </>
                         }
                     </div>
+                    { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                 </div>
             </div>
         )

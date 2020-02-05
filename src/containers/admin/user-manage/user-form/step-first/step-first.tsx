@@ -60,10 +60,12 @@ class UserModifyStepFirstContainer extends React.PureComponent<IUserModifyStepFi
      */
     public modifyAccount = (values: IModifyValue) => {
         const loading = messageFunc('正在修改密码中......');
+        const { userInfo } = this.props;
         const params: IUpdatePasswordRequestParams = {
             oldPassword: values.oldPassword,
             newPassword: values.newPassword,
             againNewPassword: values.againNewPassword,
+            teacherId: (userInfo!).teacherId
         };
 
         api.updatePassword(params).then((res: IPersonUpdateResponseResult) => {

@@ -6,7 +6,7 @@ export interface ITabItem {
 
 export const tabs: ITabItem[] = [
     {
-        name: '填写资源信息',
+        name: '填写信息',
         key: '1',
         value: 'selectNode'
     },

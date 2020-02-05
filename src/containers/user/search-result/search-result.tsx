@@ -108,7 +108,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                         id: item.id,
                         createTime: item.updateTime ? dayjs(item.updateTime).format('YYYY-MM-DD HH:mm:ss') : '',
                         contributors: item.contributors,
-                        directory: `${item.materialName || ''} > ${item.chapterName || ''}`,
+                        directory: `${item.materialName ? item.materialName + ' > ' : ''} ${item.chapterName || ''}`,
                         userImg: item.teacherLink || defaultUserPic,
                         url: item.link,
                         fileFormat: item.fileFormat,
@@ -125,7 +125,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     isLoading: false,
                     pageInfo: {
                         ...pageInfo, ...{
-                            pageNum,
+                            currentPage: pageNum,
                             pageSize: params.pageInfo.pageSize,
                             totalCount: total
                         }
@@ -224,9 +224,9 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
             ...otherParams
         } }).then(({ bool, desc }: IPromiseResolve) => {
             if (bool) {
-                canMessage && message.success(desc);
+                canMessage && message.success(desc,1);
             } else {
-                canMessage && message.error(desc);
+                canMessage && message.error(desc,1);
             }
         });
 
@@ -371,7 +371,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
     }
 
     public render() {
-        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData, modalVisible, currentViewSource } = this.state;
+        const { searchSourceType, searchSourceFormat, dataSource, isLoading, hasData, modalVisible, currentViewSource, pageInfo } = this.state;
         const pageComponentProps: IPageComponnetProps = {
             ...this.state.pageInfo,
             pageChange: this.pageChange
@@ -402,7 +402,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                             <Skeleton active/>
                             <Skeleton active/>
                         </> : <>
-                            <Tag className='source-result-tag' color='red'>共找到{dataSource.length}个结果</Tag>
+                            <Tag className='source-result-tag' color='red'>共找到{pageInfo.totalCount}个结果</Tag>
                             <div className='content-items-box'>
                                 { this.buildResultItems() }
                             </div>
@@ -417,7 +417,7 @@ class SearchResultContainer extends React.PureComponent<ISearchResultProps, ISta
                     {
                         !isLoading && !hasData && <div className='no-data'>
                             <img alt='无数据' src={noData} />
-                            <p>很抱歉！没有帮助您找到想要的结果。</p>
+                            <p>抱歉！没有找到相关资源，请更换关键词再试。</p>
                         </div>
                     }
                 </div>

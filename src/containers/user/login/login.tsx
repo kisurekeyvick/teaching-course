@@ -122,12 +122,16 @@ class UserLogin extends React.PureComponent<IProps, IState> {
     public readRememberPwd = () => {
         const loginInfo = this.localStorageService.get(StorageItemName.LOGINCACHE);
 
-        if (loginInfo) {
+        if (loginInfo && loginInfo['value']['remember']) {
             const { value } = loginInfo;
             this.props.form.setFieldsValue({
                 userName: value.loginName,
                 password: value.password,
                 remember: value.remember
+            });
+        } else {
+            this.props.form.setFieldsValue({
+                remember: false
             });
         }
     }
@@ -184,7 +188,8 @@ class UserLogin extends React.PureComponent<IProps, IState> {
      */
     public saveToLocalStorage = ({ value, success, result, isAdministrators, desc, headers }: any):Promise<string> => {
         return new Promise((resolve) => {
-            value.remember ? this.rememberPwd({...result, isAdministrators, remember: true}) : this.forgetPwd();
+            // value.remember ? this.rememberPwd({...result, isAdministrators, remember: true}) : this.forgetPwd();
+            this.rememberPwd({...result, isAdministrators, remember: value.remember});
             this.localStorageService.set(StorageItemName.PAGETYPE, { type: 'front' });
             this.localStorageService.set(StorageItemName.TOKEN, { token: headers.token });
             resolve('');
@@ -262,9 +267,8 @@ class UserLogin extends React.PureComponent<IProps, IState> {
 
         return(
             <div className='user-login' style={style}>
-                <div className='login-left-bg' />
                 <Form className='user-login-form' onSubmit={this.handleSubmit}>
-                    <p className='login-title'><span>城市轨道交通课程资源管理系统</span></p>
+                    <p className='login-title'><span>欢迎登陆城市轨道交通课程资源管理系统</span></p>
                     {
                         this.config.loginFormItem.map((item: IForm, index: number) => {
                             return <FormItem

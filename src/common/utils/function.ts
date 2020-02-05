@@ -70,11 +70,11 @@ export function messageFunc(loadDesc: string = '加载数据中...'): IMessageFu
     const loading = message.loading(loadDesc, 0);
 
     return {
-        success: function( successDesc: string = '加载完成', seconds: number = 2) {
+        success: function( successDesc: string = '加载完成', seconds: number = 1) {
             loading();
             message.success(successDesc, seconds);
         },
-        error: function(errorDesc: string = '', seconds: number = 2) {
+        error: function(errorDesc: string = '', seconds: number = 3) {
             loading();
             message.error(errorDesc, seconds);
         },

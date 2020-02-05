@@ -4,6 +4,9 @@
     min-height: 358px;
     padding: 0 0 24px;
     background-color: #fff;
+    width: 230px;
+    position: fixed;
+    overflow-y: scroll;
 
     .directory-title {
         display: flex;
@@ -55,6 +58,14 @@
             margin-top: 24px;
             font-size: 12px;
         }
+
+        span.ant-tree-title {
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            max-width: 160px;
+        }
     }
 
     .svg-icon-course {
@@ -71,7 +82,7 @@
     }
 
     .ant-tree li .ant-tree-node-content-wrapper {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     .svg-icon-chapter {

@@ -95,7 +95,7 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                                 let control: React.ReactNode = <div></div>;
                                 
                                 if (item.controlName === 'input') {
-                                    item.controlType === 'text' && (control = <Input placeholder={item.placeholder}/>);
+                                    item.controlType === 'text' && (control = <Input maxLength={item.maxLength} placeholder={item.placeholder}/>);
 
                                     item.controlType === 'textarea' && (control = <Input.TextArea maxLength={item.maxLength} placeholder={item.placeholder} autosize={{ minRows: 3, maxRows: 5 }}/>);
                                 
@@ -104,7 +104,7 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
 
                                 if (item.controlName === 'button') {
                                     control = <>
-                                        <Button type='primary' onClick={() => this.handleTreeModalClick(true)}>选择章节</Button>
+                                        <Button type='primary' onClick={() => this.handleTreeModalClick(true)}>选择资源所属章节</Button>
                                         { location && <span className='tree-node-location'>{location}</span> }
                                     </>
 
@@ -201,7 +201,7 @@ class UploadStepFirstContainer extends React.PureComponent<IUploadStepFirstProps
                     }
                 });
 
-                message.success('发布成功');
+                message.success('发布成功',1);
             }
         });
     }

@@ -1,12 +1,13 @@
 @import '../../../assets/styles/global.scss';
 
 @mixin slidelayout {
-    flex: 0 0 200px;
+    flex: 0 0 230px;
     margin: 20px 20px 0 20px;
+    overflow: hidden;
 }
 
 .book-container {
-    // height: 100%;
+        min-height: 358px;
 
     .book-body {
         display: flex;
@@ -30,6 +31,8 @@
             flex: 1;
             background-color: #fff;
             margin-top: 20px;
+            margin-bottom: 48px;
+            min-height: 358px;
         }
     
         .book-right {

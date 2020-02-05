@@ -13,6 +13,7 @@ export interface IAdminLayoutState {
 export interface IConfig {
     menuList: IMenuItem[];
     userMenuList: IHeadMenu[];
+    userCommonMenuList: IHeadMenu[];
     teacherCache: any;
 }
 
@@ -25,14 +26,25 @@ export interface IHeadMenu {
     context: string;
 }
 
-export const userMenuList: IHeadMenu[] = [
+export const userCommonMenuList: IHeadMenu[] = [
     {
         icon: 'icon-skip-page',
         key: '1',
         type: 'SvgComponent',
         value: 'skip-to-user-system',
         trigger: 'click',
-        context: '切换至前台'
+        context: '切换至首页'
+    }
+];
+
+export const userMenuList: IHeadMenu[] = [
+    {
+        icon: 'icon-switch-account',
+        key: '1',
+        type: 'SvgComponent',
+        value: 'changeAdmin',
+        trigger: 'click',
+        context: '切换管理员账号'
     },
     {
         icon: 'icon-exit',
@@ -40,6 +52,6 @@ export const userMenuList: IHeadMenu[] = [
         type: 'SvgComponent',
         value: 'exit',
         trigger: 'click',
-        context: '退出'
+        context: '退出系统'
     }
 ];

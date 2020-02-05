@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, Row, Col, Popconfirm, message, Icon } from 'antd';
+import { Skeleton, Row, Col, Popconfirm, message, Icon, Tag } from 'antd';
 import { IDataSource } from './collection.config';
 import noDataImg from 'assets/images/noData.png';
 import { SvgComponent } from 'components/icon/icon';
@@ -9,7 +9,7 @@ import { IPageInfo } from 'components/pagination/index';
 import { messageFunc, downloadFile } from 'common/utils/function';
 import { sourceFormat, matchFieldFindeTarget, IDictionaryItem } from 'common/dictionary/index';
 import { handleMaterialOperation, IPromiseResolve } from 'common/service/material-operation-ajax';
-import { defaultCollectionPic } from 'common/service/img-collection';
+import { defaultBookPic } from 'common/service/img-collection';
 import { BrowseFileModalComponent, IBrowseFileModalProps } from 'components/browse-file/browse-file';
 import './collection.scss';
 
@@ -87,7 +87,7 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                         id: item.id,
                         isCollect: true,
                         chapterId: item.chapterId,
-                        coverLink: item.coverLink || defaultCollectionPic
+                        coverLink: item.coverLink || defaultBookPic
                     };
                 });
 
@@ -147,9 +147,9 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     dataSource: [...dataSource]
                 });
 
-                message.success(desc);
+                message.success(desc,1);
             } else {
-                message.error(desc);
+                message.error(desc,1);
             }
         });
     }
@@ -226,33 +226,31 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                                 dataSource.map((source: IDataSource, index: number) => {
                                     return <Col xs={{span: 12}} sm={{span: 8}} lg={{span: 6}} key={`${source.id}-${index}`}>
                                                 <div className='collection-item'>
-                                                    <img className='material-cover' alt='书封面' src={source.coverLink}/>
                                                     <div className='collection-item-top' onClick={() => this.lookItem(source)}>
-                                                        <Row>
-                                                            <Col>
-                                                                <label>{source.title}</label>
-                                                            </Col>
-                                                            <Col>
-                                                                { source.typeImg && <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/> }
-                                                            </Col>
-                                                        </Row>
-                                                    </div>
-                                                    <p className='describle' onClick={() => this.lookItem(source)}>{source.desc}</p>
-                                                    <div className='collection-item-bottom'>
-                                                        <Row>
-                                                            <Col span={12}>
-                                                                <label>文件大小：{source.size}</label>
-                                                            </Col>
-                                                        </Row>
+                                                        <label>{source.title}</label>
+                                                        { source.typeImg && <img alt='file-format-logo' className='file-format-logo' src={source.typeImg}/> }
+
+                                                        <p className='collection-item-target'><Tag color='red'>教学目标</Tag>{source.desc}</p>
+                                                        <p className='collection-item-size'><Tag color='red'>文件大小</Tag>{source.size}</p>
                                                     </div>
                                                     <div className='collection-item-animate'>
-                                                        <p>{source.title}</p>
+                                                        <div className='collection-item-info'>
+                                                            <img className='material-cover' alt='书封面' src={source.coverLink}/>
+                                                        </div>
                                                         <div className='collection-item-operation'>
-                                                            <span className='see-btn' onClick={() => this.lookItem(source)}><SvgComponent className='icon-svg' type='icon-see'/></span>
-                                                            <span className='download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
-                                                            <Popconfirm title='请确认取消收藏。' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
-                                                                <span className='disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
-                                                            </Popconfirm>
+                                                            <Row>
+                                                                <Col span={8}>
+                                                                    <span className='hover-span see-btn' onClick={() => this.lookItem(source)}><SvgComponent className='icon-svg' type='icon-see'/></span>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <span className='hover-span download-btn' onClick={() => this.downloadCollection(source)}><Icon type="cloud-download" /></span>
+                                                                </Col>
+                                                                <Col span={8}>
+                                                                    <Popconfirm title='确认要取消收藏吗?' onConfirm={() => this.cancelCollection(source, index)} okText='确认' cancelText='取消'>
+                                                                        <span className='hover-span disCollect-btn'><SvgComponent className='svg-component' type='icon-love_fill' /></span>
+                                                                    </Popconfirm>
+                                                                </Col>
+                                                            </Row>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -263,13 +261,13 @@ export default class ColleactionContainer extends React.PureComponent<IColleacti
                     </div> : 
                     <div className='no-data'>
                         <img alt='无数据' src={noDataImg} />
-                        <p>您暂时没有搜藏记录，赶快搜索课程资源，选择您喜欢的课程并收藏吧！</p>
+                        <p>您暂时还没有收藏记录，选择您喜欢的课程并收藏吧！</p>
                     </div>
                 }
                 { modalVisible && <BrowseFileModalComponent {...browseFileModalProps}/> }
                 <div className='colleaction-bottom'>
                     { canScrollLoad && <p className='can-load-more' onClick={this.loadMore}>加载更多...</p> }
-                    { hasData && !canScrollLoad && <p className='can-not-load'>— — — — — — 我是有底线的 — — — — — —</p> }
+                    { hasData && !canScrollLoad && <p className='can-not-load'>------------------------------------------------------------------我是有底线的------------------------------------------------------------------</p> }
                 </div>
             </div>
         )

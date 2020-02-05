@@ -1,7 +1,48 @@
+@import '../../../../assets/styles/global.container.scss';
 
 .upload-step-second-container {
     .upload-step-second-form-item:first-child {
         border-bottom: 1px dotted #ddd;
         margin-bottom: 12px;
+    }
+
+    .upload-materialFile {
+        .ant-form-item-label {
+            &>label {
+                @include require;
+            }   
+        }
+    }
+
+    .upload-content {
+        .ant-upload.ant-upload-select-picture-card, 
+        .ant-upload-list-item-list-type-picture-card,
+        .ant-upload-list-picture-card-container {
+            width: 280px;
+            height: 200px;
+            position: relative;
+        }
+
+        .upload-marked-words {
+            font-size: 16px;
+            position: absolute;
+            bottom: 30px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .upload-step-second-form-item {
+            .upload-overLinkFile-warn {
+                color: $userColor;
+            }
+        }
+
+        .ant-upload.ant-upload-select-picture-card > .ant-upload {
+            padding: 0;
+        }
+
+        img.uploading-image {
+            height: 350px;
+        }
     }
 }
