@@ -268,7 +268,7 @@ class UserLogin extends React.PureComponent<IProps, IState> {
         return(
             <div className='user-login' style={style}>
                 <Form className='user-login-form' onSubmit={this.handleSubmit}>
-                    <p className='login-title'><span>厦门信息学校<br/>城市轨道交通课程<br/>资源管理系统<br/>欢迎登陆</span></p>
+                    <p className='login-title'><span>城市轨道交通课程<br/>资源管理系统<br/>欢迎登陆</span></p>
                     {
                         this.config.loginFormItem.map((item: IForm, index: number) => {
                             return <FormItem
