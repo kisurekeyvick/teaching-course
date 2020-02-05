@@ -4,6 +4,7 @@
     background-color: #fff;
     width: 100%;
     background: #fff url('../../../assets/images/loginBigBg.webp') no-repeat;
+    background-size: 100%,100%;
 
     .user-login-form {
         @include login-form;
@@ -15,10 +16,10 @@
         background-color: #fff;        
 
         p.login-title {
-            font-size: 15px;
+            font-size: 18px;
             text-transform: uppercase;
             text-align: center;
-            margin: 80px 48px 65px 48px;
+            margin: 120px 14px 65px 14px;
             font-family: 'STHeit';
             animation: zoomInUp 2s;
 
