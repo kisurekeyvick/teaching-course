@@ -24,7 +24,8 @@ export const env = {
      */
     svgUrl: 'http://at.alicdn.com/t/font_1531539_y7j27qle3h.js',
     /** 三个浏览文件的地址,2020年1月24日修改地址,只能生产环境访问 */
-    officeFileUrl: 'https://view.officeapps.live.com/op/view.aspx?src=',
+    //officeFileUrl: 'https://view.officeapps.live.com/op/view.aspx?src=',
+    officeFileUrl: `http://${window.location.hostname}:8012/onlinePreview?url=`,
     pdfFileUrl: `http://${window.location.hostname}:8012/onlinePreview?url=`,
     otherFileUrl: `http://${window.location.hostname}:8012/onlinePreview?url=`    
 };
